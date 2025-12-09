@@ -1,4 +1,5 @@
-﻿Module Module1
+﻿Imports System.IO
+Module Module1
     '
     'Ver1.10  R側にアラームコメントを入れるとXbar側にアラームが出てしまう不具合修正
     '         アラームコメント入力後QC承認待ちの場合、ツリーアイコンの表示をQマークに変更。またOK MONITORの表示も赤点滅しないように変更。
@@ -60,11 +61,11 @@
     Public ypnbuf_R(5000) As Integer
     Public Graphsmallcount As Integer
     Public strUnit As String ' 単位
-  
+
 
 
     'グラフデータ用バッファー
-    Public vv As Integer = 10000
+    Public vv As Integer = 100000
     Public MesureValueBuf(vv) As String '測定値
 
 
@@ -124,6 +125,53 @@
             Exit Sub
         End Try
 
+    End Sub
+    Public Sub LoadDataFromTextFile()
+        Dim filepath As String = "C:\testdata.txt"
+        If Not File.Exists(filepath) Then
+            MsgBox("File not found: " & filepath)
+            Exit Sub
+        End If
+        Dim lines() As String = File.ReadAllLines(filepath)
+        SPCDataNum = 0
+        ReDim M_Data(0)
+        For i As Integer = 1 To lines.Length - 1
+            Dim line As String = lines(i)
+            If line.Trim() = "" Then Continue For
+            Dim cols() As String = line.Split(vbTab)
+            If cols.Length > 20 Then
+                SPCDataNum += 1
+                Dim rawRow As String = ""
+                rawRow &= i & ","
+                rawRow &= cols(6) & " " & cols(7) & ","
+                rawRow &= cols(5) & ","
+                rawRow &= cols(20) & ","
+                rawRow &= "0."
+                rawRow &= cols(21) & ","
+                rawRow &= cols(0) & ","
+                rawRow &= "Pass"
+                ReDim Preserve M_Data(SPCDataNum)
+                M_Data(SPCDataNum) = rawRow
+                If SPCDataNum < MesureValueBuf.Length Then
+                    MesureValueBuf(SPCDataNum) = cols(5)
+                End If
+                Try
+                    X_UCL = Val(cols(9))
+                    X_UCL = Val(cols(10))
+                    X_UCL = (X_UCL + X_LCL) / 2
+                    X_UCL = Val(cols(14))
+                    X_UCL = Val(cols(15))
+                    X_UCL = (R_UCL + R_LCL) / 2
+                    X_UCL = Val(cols(12))
+                    X_UCL = Val(cols(13))
+                Catch ex As Exception
+
+                End Try
+            End If
+        Next
+        DispStartPosition = 0
+        If SPCDataNum > 30 Then DispStartPosition = SPCDataNum - 30
+        MsgBox("Loaded " & SPCDataNum & " point (Global).")
     End Sub
 
 

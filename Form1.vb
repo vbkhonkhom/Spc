@@ -1,11 +1,11 @@
-﻿
-Imports System
+﻿Imports System
 Imports Microsoft.VisualBasic
-Imports System.IO
+Imports System.IO ' <--- [1] เพิ่ม Library สำหรับอ่านไฟล์
 Imports System.Text
 Imports System.Runtime.InteropServices
 Imports System.Net
 Imports System.Data.SqlClient
+
 Public Class Form1
     Dim myHostName As String
     Dim FROMHOST_SPC_Yukuhashi As String
@@ -20,25 +20,25 @@ Public Class Form1
     End Structure
 
 
-    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)> _
-       Private Shared Function FindWindow( _
-            ByVal lpClassName As String, _
+    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+    Private Shared Function FindWindow(
+            ByVal lpClassName As String,
             ByVal lpWindowName As String) As IntPtr
     End Function
 
-    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)> _
-     Public Shared Function SendMessage( _
-                           ByVal hWnd As IntPtr, _
-                           ByVal wMsg As Int32, _
-                           ByVal wParam As Int32, _
+    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+    Public Shared Function SendMessage(
+                           ByVal hWnd As IntPtr,
+                           ByVal wMsg As Int32,
+                           ByVal wParam As Int32,
                            ByVal lParam As Int32) As Integer
     End Function
 
-    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)> _
-    Public Shared Function SendMessage( _
-                            ByVal hWnd As IntPtr, _
-                            ByVal wMsg As Int32, _
-                            ByVal wParam As Int32, _
+    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+    Public Shared Function SendMessage(
+                            ByVal hWnd As IntPtr,
+                            ByVal wMsg As Int32,
+                            ByVal wParam As Int32,
                             ByRef lParam As COPYDATASTRUCT) As Integer
     End Function
 
@@ -64,13 +64,13 @@ Public Class Form1
         '文字列メッセージを送信します
         If strMes <> String.Empty Then
             '送信データをByte配列に格納
-            Dim bytearry() As Byte = _
-                          System.Text.Encoding.Default.GetBytes(strMes)
+            Dim bytearry() As Byte =
+                         System.Text.Encoding.Default.GetBytes(strMes)
             Dim len As Int32 = bytearry.Length
             Dim cds As COPYDATASTRUCT
             cds.dwData = 0        '使用しない
             cds.lpData = strMes 'テキストのポインターをセット
-            cds.cbData = len + 1     '長さをセット
+            cds.cbData = len + 1   '長さをセット
             '文字列を送る
             result = SendMessage(hWnd, WM_COPYDATA, 0, cds)
         End If
@@ -105,109 +105,6 @@ Public Class Form1
         End Select
         MyBase.WndProc(m)
     End Sub
-    'Private Sub RxTextBox_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles RxTextBox.TextChanged
-    '    Dim po, uc As Integer
-    '    Dim splitData() As String
-    '    Dim temp() As String
-    '    Dim HEADER, FROMHOST, TOHOST, CONTENT1, CONTENT2, CONTENT3, CONTENT4 As String
-    '    Dim wsRecvBuffer As String
-    '    Dim strRefilepath As String
-
-    '    wsRecvBuffer = RxTextBox.Text
-
-    '    po = InStr(wsRecvBuffer, "MSG")
-    '    If po = 0 Then
-    '        Exit Sub
-    '    End If
-    '    wsRecvBuffer = Mid(wsRecvBuffer, po + 5)
-
-    '    po = InStr(wsRecvBuffer, " ")
-    '    If po = 0 Then
-    '        Exit Sub
-    '    End If
-    '    wsRecvBuffer = Mid(wsRecvBuffer, po + 1)
-
-    '    splitData = wsRecvBuffer.Split("|")
-    '    uc = UBound(splitData)
-    '    If uc <= 5 Then Exit Sub
-
-    '    HEADER = splitData(0)
-    '    FROMHOST = splitData(1)
-    '    TOHOST = splitData(2)
-    '    CONTENT1 = splitData(3)
-    '    CONTENT2 = splitData(4)
-    '    CONTENT3 = splitData(5)
-    '    CONTENT4 = splitData(6)
-
-    '    If HostSub = "Host" Then 'Hostのみアラーム監視を行う
-    '        If HEADER = "SPC" Or HEADER = "SPC_SheetR" Or HEADER = "SPC_Product" Or HEADER = "SPC_ASSY" Then 'HeaderがSPCの場合、測定データを受信し、アラーム監視を行う。
-    '            'strRefilepath = ""
-
-
-    '            'If CONTENT1 = "測定機器" Then
-    '            '    strRefilepath = "BUMP"
-    '            'Else
-    '            '    GetFilePath(CONTENT2, CONTENT4, strRefilepath, CONTENT1)
-    '            'End If
-    '            'AlarmingSPC(CONTENT1, CONTENT2, CONTENT3, CONTENT4, HEADER, strRefilepath) '(モニター種類,工程フロー,管理項目,CSVデータ)
-    '            'If HEADER = "SPC_ASSY" Then
-    '            '    UpdateFileName = "SPCData\CSP2\" & CONTENT1 & "\" & CONTENT2 & "\" & CONTENT2 & "_spcData.csv"
-    '            '    UpdatePropertyName = "SPCData\CSP2\" & CONTENT1 & "\" & CONTENT2 & "\" & CONTENT2 & "_Property.csv"
-    '            'Else
-    '            '    UpdateFileName = "SPCData\" & strRefilepath & "\" & CONTENT1 & "\" & CONTENT2 & "\" & CONTENT2 & "_spcData.csv"
-    '            '    UpdatePropertyName = "SPCData\" & strRefilepath & "\" & CONTENT1 & "\" & CONTENT2 & "\" & CONTENT2 & "_Property.csv"
-    '            'End If
-    '            'UpdateTimerHost.Enabled = True
-
-    '            temp = Split(CONTENT1, ",")
-
-    '            TreeName1 = temp(0) 'ツリー条件1(工程名)
-    '            TreeName2 = temp(1) 'ツリー条件2(設備名)
-    '            TreeName3 = temp(3) 'ツリー条件3(設備No)
-    '            TreeName4 = temp(2) 'ツリー条件4(測定項目)
-
-    '            Graphsmallcount = 1
-    '            SPCDataNum = 0
-    '            '上記の条件のグラフ設定を取得する
-    '            Get_PropertyData(TreeName1, TreeName2, TreeName3, TreeName4, TreeName5, TreeName6, TreeName7, TreeName8, TreeName9, TreeName10)
-    '            'SPCデータを取得する
-    '            Get_SPCData_Server(PropertyTable)
-
-    '            If SPCDataNum = 0 Then
-    '                Exit Sub
-    '            End If
-
-    '            'SPCアラーム判定を行う
-    '            GetAlarmData()
-
-    '            MRFlag = False
-    '            Label1.Text = "R"
-    '            GroupBox2.Text = "R"
-    '            GraphDisp_Server() 'グラフを表示する
-
-    '        End If
-    '        'ElseIf HostSub = "Sub" Then 'Subはデータ更新を行う
-    '        '    If HEADER = "SPC" Or HEADER = "SPC_SheetR" Or HEADER = "SPC_Product" Or HEADER = "SPC_ASSY" Then 'HeaderがSPCの場合、測定データを受信し、アラーム監視を行う。
-    '        '        If StrNetworkFolder <> "" Then 'ネットワークに接続している場合
-    '        '            strRefilepath = ""
-    '        '            If CONTENT1 = "測定機器" Then
-    '        '                strRefilepath = "BUMP"
-    '        '            Else
-    '        '                GetFilePath(CONTENT2, CONTENT4, strRefilepath, CONTENT1)
-    '        '            End If
-    '        '            If HEADER = "SPC_ASSY" Then
-    '        '                UpdateFileName = "SPCData\CSP2\" & CONTENT1 & "\" & CONTENT2 & "\" & CONTENT2 & "_spcData.csv"
-    '        '                UpdatePropertyName = "SPCData\CSP2\" & CONTENT1 & "\" & CONTENT2 & "\" & CONTENT2 & "_Property.csv"
-    '        '            Else
-    '        '                UpdateFileName = "SPCData\" & strRefilepath & "\" & CONTENT1 & "\" & CONTENT2 & "\" & CONTENT2 & "_spcData.csv"
-    '        '                UpdatePropertyName = "SPCData\" & strRefilepath & "\" & CONTENT1 & "\" & CONTENT2 & "\" & CONTENT2 & "_Property.csv"
-    '        '            End If
-    '        '            UpdateTimer.Enabled = True
-    '        '        End If
-    '        '    End If
-    '    End If
-
-    'End Sub
 
     'ラベルコントロール配列のフィールドを作成
     Public LabXBar() As System.Windows.Forms.Label
@@ -234,9 +131,9 @@ Public Class Form1
             Dim dr As DialogResult
             Dim frm As New Form3
             dr = frm.ShowDialog
-            If dr = Windows.Forms.DialogResult.OK Then
+            If dr = System.Windows.Forms.DialogResult.OK Then
                 LoadLoad()
-            ElseIf dr = Windows.Forms.DialogResult.Cancel Then
+            ElseIf dr = System.Windows.Forms.DialogResult.Cancel Then
                 Me.Close()
             End If
 
@@ -245,6 +142,7 @@ Public Class Form1
         End If
 
     End Sub
+
     Public Sub LoadLoad()
         'If IO.Directory.Exists(StrRootFolder) = False Then
         '    IO.Directory.CreateDirectory(StrRootFolder)
@@ -332,7 +230,6 @@ Public Class Form1
 
         'ファイルの最後までループ
         Do Until sr.Peek() = -1
-
             temp = Split(sr.ReadLine(), ",")
             If temp(0).Trim(Chr(34)) <> "" Then  '
                 'SPCデータの保存先フォルダを取得
@@ -440,6 +337,15 @@ Public Class Form1
         Dim temp() As String
         temp = Split(_TreeRist(0, 0), ",")
 
+        Dim maxLen As Integer = 0
+        For i As Integer = 0 To UBound(_TreeRist, 1)
+            If _TreeRist(i, 0) IsNot Nothing Then
+                Dim parts() As String = Split(_TreeRist(i, 0), ",")
+                If parts.Length > maxLen Then maxLen = parts.Length
+            End If
+        Next
+        Dim TRist(UBound(_TreeRist, 1), maxLen) As String
+
         Dim Icons As New ImageList
         Icons.Images.Add("Yellow", Image.FromFile(StrCDir & "\Picture\Folder.jpg")) 'SPCアラームがない場合のフォルダアイコン
         Icons.Images.Add("Red", Image.FromFile(StrCDir & "\Picture\FolderRed.jpg")) 'SPCアラームがある場合のフォルダアイコン(赤)
@@ -450,7 +356,6 @@ Public Class Form1
         Dim Tree(UBound(temp, 1))() As String
         Dim RootNode(UBound(temp, 1))() As TreeNode
 
-        Dim TRist(UBound(_TreeRist, 1), UBound(temp, 1) + 1) As String
         For i As Integer = 0 To UBound(_TreeRist, 1)
             temp = Split(_TreeRist(i, 0), ",")
             For j As Integer = 0 To UBound(temp, 1)
@@ -673,7 +578,7 @@ Public Class Form1
     Public Sub TreeView_AfterSelect(ByVal _TreeView As TreeView)
 
         'ツリーデータセット
-        TreeName = TreeInfo(_TreeView)
+        TreeName = treeInfo(_TreeView)
 
         'ツリーデータからプロパティデータセット(QC承認も確認)
         PropertyTable = getProperty()
@@ -761,13 +666,10 @@ Public Class Form1
 
         End If
 
-
-
-
         'GraphDisp_Server() 'グラフを表示する
         GraphDisp() 'グラフを表示する
     End Sub
-   
+
 
     Private Sub Button2_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Button2.MouseDown
         'グラフ左移動START
@@ -786,7 +688,7 @@ Public Class Form1
         If DispStartPosition > 0 Then
             DispStartPosition -= 1
 
-             GraphDisp()
+            GraphDisp()
 
 
         End If
@@ -800,7 +702,7 @@ Public Class Form1
         If SPCDataNum - 30 > DispStartPosition Then
             DispStartPosition += 1
 
-             GraphDisp()
+            GraphDisp()
 
         End If
 
@@ -815,49 +717,6 @@ Public Class Form1
         'グラフ右移動STOP
         Timer2.Enabled = False
     End Sub
-
-    ''X側のアラームコメントを表示・入力する
-    'Private Sub PictureBox1_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles PictureBox1.MouseDown
-    '    Dim mx1, my1, dc, i As Integer
-
-    '    mx1 = e.X
-    '    my1 = e.Y
-
-    '    dc = 0
-    '    For i = 0 To 31
-    '        If xpnbuf_X(i) - 10 < mx1 And xpnbuf_X(i) + 10 > mx1 Then
-    '            ypnbuf_X(i) = my1
-    '            dc = 1
-    '            Exit For
-    '        End If
-    '    Next
-    '    If dc <> 0 Then
-    '        SerectPoint = DispStartPosition + i
-    '    End If
-    '    GraphMode = "X"
-
-    '    If e.Button = Windows.Forms.MouseButtons.Right Then '右クリック
-    '        If dc <> 0 Then
-    '            '右クリック時アラームコメント入力画面を表示する
-    '            'If StrNetworkFolder <> "L:\" Then
-    '            Get_AlarmInfo(SerectPoint, "Write")
-    '            FormAlarmInput.Show()
-    '            'End If
-    '        End If
-
-    '    Else   '左クリック時アラームコメント表示画面を表示する
-    '        If dc <> 0 Then
-    '            Get_AlarmInfo(SerectPoint, "Read")
-
-    '            'アラームコメント表示画面表示
-    '            FormAlarmDisp.Show()
-    '        End If
-
-    '    End If
-
-    'End Sub
-
-
 
     'PopUpを表示する
     Private Sub _MouseMove(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles PictureBox1.MouseMove, PictureBox2.MouseMove
@@ -938,7 +797,7 @@ Public Class Form1
         End Try
 
     End Sub
-  
+
 
 
     Public Function Check_Textdata() As Boolean
@@ -1050,7 +909,7 @@ Public Class Form1
 
 
         If _Mode = "Control limit change" Then
-      
+
 
             _Buf(0) = FormControl.Get_PropertyNo() 'iGraphNo
             'Buf(1) = "" 'cProcessName
@@ -1158,7 +1017,8 @@ Public Class Form1
             To_Server(_Buf, _Mode)
 
         ElseIf _Mode = "Control limit approval" Then
-         
+
+
             _Buf(56) = DateTime.Now.ToString 'cApprovalDate
             _Buf(57) = UserName  'cApproverName
 
@@ -1173,9 +1033,9 @@ Public Class Form1
             Dim dr As DialogResult
             Dim frm As New Form3
             dr = frm.ShowDialog
-            If dr = Windows.Forms.DialogResult.OK Then
+            If dr = System.Windows.Forms.DialogResult.OK Then
                 LoadLoad()
-            ElseIf dr = Windows.Forms.DialogResult.Cancel Then
+            ElseIf dr = System.Windows.Forms.DialogResult.Cancel Then
                 Me.Close()
             End If
 
@@ -1422,7 +1282,7 @@ Public Class Form1
         Dim result As DialogResult
         Dim eMsg As String = ""
         result = MessageBox.Show("Do you want to delete the data in the SPC_Alarm ?", "Delete Data", MessageBoxButtons.OKCancel)
-        If result = Windows.Forms.DialogResult.OK Then
+        If result = System.Windows.Forms.DialogResult.OK Then
             eMsg = Input_CSV_to_Server(StrCDir & "\SPC_Alarm.csv", 1)
             If Not eMsg = "" Then
                 Write_Error("error Delete_AlarmTable" & eMsg)
@@ -1483,7 +1343,11 @@ Public Class Form1
             Do Until sr0.Peek() = -1
                 temp0 = Split(sr0.ReadLine(), ",")
                 For i As Integer = 0 To CoMax - 1
-                    Buf(Gyo, i) = temp0(i)
+                    If i < temp0.Length Then
+                        Buf(Gyo, i) = temp0(i)
+                    Else
+                        Buf(Gyo, i) = ""
+                    End If
                 Next
                 Gyo += 1
             Loop
@@ -1662,5 +1526,92 @@ Public Class Form1
             Exit Sub
         End Try
 
+    End Sub
+
+
+    ' [3] ส่วนที่เพิ่มใหม่: ฟังก์ชันอ่านข้อมูลจากไฟล์ testdata.txt
+    Private Sub LoadDataFromTextFile()
+        ' แก้ Path ให้ตรงกับที่อยู่ไฟล์ testdata ของคุณ
+        Dim filePath As String = "C:\testdata.txt"
+
+        If Not File.Exists(filePath) Then
+            MsgBox("File not found: " & filePath)
+            Exit Sub
+        End If
+
+        Dim lines() As String = File.ReadAllLines(filePath)
+
+        ' รีเซ็ตค่าตัวนับข้อมูล
+        SPCDataNum = 0
+
+        ' เคลียร์ข้อมูลเก่าใน M_Data
+        ReDim M_Data(0)
+
+        ' วนลูปอ่านข้อมูล (เริ่มที่ 1 เพื่อข้าม Header)
+        For i As Integer = 1 To lines.Length - 1
+            Dim line As String = lines(i)
+            If line.Trim() = "" Then Continue For
+
+            Dim cols() As String = line.Split(vbTab) ' ข้อมูลในไฟล์คั่นด้วย Tab
+
+            If cols.Length > 20 Then
+                SPCDataNum += 1
+
+                ' 1. เก็บค่าลงตัวแปร M_Data (จำลองโครงสร้างข้อมูลให้เหมือนมาจาก Server)
+                ' Format: ID, Date, Mean(X), Range(R), MR, Operator, Lot, ...
+                ' Index อ้างอิงจากไฟล์ testdata: Date=6, Time=7, Mean=5, Range=20
+                Dim rawRow As String = ""
+                rawRow &= i & ","                 ' Index (ID)
+                rawRow &= cols(6) & " " & cols(7) & "," ' Date Time
+                rawRow &= cols(5) & ","           ' Mean (X) -> Column 5
+                rawRow &= cols(20) & ","          ' Range (R) -> Column 20
+                rawRow &= "0,"                    ' MR (สมมติเป็น 0)
+                rawRow &= cols(21) & ","          ' Operator -> Column 21
+                rawRow &= cols(0) & ","           ' Lot Number -> Column 0
+                rawRow &= "Pass"                  ' Status
+
+                ' ขยายขนาด Array และเก็บข้อมูล
+                ReDim Preserve M_Data(SPCDataNum)
+                M_Data(SPCDataNum) = rawRow
+
+                ' 2. เก็บค่าลง Buffer (เผื่อ GraphDisp ใช้ตัวนี้ด้วย)
+                If SPCDataNum < MesureValueBuf.Length Then
+                    MesureValueBuf(SPCDataNum) = cols(5) ' เก็บค่า Mean
+                End If
+
+                ' 3. ดึงค่า Control Limits (ใช้ค่าจากไฟล์)
+                ' UCL=9, LCL=10, R_UCL=14, R_LCL=15
+                Try
+                    X_UCL = Val(cols(9))   ' Upper Control Limit (X-Bar)
+                    X_LCL = Val(cols(10))  ' Lower Control Limit (X-Bar)
+                    X_CL = (X_UCL + X_LCL) / 2 ' คำนวณเส้นกลางคร่าวๆ
+
+                    R_UCL = Val(cols(14))  ' Upper Range Limit
+                    R_LCL = Val(cols(15))  ' Lower Range Limit
+                    R_CL = (R_UCL + R_LCL) / 2
+
+                    ' ถ้ามี Spec Limit ก็ใส่ได้ (USL=12, LSL=13)
+                    X_USL = Val(cols(12))
+                    X_LSL = Val(cols(13))
+                Catch ex As Exception
+                    ' กรณีแปลงตัวเลขไม่ได้ ให้ข้ามไป
+                End Try
+            End If
+        Next
+
+        ' ตั้งค่าการแสดงผลเบื้องต้น
+        DispStartPosition = 0
+        If SPCDataNum > 30 Then DispStartPosition = SPCDataNum - 30 ' ให้กราฟแสดงช่วงท้ายๆ
+
+        ' สั่งวาดกราฟ
+        GraphDisp()
+
+        MsgBox("Loaded " & SPCDataNum & " points from file.")
+    End Sub
+
+    ' [2] ส่วนที่เพิ่มใหม่: Event Handler สำหรับปุ่ม ButtonLoad
+    ' หมายเหตุ: ต้องสร้างปุ่มชื่อ ButtonLoad ใน Form Designer ก่อน
+    Private Sub ButtonLoad_Click_1(sender As Object, e As EventArgs) Handles ButtonLoad.Click
+        LoadDataFromTextFile()
     End Sub
 End Class

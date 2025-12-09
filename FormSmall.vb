@@ -1,4 +1,5 @@
-﻿Public Class FormSmall
+﻿Imports System.IO
+Public Class FormSmall
     'ラベルコントロール配列のフィールドを作成
 
     Public LabXBar_Small() As System.Windows.Forms.Label
@@ -109,16 +110,16 @@
 
 
 
-  
+
 
     Private Sub Button8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button8.Click
         If StrServerConnection = "" Then
             Dim dr As DialogResult
             Dim frm As New Form3
             dr = frm.ShowDialog
-            If dr = Windows.Forms.DialogResult.OK Then
+            If dr = System.Windows.Forms.DialogResult.OK Then
                 Form1.LoadLoad()
-            ElseIf dr = Windows.Forms.DialogResult.Cancel Then
+            ElseIf dr = System.Windows.Forms.DialogResult.Cancel Then
                 Me.Close()
             End If
 
@@ -268,5 +269,10 @@
 
     Private Sub UserToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UserToolStripMenuItem.Click
         Form1.User()
+    End Sub
+
+    Private Sub ButtonLoad_Click(sender As Object, e As EventArgs) Handles ButtonLoad.Click
+        LoadDataFromTextFile()
+        GraphDisp()
     End Sub
 End Class

@@ -23,99 +23,100 @@ Partial Class FormMiddle
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMiddle))
-        Me.labLCL = New System.Windows.Forms.Label
-        Me.labCL = New System.Windows.Forms.Label
-        Me.labUCL = New System.Windows.Forms.Label
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox
-        Me.Label21 = New System.Windows.Forms.Label
-        Me.LabLoCpk = New System.Windows.Forms.Label
-        Me.LabUpCpk = New System.Windows.Forms.Label
-        Me.Label40 = New System.Windows.Forms.Label
-        Me.Label38 = New System.Windows.Forms.Label
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Button8 = New System.Windows.Forms.Button
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip
-        Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.ExToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.PropertyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.DToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.LanguageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.JapaneseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.EnglishToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.HowToUseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.ResolutionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripMenuItem
-        Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem
-        Me.UserToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.SPCRuleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.SPCRuleToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem
-        Me.CreateNewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.SettingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.ServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.DeleteAlarmTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.StandardNoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.SoftwareVersion206ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox
-        Me.LabelBase = New System.Windows.Forms.Label
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.TextRSiguma = New System.Windows.Forms.Label
-        Me.TextRCL = New System.Windows.Forms.Label
-        Me.TextRUCL = New System.Windows.Forms.Label
-        Me.Label39 = New System.Windows.Forms.Label
-        Me.Label41 = New System.Windows.Forms.Label
-        Me.Label42 = New System.Windows.Forms.Label
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.TextSiguma = New System.Windows.Forms.Label
-        Me.TextLCL = New System.Windows.Forms.Label
-        Me.TextCL = New System.Windows.Forms.Label
-        Me.TextUCL = New System.Windows.Forms.Label
-        Me.Label34 = New System.Windows.Forms.Label
-        Me.Label33 = New System.Windows.Forms.Label
-        Me.Label32 = New System.Windows.Forms.Label
-        Me.Label31 = New System.Windows.Forms.Label
-        Me.LabelQC = New System.Windows.Forms.Label
-        Me.Button3 = New System.Windows.Forms.Button
-        Me.Button2 = New System.Windows.Forms.Button
-        Me.PictureBox9 = New System.Windows.Forms.PictureBox
-        Me.labRCL = New System.Windows.Forms.Label
-        Me.labRUCL = New System.Windows.Forms.Label
-        Me.Button9 = New System.Windows.Forms.Button
-        Me.Button7 = New System.Windows.Forms.Button
-        Me.Label29 = New System.Windows.Forms.Label
-        Me.Label18 = New System.Windows.Forms.Label
-        Me.Label17 = New System.Windows.Forms.Label
-        Me.Label16 = New System.Windows.Forms.Label
-        Me.Label15 = New System.Windows.Forms.Label
-        Me.Label14 = New System.Windows.Forms.Label
-        Me.Label19 = New System.Windows.Forms.Label
-        Me.Label20 = New System.Windows.Forms.Label
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox
-        Me.PictureBox4 = New System.Windows.Forms.PictureBox
-        Me.LabUnit = New System.Windows.Forms.Label
-        Me.Label11 = New System.Windows.Forms.Label
-        Me.Label10 = New System.Windows.Forms.Label
-        Me.Label9 = New System.Windows.Forms.Label
-        Me.Label8 = New System.Windows.Forms.Label
-        Me.Label7 = New System.Windows.Forms.Label
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.Label12 = New System.Windows.Forms.Label
-        Me.Label13 = New System.Windows.Forms.Label
-        Me.Label22 = New System.Windows.Forms.Label
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox
-        Me.labTitle = New System.Windows.Forms.Label
-        Me.PictureBox8 = New System.Windows.Forms.PictureBox
-        Me.PictureBox6 = New System.Windows.Forms.PictureBox
-        Me.PictureBox7 = New System.Windows.Forms.PictureBox
-        Me.TreeView1 = New System.Windows.Forms.TreeView
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.ListBox1 = New System.Windows.Forms.ListBox
-        Me.TextItem = New System.Windows.Forms.TextBox
-        Me.txtStan_No = New System.Windows.Forms.Label
+        Me.labLCL = New System.Windows.Forms.Label()
+        Me.labCL = New System.Windows.Forms.Label()
+        Me.labUCL = New System.Windows.Forms.Label()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.LabLoCpk = New System.Windows.Forms.Label()
+        Me.LabUpCpk = New System.Windows.Forms.Label()
+        Me.Label40 = New System.Windows.Forms.Label()
+        Me.Label38 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Button8 = New System.Windows.Forms.Button()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PropertyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LanguageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.JapaneseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EnglishToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HowToUseToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ResolutionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UserToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SPCRuleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SPCRuleToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CreateNewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SettingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ServerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeleteAlarmTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.StandardNoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SoftwareVersion206ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.LabelBase = New System.Windows.Forms.Label()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.TextRSiguma = New System.Windows.Forms.Label()
+        Me.TextRCL = New System.Windows.Forms.Label()
+        Me.TextRUCL = New System.Windows.Forms.Label()
+        Me.Label39 = New System.Windows.Forms.Label()
+        Me.Label41 = New System.Windows.Forms.Label()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.TextSiguma = New System.Windows.Forms.Label()
+        Me.TextLCL = New System.Windows.Forms.Label()
+        Me.TextCL = New System.Windows.Forms.Label()
+        Me.TextUCL = New System.Windows.Forms.Label()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.Label33 = New System.Windows.Forms.Label()
+        Me.Label32 = New System.Windows.Forms.Label()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.LabelQC = New System.Windows.Forms.Label()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.PictureBox9 = New System.Windows.Forms.PictureBox()
+        Me.labRCL = New System.Windows.Forms.Label()
+        Me.labRUCL = New System.Windows.Forms.Label()
+        Me.Button9 = New System.Windows.Forms.Button()
+        Me.Button7 = New System.Windows.Forms.Button()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
+        Me.LabUnit = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.labTitle = New System.Windows.Forms.Label()
+        Me.PictureBox8 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox6 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox7 = New System.Windows.Forms.PictureBox()
+        Me.TreeView1 = New System.Windows.Forms.TreeView()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.ListBox1 = New System.Windows.Forms.ListBox()
+        Me.TextItem = New System.Windows.Forms.TextBox()
+        Me.txtStan_No = New System.Windows.Forms.Label()
+        Me.ButtonLoad = New System.Windows.Forms.Button()
         Me.GroupBox4.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -254,7 +255,7 @@ Partial Class FormMiddle
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
-        Me.MenuStrip1.Font = New System.Drawing.Font("メイリオ", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.MenuStrip1.Font = New System.Drawing.Font("Meiryo", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.PropertyToolStripMenuItem, Me.SPCRuleToolStripMenuItem, Me.SettingToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
@@ -988,10 +989,9 @@ Partial Class FormMiddle
         'ListBox1
         '
         Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.ItemHeight = 12
         Me.ListBox1.Location = New System.Drawing.Point(1038, 972)
         Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(10, 16)
+        Me.ListBox1.Size = New System.Drawing.Size(10, 4)
         Me.ListBox1.TabIndex = 132
         '
         'TextItem
@@ -1012,11 +1012,21 @@ Partial Class FormMiddle
         Me.txtStan_No.TabIndex = 318
         Me.txtStan_No.Text = "RISTS R02325.21.001"
         '
+        'ButtonLoad
+        '
+        Me.ButtonLoad.Location = New System.Drawing.Point(1033, 137)
+        Me.ButtonLoad.Name = "ButtonLoad"
+        Me.ButtonLoad.Size = New System.Drawing.Size(44, 20)
+        Me.ButtonLoad.TabIndex = 319
+        Me.ButtonLoad.Text = "Load Test Data"
+        Me.ButtonLoad.UseVisualStyleBackColor = True
+        '
         'FormMiddle
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1259, 896)
+        Me.Controls.Add(Me.ButtonLoad)
         Me.Controls.Add(Me.txtStan_No)
         Me.Controls.Add(Me.TextItem)
         Me.Controls.Add(Me.ListBox1)
@@ -1186,4 +1196,5 @@ Partial Class FormMiddle
     Friend WithEvents SoftwareVersion206ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents StandardNoToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents txtStan_No As System.Windows.Forms.Label
+    Friend WithEvents ButtonLoad As Button
 End Class

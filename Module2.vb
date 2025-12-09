@@ -26,12 +26,13 @@ Module Module2
 
 
     Public Function readMaster(ByVal _data As String, ByVal _p As Integer) As String
-        If _data = "" Then
+        If String.IsNullOrEmpty(_data) Then Return ""
+        Dim temp() As String = Split(_data, ",")
+        If _p >= 0 AndAlso _p < temp.Length Then
+            Return temp(_p)
+        Else
             Return ""
         End If
-
-        Dim temp() As String = Split(_data, ",")
-        Return temp(_p)
 
     End Function
 
@@ -301,8 +302,8 @@ Module Module2
 
         c = 0
         Dim s As Integer = 0
-        If SpcTable.Rows.Count > 10000 Then
-            s = SpcTable.Rows.Count - 10000 + 1
+        If SpcTable.Rows.Count > vv Then
+            s = SpcTable.Rows.Count - vv + 1
         End If
         Dim syosu As Integer
         Dim temp() As String
@@ -1312,171 +1313,189 @@ Module Module2
         Dim x03 As Integer
 
         For j = 0 To 29 * Graphsmallcount
-            If M_Data(jk) = "" Then
-                Continue For
-            End If
-            strData = readMaster(M_Data(jk), _X)
-            If strData = "" Then
-                Continue For
-            End If
-            p = 0
+            Try
+                If jk < 0 OrElse jk > UBound(M_Data) Then
+                    jk += 1
+                    Continue For
+                End If
+                If String.IsNullOrEmpty(M_Data(jk)) = "" Then
+                    jk += 1
+                    Continue For
+                End If
+                strData = readMaster(M_Data(jk), _X)
+                If strData = "" Then
+                    jk += 1
+                    Continue For
+                End If
 
-            For k = 0 To PropertyNo
-                If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
-                    If readMaster(M_Data(jk), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then
-                        p = k
+                p = 0
+
+                For k = 0 To PropertyNo
+                    If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
+                        If readMaster(M_Data(jk), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then
+                            p = k
+                        End If
                     End If
-                End If
-            Next
+                    jk += 1
 
-            X_USL = PropertyTable.Rows(p)("cUsl")
-            X_LSL = PropertyTable.Rows(p)("cLsl")
-            X_CL = PropertyTable.Rows(p)("cXcl")
-            X_UCL = PropertyTable.Rows(p)("cXucl")
-            X_LCL = PropertyTable.Rows(p)("cXlcl")
-            X_Shiguma = PropertyTable.Rows(p)("cXdev")
-            X_SCL = PropertyTable.Rows(p)("cScl")
-            X_kousa = PropertyTable.Rows(p)("cTolerance")
-            X_gType = PropertyTable.Rows(p)("cLimitType")
-            If Size = "MAX" Then
-                'xpn = xp + j * (30 / Graphsmallcount) + 15 + 120
-                xpn = xp + j * (30 / Graphsmallcount) + 15
-                x00 = 15
-            ElseIf Size = "Middle" Then
-                xpn = xp + j * (25 / Graphsmallcount) + 10
-                x00 = 13
-            ElseIf Size = "MIN" Then
-                xpn = xp + j * (20 / Graphsmallcount) + 10
-                x00 = 10
-            End If
-
-            If X_gType = "UpperLower" Then
-                yp0 = ((X_USL + X_LSL) / 2 - X_SCL)
-                yp = yp0 * Bairitu
-            End If
-
-            'Upper:上限のみ、Lower:下限のみ
-            '上限規格ラインを描画
-            If X_gType <> "Lower" Then
-
-                'If Size = "MAX" Then
-                '    ypn = 28
-                'ElseIf Size = "Middle" Then
-                '    ypn = 12
-                'ElseIf Size = "MIN" Then
-                '    ypn = 10
-                'End If
-                ypn = yp + yh - (X_USL - dblLow) * Bairitu
-                g.DrawLine(HPen, xpn - x00, ypn, xpn + x00, ypn)
-            End If
-            If X_gType <> "Upper" Then
-                '下限規格ラインを描画
-
-                'If Size = "MAX" Then
-                '    ypn = 428
-                'ElseIf Size = "Middle" Then
-                '    ypn = 362
-                'ElseIf Size = "MIN" Then
-                '    ypn = 42
-                'End If
-                ypn = yp + yh - (X_LSL - dblLow) * Bairitu
-                g.DrawLine(HPen, xpn - x00, ypn, xpn + x00, ypn)
-            End If
-
-            '------------   CL,UCL,LCLのライン   -------------
-
-            'CLラインの描画を行う
-            Data1 = (X_CL - dblLow) * Bairitu
-            ypn = yp + yh - Data1
-
-            g.DrawLine(APen, xpn - x00, ypn, xpn + x00, ypn)
-            ycl = ypn
-            'UCLラインの描画を行う
-            Data1 = (X_UCL - dblLow) * Bairitu
-            ypn = yp + yh - Data1
-
-            g.DrawLine(FPen, xpn - x00, ypn, xpn + x00, ypn)
-            yucl = ypn
-            'LCLラインの描画を行う
-            Data1 = (X_LCL - dblLow) * Bairitu
-            ypn = yp + yh - Data1
-            g.DrawLine(FPen, xpn - x00, ypn, xpn + x00, ypn)
-            ylcl = ypn
-            'グラフプロット用変数Data1
-            Data1 = (CDbl(strData) - dblLow) * Bairitu
-
-
-            'Cpkを求めるために和と二乗の和を求める
-            sum += CDbl(strData)
-            Jsum += CDbl(strData) * CDbl(strData)
-
-            c += 1
-
-
-            ypn = yp + yh - Data1
-
-
-            'アラームじゃない場合0
-            colbuf(j) = 0
-            'アラームの場合1
-            Dim ala As Integer = readMaster(M_Alarm(jk)(0), 0)
-
-
-            If ala = 1 Then
-                colbuf(j) = 1
-            End If
-
-            If ala = 2 Or ala = 3 Then
-                colbuf(j) = 1
-                ypf = ypn
-
-                ypa = ypf - 50
-                If ypa < 0 Then
-                    ypa = 50
-                    ypf = ypa + 50
-                End If
-                If ypa > 400 Then
-                    ypa = 400
-                    ypf = ypa + 50
-                End If
-
-                g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23) '旗の縦線
-
-                If Size = "MAX" Then
-                    x01 = 15
-                ElseIf Size = "Middle" Then
-                    x01 = 15
-                ElseIf Size = "MIN" Then
-                    x01 = 15
-                End If
-
-                k = 0
-                For ii = 0 To 7 '旗(赤緑)
-                    If ala = 3 Then
-                        g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
-                    ElseIf ala = 2 Then
-                        g.DrawLine(A1Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
-                    End If
-
-                    k += 1
                 Next
-            End If
+
+                X_USL = PropertyTable.Rows(p)("cUsl")
+                X_LSL = PropertyTable.Rows(p)("cLsl")
+                X_CL = PropertyTable.Rows(p)("cXcl")
+                X_UCL = PropertyTable.Rows(p)("cXucl")
+                X_LCL = PropertyTable.Rows(p)("cXlcl")
+                X_Shiguma = PropertyTable.Rows(p)("cXdev")
+                X_SCL = PropertyTable.Rows(p)("cScl")
+                X_kousa = PropertyTable.Rows(p)("cTolerance")
+                X_gType = PropertyTable.Rows(p)("cLimitType")
+                If Size = "MAX" Then
+                    'xpn = xp + j * (30 / Graphsmallcount) + 15 + 120
+                    xpn = xp + j * (30 / Graphsmallcount) + 15
+                    x00 = 15
+                ElseIf Size = "Middle" Then
+                    xpn = xp + j * (25 / Graphsmallcount) + 10
+                    x00 = 13
+                ElseIf Size = "MIN" Then
+                    xpn = xp + j * (20 / Graphsmallcount) + 10
+                    x00 = 10
+                End If
+
+                If X_gType = "UpperLower" Then
+                    yp0 = ((X_USL + X_LSL) / 2 - X_SCL)
+                    yp = yp0 * Bairitu
+                End If
+
+                'Upper:上限のみ、Lower:下限のみ
+                '上限規格ラインを描画
+                If X_gType <> "Lower" Then
+
+                    'If Size = "MAX" Then
+                    '    ypn = 28
+                    'ElseIf Size = "Middle" Then
+                    '    ypn = 12
+                    'ElseIf Size = "MIN" Then
+                    '    ypn = 10
+                    'End If
+                    ypn = yp + yh - (X_USL - dblLow) * Bairitu
+                    g.DrawLine(HPen, xpn - x00, ypn, xpn + x00, ypn)
+                End If
+                If X_gType <> "Upper" Then
+                    '下限規格ラインを描画
+
+                    'If Size = "MAX" Then
+                    '    ypn = 428
+                    'ElseIf Size = "Middle" Then
+                    '    ypn = 362
+                    'ElseIf Size = "MIN" Then
+                    '    ypn = 42
+                    'End If
+                    ypn = yp + yh - (X_LSL - dblLow) * Bairitu
+                    g.DrawLine(HPen, xpn - x00, ypn, xpn + x00, ypn)
+                End If
+
+                '------------   CL,UCL,LCLのライン   -------------
+
+                'CLラインの描画を行う
+                Data1 = (X_CL - dblLow) * Bairitu
+                ypn = yp + yh - Data1
+
+                g.DrawLine(APen, xpn - x00, ypn, xpn + x00, ypn)
+                ycl = ypn
+                'UCLラインの描画を行う
+                Data1 = (X_UCL - dblLow) * Bairitu
+                ypn = yp + yh - Data1
+
+                g.DrawLine(FPen, xpn - x00, ypn, xpn + x00, ypn)
+                yucl = ypn
+                'LCLラインの描画を行う
+                Data1 = (X_LCL - dblLow) * Bairitu
+                ypn = yp + yh - Data1
+                g.DrawLine(FPen, xpn - x00, ypn, xpn + x00, ypn)
+                ylcl = ypn
+                'グラフプロット用変数Data1
+                Data1 = (CDbl(strData) - dblLow) * Bairitu
 
 
-            jk += 1
+                'Cpkを求めるために和と二乗の和を求める
+                sum += CDbl(strData)
+                Jsum += CDbl(strData) * CDbl(strData)
 
-            xpnbuf_X(j) = xpn
-            ypnbuf_X(j) = ypn
-            If j > 0 And null_bit = 0 Then
+                c += 1
 
-                g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) 'グラフの線
 
-            End If
+                ypn = yp + yh - Data1
 
-            null_bit = 0
-            xp_old = xpn
-            yp_old = ypn
-            end_bit = 1
+
+                'アラームじゃない場合0
+                colbuf(j) = 0
+                'アラームの場合1
+                Dim ala As Integer = readMaster(M_Alarm(jk)(0), 0)
+
+
+                If ala = 1 Then
+                    colbuf(j) = 1
+                End If
+
+                If ala = 2 Or ala = 3 Then
+                    colbuf(j) = 1
+                    ypf = ypn
+
+                    ypa = ypf - 50
+                    If ypa < 0 Then
+                        ypa = 50
+                        ypf = ypa + 50
+                    End If
+                    If ypa > 400 Then
+                        ypa = 400
+                        ypf = ypa + 50
+                    End If
+
+                    g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23) '旗の縦線
+
+                    If Size = "MAX" Then
+                        x01 = 15
+                    ElseIf Size = "Middle" Then
+                        x01 = 15
+                    ElseIf Size = "MIN" Then
+                        x01 = 15
+                    End If
+
+                    k = 0
+                    For ii = 0 To 7 '旗(赤緑)
+                        If ala = 3 Then
+                            g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
+                        ElseIf ala = 2 Then
+                            g.DrawLine(A1Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
+                        End If
+
+
+                        k += 1
+                    Next
+                End If
+
+
+                jk += 1
+
+                xpnbuf_X(j) = xpn
+                ypnbuf_X(j) = ypn
+                If j > 0 And null_bit = 0 Then
+
+                    g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) 'グラフの線
+
+                End If
+
+                null_bit = 0
+                xp_old = xpn
+                yp_old = ypn
+                end_bit = 1
+
+                jk += 1
+
+            Catch ex As Exception
+                jk += 1
+                Continue For
+            End Try
 
         Next
 
@@ -1581,6 +1600,8 @@ Module Module2
                     g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
                 End If
             End If
+
+
             jk += 1
         Next
         '====================================================================
@@ -1869,8 +1890,15 @@ Module Module2
         End If
 
         For j = 0 To 29 * Graphsmallcount
+            If i < 0 OrElse i > UBound(M_Data) Then
+                Exit For
+            End If
+            If M_Data(i) Is Nothing OrElse M_Data(i) = "" Then
+                If i < UBound(M_Data) Then i += 1
+                Continue For
+                End If
 
-            If MR Then
+                If MR Then
                 strData = readMaster(M_Data(i), _MR)
             Else
                 strData = readMaster(M_Data(i), _R)
@@ -2150,6 +2178,14 @@ Module Module2
         k = DispStartPosition
 
         For j = 0 To 36
+            If k < 0 OrElse k > UBound(M_Data) Then
+                k += (1 * Graphsmallcount)
+                Continue For
+            End If
+            If M_Data(k) Is Nothing OrElse M_Data(k) = "" Then
+                k += (1 * Graphsmallcount)
+                Continue For
+            End If
             Dim wdate As String = readMaster(M_Data(k), _wDate)
 
             If j >= x04 And k < SPCDataNum And wdate <> "" And j <> 36 Then
@@ -2364,6 +2400,8 @@ Module Module2
 
 
         For i = DispStartPosition To DispStartPosition + 29 + (30 * (Graphsmallcount - 1))
+            If i > UBound(M_Data) Then Exit For
+            If M_Data(i) Is Nothing Then Continue For
             strData = readMaster(M_Data(i), _X)
             'strData = SPCXDataBuf(i)
             If strData <> "" Then

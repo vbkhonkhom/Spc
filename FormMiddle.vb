@@ -1,4 +1,6 @@
-﻿Public Class FormMiddle
+﻿
+Imports System.IO
+Public Class FormMiddle
     Public LabXBar_Middle() As System.Windows.Forms.Label
     Public LabR_Middle() As System.Windows.Forms.Label
 
@@ -180,11 +182,11 @@
 
 
     Private Sub PictureBox6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox6.Click
-       
+
     End Sub
 
     Private Sub PictureBox8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox8.Click
-      
+
     End Sub
 
     Private Sub ExToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ExToolStripMenuItem.Click
@@ -263,9 +265,9 @@
             Dim dr As DialogResult
             Dim frm As New Form3
             dr = frm.ShowDialog
-            If dr = Windows.Forms.DialogResult.OK Then
+            If dr = System.Windows.Forms.DialogResult.OK Then
                 Form1.LoadLoad()
-            ElseIf dr = Windows.Forms.DialogResult.Cancel Then
+            ElseIf dr = System.Windows.Forms.DialogResult.Cancel Then
                 Me.Close()
             End If
 
@@ -313,5 +315,10 @@
 
     Private Sub StandardNoToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles StandardNoToolStripMenuItem.Click
         Form1.StandardNo()
+    End Sub
+
+    Private Sub ButtonLoad_Click(sender As Object, e As EventArgs) Handles ButtonLoad.Click
+        LoadDataFromTextFile()
+        GraphDisp()
     End Sub
 End Class
