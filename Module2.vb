@@ -3426,86 +3426,91 @@ Module Module2
     End Sub
 
     'アラームコメントを表示する
-    Public Sub Display_AlarmInfo(ByVal _table As DataTable, ByVal _RorW As String, ByVal _mode As String) 'データIDより検索
+    ' [Module2.vb]
+    ' ก๊อปปี้ไปวางทับ Sub Display_AlarmInfo ของเดิมทั้งหมด
+    Public Sub Display_AlarmInfo(ByVal _table As DataTable, ByVal _RorW As String, ByVal _mode As String)
         Dim strAlm As String = ""
         Try
+            ' [ป้องกัน 1] เช็คก่อนว่ามีตารางและมีข้อมูลไหม
+            If _table Is Nothing OrElse _table.Rows.Count = 0 Then
+                ' ถ้าไม่มีข้อมูล ให้จบการทำงานเลย (กันเด้ง)
+                Exit Sub
+            End If
 
             If StrLanguage = "Japanese" Then
-                If _table.Rows(0)("cSpcrule1") = "True" Then
+                If _table.Rows(0)("cSpcrule1").ToString = "True" Then
                     strAlm &= "①1点が3σ制限を越える"
-                ElseIf _table.Rows(0)("cSpcrule2") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule2").ToString = "True" Then
                     strAlm &= "②8点連続で片側に出現"
-                ElseIf _table.Rows(0)("cSpcrule3") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule3").ToString = "True" Then
                     strAlm &= "③3点のうち2点が2σ制限を越える"
-                ElseIf _table.Rows(0)("cSpcrule4") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule4").ToString = "True" Then
                     strAlm &= "④5点のうち4点が1σ制限を越える"
-                ElseIf _table.Rows(0)("cSpcrule5") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule5").ToString = "True" Then
                     strAlm &= "⑤15点連続で1σ制限内に出現"
-                ElseIf _table.Rows(0)("cSpcrule6") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule6").ToString = "True" Then
                     strAlm &= "⑥8点連続で1σ制限を越える"
-                ElseIf _table.Rows(0)("cSpcrule7") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule7").ToString = "True" Then
                     strAlm &= "⑦7点連続上昇or下降"
-                ElseIf _table.Rows(0)("cSpcrule8") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule8").ToString = "True" Then
                     strAlm &= "⑧14点連続で交互に上下する"
                 End If
-            ElseIf StrLanguage = "English" Then '英語表記の場合
-                If _table.Rows(0)("cSpcrule1") = "True" Then
+            ElseIf StrLanguage = "English" Then
+                If _table.Rows(0)("cSpcrule1").ToString = "True" Then
                     strAlm &= "①Any single data point falls outside The 3σ limit from the centerline"
-                ElseIf _table.Rows(0)("cSpcrule2") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule2").ToString = "True" Then
                     strAlm &= "②Eight consecutive points fall on the same side of the centerline"
-                ElseIf _table.Rows(0)("cSpcrule3") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule3").ToString = "True" Then
                     strAlm &= "③Two out of three consecutive points fall beyond the 2σ limit"
-                ElseIf _table.Rows(0)("cSpcrule4") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule4").ToString = "True" Then
                     strAlm &= "④Four out of five consecutive points fall beyond the 1σ limit"
-                ElseIf _table.Rows(0)("cSpcrule5") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule5").ToString = "True" Then
                     strAlm &= "⑤Fifteen consective points fall within ±1σ"
-                ElseIf _table.Rows(0)("cSpcrule6") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule6").ToString = "True" Then
                     strAlm &= "⑥Eight consective points fall beyond the 1σ limit"
-                ElseIf _table.Rows(0)("cSpcrule7") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule7").ToString = "True" Then
                     strAlm &= "⑦Seven consective points fall continuous rise or descent"
-                ElseIf _table.Rows(0)("cSpcrule8") = "True" Then
+                ElseIf _table.Rows(0)("cSpcrule8").ToString = "True" Then
                     strAlm &= "⑧Fourteen consective points fall alternate up and down"
                 End If
-
             End If
 
             If _RorW = "Read" Then
-
+                ' [ป้องกัน 2] ใช้ TryCatch ย่อย หรือเช็ค Null ก่อนเสมอ
                 FormAlarmDisp.LabDate.Text = readMaster(M_Data(SerectPoint), _wDate)
-
                 FormAlarmDisp.LabSPCAlarm.Text = strAlm
 
-                If (Not IsDBNull(_table.Rows(0)("cMaintenanceID"))) Then
+                If Not IsDBNull(_table.Rows(0)("cMaintenanceID")) Then
                     FormAlarmDisp.LabAnother.Text = _table.Rows(0)("cMaintenanceID")
                 Else
                     FormAlarmDisp.LabAnother.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cApproverName"))) Then
+                If Not IsDBNull(_table.Rows(0)("cApproverName")) Then
                     FormAlarmDisp.LabQC.Text = _table.Rows(0)("cApproverName")
                 Else
                     FormAlarmDisp.LabQC.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cTreatEffect"))) Then
+                If Not IsDBNull(_table.Rows(0)("cTreatEffect")) Then
                     FormAlarmDisp.LabCheck.Text = _table.Rows(0)("cTreatEffect")
                 Else
                     FormAlarmDisp.LabCheck.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cTreatResult"))) Then
+                If Not IsDBNull(_table.Rows(0)("cTreatResult")) Then
                     FormAlarmDisp.LabAction.Text = _table.Rows(0)("cTreatResult")
                 Else
                     FormAlarmDisp.LabAction.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cTreatIncharge"))) Then
+                If Not IsDBNull(_table.Rows(0)("cTreatIncharge")) Then
                     FormAlarmDisp.LabPerson2.Text = _table.Rows(0)("cTreatIncharge")
                 Else
                     FormAlarmDisp.LabPerson2.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cSurveyResult"))) Then
+                If Not IsDBNull(_table.Rows(0)("cSurveyResult")) Then
                     FormAlarmDisp.LabResult.Text = _table.Rows(0)("cSurveyResult")
                 Else
                     FormAlarmDisp.LabResult.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cSurveyIncharge"))) Then
+                If Not IsDBNull(_table.Rows(0)("cSurveyIncharge")) Then
                     FormAlarmDisp.LabPerson.Text = _table.Rows(0)("cSurveyIncharge")
                 Else
                     FormAlarmDisp.LabPerson.Text = ""
@@ -3518,55 +3523,51 @@ Module Module2
                 FormAlarmInput.TextDate.Text = readMaster(M_Data(SerectPoint), _wDate)
                 FormAlarmInput.TextSPCAlarm.Text = strAlm
 
-                If (Not IsDBNull(_table.Rows(0)("cMaintenanceID"))) Then
+                If Not IsDBNull(_table.Rows(0)("cMaintenanceID")) Then
                     FormAlarmInput.TextAnother.Text = _table.Rows(0)("cMaintenanceID")
                 Else
                     FormAlarmInput.TextAnother.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cApproverName"))) Then
+                If Not IsDBNull(_table.Rows(0)("cApproverName")) Then
                     FormAlarmInput.TextQC.Text = _table.Rows(0)("cApproverName")
                 Else
                     FormAlarmInput.TextQC.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cTreatEffect"))) Then
+                If Not IsDBNull(_table.Rows(0)("cTreatEffect")) Then
                     FormAlarmInput.TextCheck.Text = _table.Rows(0)("cTreatEffect")
                 Else
                     FormAlarmInput.TextCheck.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cTreatResult"))) Then
+                If Not IsDBNull(_table.Rows(0)("cTreatResult")) Then
                     FormAlarmInput.TextAction.Text = _table.Rows(0)("cTreatResult")
                 Else
                     FormAlarmInput.TextAction.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cTreatIncharge"))) Then
+                If Not IsDBNull(_table.Rows(0)("cTreatIncharge")) Then
                     FormAlarmInput.TextPerson2.Text = _table.Rows(0)("cTreatIncharge")
                 Else
                     FormAlarmInput.TextPerson2.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cSurveyResult"))) Then
+                If Not IsDBNull(_table.Rows(0)("cSurveyResult")) Then
                     FormAlarmInput.TextResult.Text = _table.Rows(0)("cSurveyResult")
                 Else
                     FormAlarmInput.TextResult.Text = ""
                 End If
-                If (Not IsDBNull(_table.Rows(0)("cSurveyIncharge"))) Then
+                If Not IsDBNull(_table.Rows(0)("cSurveyIncharge")) Then
                     FormAlarmInput.TextPerson.Text = _table.Rows(0)("cSurveyIncharge")
                 Else
                     FormAlarmInput.TextPerson.Text = ""
                 End If
 
                 FormAlarmInput.TextMode.Text = _mode
-
             End If
 
-
-        Catch ex As System.Exception
-
-            StrErrMes = "アラームコメント表示エラー" + ", " + ex.Message & ex.StackTrace
+        Catch ex As Exception
+            ' บันทึก Error แต่ไม่เด้งปิดโปรแกรม
+            StrErrMes = "Alarm Info Display Error: " & ex.Message
             Call SaveLog(Now(), StrErrMes)
-            Exit Sub
         End Try
     End Sub
-
 
 #End Region
 

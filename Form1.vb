@@ -1530,10 +1530,10 @@ Public Class Form1
 
 
     ' [3] ส่วนที่เพิ่มใหม่: ฟังก์ชันอ่านข้อมูลจากไฟล์ testdata.txt
+    ' [Form1.vb] แทนที่ Sub LoadDataFromTextFile ของเดิมด้วยอันนี้
     Private Sub LoadDataFromTextFile()
-        ' แก้ Path ให้ตรงกับที่อยู่ไฟล์ testdata ของคุณ
+        ' 1. ตรวจสอบไฟล์
         Dim filePath As String = "C:\testdata.txt"
-
         If Not File.Exists(filePath) Then
             MsgBox("File not found: " & filePath)
             Exit Sub
@@ -1541,63 +1541,56 @@ Public Class Form1
 
         Dim lines() As String = File.ReadAllLines(filePath)
 
-        ' รีเซ็ตค่าตัวนับข้อมูล
+        ' 2. รีเซ็ตค่าเริ่มต้น (สำคัญมาก! ห้ามลบ)
         SPCDataNum = 0
+        Graphsmallcount = 1  ' <--- [แก้จุดที่ 1] ต้องตั้งเป็น 1 เสมอ ไม่งั้นกราฟเด้ง
 
-        Graphsmallcount = 1
-
-        ' เคลียร์ข้อมูลเก่าใน M_Data
         ReDim M_Data(0)
+        ReDim M_Alarm(lines.Length) ' สร้าง Alarm รอไว้กันเด้ง
 
-        ReDim M_Alarm(lines.Length)
-
-        ' วนลูปอ่านข้อมูล (เริ่มที่ 1 เพื่อข้าม Header)
+        ' 3. อ่านข้อมูลจากไฟล์ (โครงสร้างไฟล์ของคุณถูกต้องแล้ว)
         For i As Integer = 1 To lines.Length - 1
             Dim line As String = lines(i)
             If line.Trim() = "" Then Continue For
 
-            Dim cols() As String = line.Split(vbTab) ' ข้อมูลในไฟล์คั่นด้วย Tab
+            Dim cols() As String = line.Split(vbTab)
 
-            If cols.Length > 20 Then
+            ' เช็คว่ามีคอลัมน์ครบตามไฟล์ testdata หรือไม่
+            If cols.Length > 21 Then
                 SPCDataNum += 1
 
-                ' 1. เก็บค่าลงตัวแปร M_Data (จำลองโครงสร้างข้อมูลให้เหมือนมาจาก Server)
-                ' Format: ID, Date, Mean(X), Range(R), MR, Operator, Lot, ...
-                ' Index อ้างอิงจากไฟล์ testdata: Date=6, Time=7, Mean=5, Range=20
+                ' จัด Format ข้อมูล: ID, Date Time, Mean, Range, MR, Operator, Lot, Status
                 Dim rawRow As String = ""
-                rawRow &= i & ","                 ' Index (ID)
-                rawRow &= cols(6) & " " & cols(7) & "," ' Date Time
-                rawRow &= cols(5) & ","           ' Mean (X) -> Column 5
-                rawRow &= cols(20) & ","          ' Range (R) -> Column 20
-                rawRow &= "0,"                    ' MR (สมมติเป็น 0)
-                rawRow &= cols(21) & ","          ' Operator -> Column 21
-                rawRow &= cols(0) & ","           ' Lot Number -> Column 0
-                rawRow &= "Pass"                  ' Status
+                rawRow &= i & ","
+                rawRow &= cols(6) & " " & cols(7) & ","
+                rawRow &= cols(5) & ","
+                rawRow &= cols(20) & ","
+                rawRow &= "0,"
+                rawRow &= cols(21) & ","
+                rawRow &= cols(0) & ","
+                rawRow &= "Pass"
 
-                ' ขยายขนาด Array และเก็บข้อมูล
                 ReDim Preserve M_Data(SPCDataNum)
                 M_Data(SPCDataNum) = rawRow
 
+                ' สร้าง Alarm หลอกๆ กัน Error
                 ReDim Preserve M_Alarm(SPCDataNum)
                 ReDim M_Alarm(SPCDataNum)(2)
                 M_Alarm(SPCDataNum)(0) = "0,00000000"
                 M_Alarm(SPCDataNum)(1) = "0,00000000"
                 M_Alarm(SPCDataNum)(2) = "0,00000000"
 
-                ' 2. เก็บค่าลง Buffer (เผื่อ GraphDisp ใช้ตัวนี้ด้วย)
                 If SPCDataNum < MesureValueBuf.Length Then
-                    MesureValueBuf(SPCDataNum) = cols(5) ' เก็บค่า Mean
+                    MesureValueBuf(SPCDataNum) = cols(5)
                 End If
 
-
-                ' 3. ดึงค่า Control Limits (ใช้ค่าจากไฟล์)
-                ' UCL=9, LCL=10, R_UCL=14, R_LCL=15
+                ' อ่านค่า Limit (ใช้ TryCatch กันไฟล์มีปัญหา)
                 Try
-                    X_UCL = Val(cols(9))   ' Upper Control Limit (X-Bar)
-                    X_LCL = Val(cols(10))  ' Lower Control Limit (X-Bar)
-                    X_CL = (X_UCL + X_LCL) / 2 ' คำนวณเส้นกลางคร่าวๆ
-                    R_UCL = Val(cols(14))  ' Upper Range Limit
-                    R_LCL = Val(cols(15))  ' Lower Range Limit
+                    X_UCL = Val(cols(9))
+                    X_LCL = Val(cols(10))
+                    X_CL = (X_UCL + X_LCL) / 2
+                    R_UCL = Val(cols(14))
+                    R_LCL = Val(cols(15))
                     R_CL = (R_UCL + R_LCL) / 2
                     X_USL = Val(cols(12))
                     X_LSL = Val(cols(13))
@@ -1606,11 +1599,17 @@ Public Class Form1
             End If
         Next
 
+        ' ==================================================================
+        ' 4. [แก้จุดที่ 2] สร้างตาราง PropertyTable จำลอง (เพราะไม่ได้โหลดจาก DB)
+        ' ==================================================================
         Dim dt As New DataTable()
+
+        ' ประกาศชื่อคอลัมน์ใส่ตัวแปร (กันพิมพ์ผิด)
         Dim col_cMRdev As String = "cMRdev"
         Dim col_cMR As String = "cMR"
         Dim col_cSpcRule As String = "cSpcRule"
 
+        ' สร้างคอลัมน์ให้ครบทุกตัวที่กราฟต้องใช้
         dt.Columns.Add("cScl", GetType(Double))
         dt.Columns.Add("cTolerance", GetType(Double))
         dt.Columns.Add("cUnit", GetType(String))
@@ -1628,23 +1627,17 @@ Public Class Form1
         dt.Columns.Add("cMRcl", GetType(Double))
         dt.Columns.Add(col_cMRdev, GetType(Double))
         dt.Columns.Add(col_cMR, GetType(String))
-
+        dt.Columns.Add("cApprovalDate", GetType(DateTime))
+        dt.Columns.Add("cMachineNo", GetType(String))
+        dt.Columns.Add("cControlItem", GetType(String))
 
         For k As Integer = 1 To 8
             dt.Columns.Add(col_cSpcRule & k, GetType(Boolean))
         Next
 
-        dt.Columns.Add("cApprovalDate", GetType(DateTime))
-        dt.Columns.Add("cMachineNo", GetType(String))
-        dt.Columns.Add("cControlItem", GetType(String))
-
-
+        ' ใส่ข้อมูลจำลอง 1 แถว เพื่อให้กราฟมีค่าไปวาดเส้น Limit
         Try
             Dim dr As DataRow = dt.NewRow()
-            If Not dt.Columns.Contains(col_cMRdev) Then
-                MsgBox("System Error: Column cMRdev failed to create!")
-                Exit Sub
-            End If
             dr("cScl") = (X_UCL + X_LCL) / 2
             dr("cTolerance") = Math.Abs(X_USL - X_LSL)
             If IsDBNull(dr("cTolerance")) OrElse dr("cTolerance") = 0 Then dr("cTolerance") = 1
@@ -1663,32 +1656,31 @@ Public Class Form1
             dr("cMRcl") = 0
             dr(col_cMRdev) = 0
             dr(col_cMR) = "0"
+            dr("cApprovalDate") = DateTime.Now.AddYears(-10)
+            dr("cMachineNo") = "TextFile"
+            dr("cControlItem") = "Data"
 
             For k As Integer = 1 To 8
                 dr(col_cSpcRule & k) = False
             Next
 
-            dr("cApprovalDate") = DateTime.Now.AddYears(-10)
-            dr("cMachineNo") = "TextFile"
-            dr("cControlItem") = "Data"
-
             dt.Rows.Add(dr)
-            PropertyTable = dt
+            PropertyTable = dt ' ส่งตารางที่สร้างเสร็จแล้วไปให้ตัวแปรจริง
         Catch ex As Exception
-            Dim colist As String = ""
-            For Each c As DataColumn In dt.Columns
-                colist &= c.ColumnName & ", "
-            Next
-            MsgBox("Critical Error building table: " & ex.Message)
+            MsgBox("Error building table: " & ex.Message)
             Exit Sub
         End Try
+
+        ' ========================================================
+        ' [แก้จุดที่ 3] สร้างชื่อกราฟจำลอง (กัน Error Value cannot be null)
+        ' ========================================================
         ReDim TreeName(0)
         TreeName(0) = "TextFile Data"
-        ' ตั้งค่าการแสดงผลเบื้องต้น
-        DispStartPosition = 0
-        If SPCDataNum > 30 Then DispStartPosition = SPCDataNum - 30 ' ให้กราฟแสดงช่วงท้ายๆ
 
-        ' สั่งวาดกราฟ
+        ' 5. สั่งวาดกราฟ
+        DispStartPosition = 0
+        If SPCDataNum > 30 Then DispStartPosition = SPCDataNum - 30
+
         GraphDisp()
 
         MsgBox("Loaded " & SPCDataNum & " points from file.")
