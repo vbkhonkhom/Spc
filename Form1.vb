@@ -1544,8 +1544,12 @@ Public Class Form1
         ' รีเซ็ตค่าตัวนับข้อมูล
         SPCDataNum = 0
 
+        Graphsmallcount = 1
+
         ' เคลียร์ข้อมูลเก่าใน M_Data
         ReDim M_Data(0)
+
+        ReDim M_Alarm(lines.Length)
 
         ' วนลูปอ่านข้อมูล (เริ่มที่ 1 เพื่อข้าม Header)
         For i As Integer = 1 To lines.Length - 1
@@ -1574,10 +1578,17 @@ Public Class Form1
                 ReDim Preserve M_Data(SPCDataNum)
                 M_Data(SPCDataNum) = rawRow
 
+                ReDim Preserve M_Alarm(SPCDataNum)
+                ReDim M_Alarm(SPCDataNum)(2)
+                M_Alarm(SPCDataNum)(0) = "0,00000000"
+                M_Alarm(SPCDataNum)(1) = "0,00000000"
+                M_Alarm(SPCDataNum)(2) = "0,00000000"
+
                 ' 2. เก็บค่าลง Buffer (เผื่อ GraphDisp ใช้ตัวนี้ด้วย)
                 If SPCDataNum < MesureValueBuf.Length Then
                     MesureValueBuf(SPCDataNum) = cols(5) ' เก็บค่า Mean
                 End If
+
 
                 ' 3. ดึงค่า Control Limits (ใช้ค่าจากไฟล์)
                 ' UCL=9, LCL=10, R_UCL=14, R_LCL=15
@@ -1585,20 +1596,94 @@ Public Class Form1
                     X_UCL = Val(cols(9))   ' Upper Control Limit (X-Bar)
                     X_LCL = Val(cols(10))  ' Lower Control Limit (X-Bar)
                     X_CL = (X_UCL + X_LCL) / 2 ' คำนวณเส้นกลางคร่าวๆ
-
                     R_UCL = Val(cols(14))  ' Upper Range Limit
                     R_LCL = Val(cols(15))  ' Lower Range Limit
                     R_CL = (R_UCL + R_LCL) / 2
-
-                    ' ถ้ามี Spec Limit ก็ใส่ได้ (USL=12, LSL=13)
                     X_USL = Val(cols(12))
                     X_LSL = Val(cols(13))
                 Catch ex As Exception
-                    ' กรณีแปลงตัวเลขไม่ได้ ให้ข้ามไป
                 End Try
             End If
         Next
 
+        Dim dt As New DataTable()
+        Dim col_cMRdev As String = "cMRdev"
+        Dim col_cMR As String = "cMR"
+        Dim col_cSpcRule As String = "cSpcRule"
+
+        dt.Columns.Add("cScl", GetType(Double))
+        dt.Columns.Add("cTolerance", GetType(Double))
+        dt.Columns.Add("cUnit", GetType(String))
+        dt.Columns.Add("cLimitType", GetType(String))
+        dt.Columns.Add("cUsl", GetType(Double))
+        dt.Columns.Add("cLsl", GetType(Double))
+        dt.Columns.Add("cXcl", GetType(Double))
+        dt.Columns.Add("cXucl", GetType(Double))
+        dt.Columns.Add("cXlcl", GetType(Double))
+        dt.Columns.Add("cXdev", GetType(Double))
+        dt.Columns.Add("cRucl", GetType(Double))
+        dt.Columns.Add("cRcl", GetType(Double))
+        dt.Columns.Add("cRdev", GetType(Double))
+        dt.Columns.Add("cMRucl", GetType(Double))
+        dt.Columns.Add("cMRcl", GetType(Double))
+        dt.Columns.Add(col_cMRdev, GetType(Double))
+        dt.Columns.Add(col_cMR, GetType(String))
+
+
+        For k As Integer = 1 To 8
+            dt.Columns.Add(col_cSpcRule & k, GetType(Boolean))
+        Next
+
+        dt.Columns.Add("cApprovalDate", GetType(DateTime))
+        dt.Columns.Add("cMachineNo", GetType(String))
+        dt.Columns.Add("cControlItem", GetType(String))
+
+
+        Try
+            Dim dr As DataRow = dt.NewRow()
+            If Not dt.Columns.Contains(col_cMRdev) Then
+                MsgBox("System Error: Column cMRdev failed to create!")
+                Exit Sub
+            End If
+            dr("cScl") = (X_UCL + X_LCL) / 2
+            dr("cTolerance") = Math.Abs(X_USL - X_LSL)
+            If IsDBNull(dr("cTolerance")) OrElse dr("cTolerance") = 0 Then dr("cTolerance") = 1
+            dr("cUnit") = "Unit"
+            dr("cLimitType") = "UpperLower"
+            dr("cUsl") = X_USL
+            dr("cLsl") = X_LSL
+            dr("cXcl") = X_CL
+            dr("cXucl") = X_UCL
+            dr("cXlcl") = X_LCL
+            dr("cXdev") = 0
+            dr("cRucl") = R_UCL
+            dr("cRcl") = R_CL
+            dr("cRdev") = 0
+            dr("cMRucl") = 0
+            dr("cMRcl") = 0
+            dr(col_cMRdev) = 0
+            dr(col_cMR) = "0"
+
+            For k As Integer = 1 To 8
+                dr(col_cSpcRule & k) = False
+            Next
+
+            dr("cApprovalDate") = DateTime.Now.AddYears(-10)
+            dr("cMachineNo") = "TextFile"
+            dr("cControlItem") = "Data"
+
+            dt.Rows.Add(dr)
+            PropertyTable = dt
+        Catch ex As Exception
+            Dim colist As String = ""
+            For Each c As DataColumn In dt.Columns
+                colist &= c.ColumnName & ", "
+            Next
+            MsgBox("Critical Error building table: " & ex.Message)
+            Exit Sub
+        End Try
+        ReDim TreeName(0)
+        TreeName(0) = "TextFile Data"
         ' ตั้งค่าการแสดงผลเบื้องต้น
         DispStartPosition = 0
         If SPCDataNum > 30 Then DispStartPosition = SPCDataNum - 30 ' ให้กราฟแสดงช่วงท้ายๆ
