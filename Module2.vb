@@ -2361,9 +2361,20 @@ Module Module2
         yp = 0
         yp0 = 0
         yps = 0
+        If PropertyTable IsNot Nothing AndAlso PropertyTable.Rows.Count > 0 Then
+            Dim lastRow As Integer = PropertyTable.Rows.Count - 1
+            X_SCL = PropertyTable.Rows(lastRow)("cScl")
+            X_kousa = PropertyTable.Rows(lastRow)("cTolerance")
+            X_CL = PropertyTable.Rows(lastRow)("cXcl")
+            X_USL = PropertyTable.Rows(lastRow)("cUsl")
+            X_LSL = PropertyTable.Rows(lastRow)("cLsl")
+            X_Shiguma = PropertyTable.Rows(lastRow)("cXdev")
+            X_gType = PropertyTable.Rows(lastRow)("cLimitType")
+        End If
 
         dbl1 = X_SCL
         dbl2 = X_kousa / 5 'STEP
+        If dbl2 = 0 Then dbl2 = 1
         strStep = CStr(dbl2)      'STEP
         Bairitu = x00 / dbl2       '縦40Pix
         dblLow = dbl1 - dbl2 * 5

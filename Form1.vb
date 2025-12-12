@@ -1554,6 +1554,11 @@ Public Class Form1
             If line.Trim() = "" Then Continue For
 
             Dim cols() As String = line.Split(vbTab)
+            If cols.Length > 7 Then
+                If cols(6).Trim() = "Date" OrElse cols(7).Trim() = "Time" OrElse cols(0).Trim = "Lot Number" Then
+                    Continue For
+                End If
+            End If
 
             ' เช็คว่ามีคอลัมน์ครบตามไฟล์ testdata หรือไม่
             If cols.Length > 21 Then
