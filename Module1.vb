@@ -48,6 +48,8 @@ Module Module1
     'グラフ作成用変数
     Public X_USL, X_LSL, X_SCL, X_kousa As Double 'XBar側規格値
     Public R_USL, R_LSL As Double 'R側規格値
+    Public R_SCL, R_kousa As Double
+    Public R_gType As String
     Public X_UCL, X_LCL, X_CL, X_Shiguma As Double 'XBar側管理値
     Public R_UCL, R_LCL, R_CL, R_Shiguma As Double 'R側管理値
     Public MR_UCL, MR_LCL, MR_CL, MR_Shiguma As Double 'MR側管理値

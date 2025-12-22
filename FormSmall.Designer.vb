@@ -135,7 +135,7 @@ Partial Class FormSmall
         Me.PictureBox7.BackColor = System.Drawing.Color.White
         Me.PictureBox7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.PictureBox7.Image = CType(resources.GetObject("PictureBox7.Image"), System.Drawing.Image)
-        Me.PictureBox7.Location = New System.Drawing.Point(12, 29)
+        Me.PictureBox7.Location = New System.Drawing.Point(3, 27)
         Me.PictureBox7.Name = "PictureBox7"
         Me.PictureBox7.Size = New System.Drawing.Size(96, 74)
         Me.PictureBox7.TabIndex = 78
@@ -153,7 +153,7 @@ Partial Class FormSmall
         '
         Me.PictureBox8.Cursor = System.Windows.Forms.Cursors.Hand
         Me.PictureBox8.Image = CType(resources.GetObject("PictureBox8.Image"), System.Drawing.Image)
-        Me.PictureBox8.Location = New System.Drawing.Point(166, 27)
+        Me.PictureBox8.Location = New System.Drawing.Point(159, 27)
         Me.PictureBox8.Name = "PictureBox8"
         Me.PictureBox8.Size = New System.Drawing.Size(51, 50)
         Me.PictureBox8.TabIndex = 204
@@ -164,7 +164,7 @@ Partial Class FormSmall
         '
         Me.PictureBox6.Cursor = System.Windows.Forms.Cursors.Hand
         Me.PictureBox6.Image = CType(resources.GetObject("PictureBox6.Image"), System.Drawing.Image)
-        Me.PictureBox6.Location = New System.Drawing.Point(111, 27)
+        Me.PictureBox6.Location = New System.Drawing.Point(104, 27)
         Me.PictureBox6.Name = "PictureBox6"
         Me.PictureBox6.Size = New System.Drawing.Size(51, 50)
         Me.PictureBox6.TabIndex = 203
@@ -173,8 +173,9 @@ Partial Class FormSmall
         '
         'Button8
         '
+        Me.Button8.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button8.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button8.Location = New System.Drawing.Point(114, 78)
+        Me.Button8.Location = New System.Drawing.Point(104, 78)
         Me.Button8.Name = "Button8"
         Me.Button8.Size = New System.Drawing.Size(96, 25)
         Me.Button8.TabIndex = 202
@@ -183,9 +184,11 @@ Partial Class FormSmall
         '
         'labTitle
         '
-        Me.labTitle.BackColor = System.Drawing.Color.LightSalmon
+        Me.labTitle.BackColor = System.Drawing.Color.DarkRed
         Me.labTitle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.labTitle.Cursor = System.Windows.Forms.Cursors.Hand
         Me.labTitle.Font = New System.Drawing.Font("Impact", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.labTitle.ForeColor = System.Drawing.SystemColors.ControlLightLight
         Me.labTitle.Location = New System.Drawing.Point(228, 27)
         Me.labTitle.Name = "labTitle"
         Me.labTitle.Size = New System.Drawing.Size(616, 35)
@@ -316,10 +319,12 @@ Partial Class FormSmall
         'Label22
         '
         Me.Label22.AutoSize = True
+        Me.Label22.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.Label22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label22.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label22.Location = New System.Drawing.Point(219, 65)
+        Me.Label22.Location = New System.Drawing.Point(220, 64)
         Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(55, 24)
+        Me.Label22.Size = New System.Drawing.Size(57, 26)
         Me.Label22.TabIndex = 208
         Me.Label22.Text = "XBar"
         '
@@ -344,8 +349,9 @@ Partial Class FormSmall
         '
         'Button9
         '
+        Me.Button9.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button9.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button9.Location = New System.Drawing.Point(310, 478)
+        Me.Button9.Location = New System.Drawing.Point(308, 475)
         Me.Button9.Name = "Button9"
         Me.Button9.Size = New System.Drawing.Size(36, 24)
         Me.Button9.TabIndex = 240
@@ -354,8 +360,9 @@ Partial Class FormSmall
         '
         'Button7
         '
+        Me.Button7.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button7.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button7.Location = New System.Drawing.Point(268, 478)
+        Me.Button7.Location = New System.Drawing.Point(266, 475)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(36, 24)
         Me.Button7.TabIndex = 239
@@ -524,6 +531,7 @@ Partial Class FormSmall
         '
         'Button3
         '
+        Me.Button3.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button3.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Button3.Location = New System.Drawing.Point(821, 64)
         Me.Button3.Name = "Button3"
@@ -534,6 +542,7 @@ Partial Class FormSmall
         '
         'Button2
         '
+        Me.Button2.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button2.Font = New System.Drawing.Font("Meiryo UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Button2.Location = New System.Drawing.Point(765, 64)
         Me.Button2.Name = "Button2"
@@ -752,7 +761,7 @@ Partial Class FormSmall
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.MenuStrip1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
         Me.MenuStrip1.Font = New System.Drawing.Font("Meiryo", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.PropertyToolStripMenuItem, Me.SPCRuleToolStripMenuItem, Me.SettingToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
@@ -903,10 +912,12 @@ Partial Class FormSmall
         'Label1
         '
         Me.Label1.AutoSize = True
+        Me.Label1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.Label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label1.Font = New System.Drawing.Font("Meiryo UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label1.Location = New System.Drawing.Point(230, 477)
+        Me.Label1.Location = New System.Drawing.Point(228, 474)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(23, 24)
+        Me.Label1.Size = New System.Drawing.Size(25, 26)
         Me.Label1.TabIndex = 254
         Me.Label1.Text = "R"
         '
@@ -1013,7 +1024,7 @@ Partial Class FormSmall
         'FormSmall
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1006, 668)
         Me.Controls.Add(Me.ButtonLoad)
         Me.Controls.Add(Me.txtStan_No)

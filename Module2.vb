@@ -1,6 +1,7 @@
 ﻿Imports System.Data.SqlClient
+Imports System.Draw
 Module Module2
-    'アラーム用のポインタ
+    '??????????
     Dim p_iID As Integer = 0
     Dim p_dWorkDate As Integer = 1
     Dim p_cUsl As Integer = 2
@@ -38,7 +39,7 @@ Module Module2
 
     Public Function treeInfo(ByVal _TreeView As TreeView) As String()
 
-        Dim n As Integer 'ノードのルート数
+        Dim n As Integer '????????
         Dim TreeNodeBuf As TreeNode = Nothing
         Dim TreeNameBuf(10 - 1) As String
         Dim TreeName(10 - 1) As String
@@ -46,7 +47,7 @@ Module Module2
             TreeNameBuf(i) = ""
             TreeName(i) = ""
         Next
-        '枝から幹に向かって格納していく
+        '???????????????
         For i As Integer = 0 To UBound(TreeNameBuf, 1)
             If i = 0 Then
                 TreeNodeBuf = _TreeView.SelectedNode
@@ -61,7 +62,7 @@ Module Module2
                 n += 1
             End If
         Next
-        '逆に入れて幹順にする
+        '??????????
         For i As Integer = 0 To n - 1
             TreeName(i) = TreeNameBuf(n - 1 - i)
         Next
@@ -69,7 +70,7 @@ Module Module2
         Return TreeName
     End Function
 
-    'サーバーよりグラフ設定データを取得する
+    '???????????????????
     Public Function getProperty() As DataTable
 
         Dim _pTable As New DataTable
@@ -116,7 +117,7 @@ Module Module2
             QCNotCheckFlag = True
 
             For k = 0 To _pTable.Rows.Count - 1
-                If IsDBNull(_pTable.Rows(k)("cApprovalDate")) Then 'QC未承認ないか判定
+                If IsDBNull(_pTable.Rows(k)("cApprovalDate")) Then 'QC????????
                     QCNotCheckFlag = False
                 End If
             Next
@@ -128,7 +129,7 @@ Module Module2
             Adapter.Dispose()
             Cn.Dispose()
 
-            StrErrMes = "グラフ設定データ取得エラー" + ", " + ex.Message & ex.StackTrace
+            StrErrMes = "?????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
         End Try
     End Function
@@ -192,7 +193,7 @@ Module Module2
                 Return Nothing
             End If
 
-            'dWorkDateで並び換え
+            'dWorkDate?????
             Dim dv = New DataView(_sTable)
             dv.Sort = "dWorkDate,iID"
             _sTable = dv.ToTable
@@ -203,7 +204,7 @@ Module Module2
             Adapter.Dispose()
             Cn.Dispose()
 
-            StrErrMes = "グラフ設定データ取得エラー" + ", " + ex.Message & ex.StackTrace
+            StrErrMes = "?????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
         End Try
 
@@ -270,13 +271,13 @@ Module Module2
     End Sub
 
 
-    'SPCデータを取得する
+    'SPC????????
     Public Function getSPCMaster() As String()
         Dim _Master(vv) As String
         Graphsmallcount = 1
         SPCDataNum = 0
 
-        'データ取得と並び換え
+        '??????????
         Dim SpcTable As New DataTable
         SpcTable = getData()
 
@@ -345,17 +346,17 @@ Module Module2
                 mBuf(_R) = SpcTable.Rows(i)("cR")  'R
             End If
             If (Not IsDBNull(SpcTable.Rows(i)("cLotNo"))) Then
-                mBuf(_lot) = SpcTable.Rows(i)("cLotNo") 'ロットNo
+                mBuf(_lot) = SpcTable.Rows(i)("cLotNo") '???No
             End If
             If (Not IsDBNull(SpcTable.Rows(i)("cInCharge"))) Then
-                mBuf(_opName) = SpcTable.Rows(i)("cInCharge") '作業者
+                mBuf(_opName) = SpcTable.Rows(i)("cInCharge") '???
             End If
             If (Not IsDBNull(SpcTable.Rows(i)("cCategory"))) Then
-                mBuf(_cate) = SpcTable.Rows(i)("cCategory") '測定周期
+                mBuf(_cate) = SpcTable.Rows(i)("cCategory") '????
             End If
 
             If c > 0 Then
-                mBuf(_MR) = Math.Round(Math.Abs(CDbl(mBuf(_X)) - CDbl(readMaster(_Master(c - 1), _X))), syosu, MidpointRounding.AwayFromZero) '変動量
+                mBuf(_MR) = Math.Round(Math.Abs(CDbl(mBuf(_X)) - CDbl(readMaster(_Master(c - 1), _X))), syosu, MidpointRounding.AwayFromZero) '???
             ElseIf c = 0 Then
                 mBuf(_MR) = 0
             End If
@@ -389,7 +390,7 @@ Module Module2
 
         Next
 
-        SPCDataNum = c 'データ数を取得
+        SPCDataNum = c '???????
         If c >= 30 * Graphsmallcount Then
             DispStartPosition = SPCDataNum - (30 * Graphsmallcount)
         Else
@@ -404,14 +405,14 @@ Module Module2
         '    Cn.Dispose()
         '    SpcTable.Dispose()
 
-        '    StrErrMes = "SPCデータ取得エラー" + ", " + ex.Message & ex.StackTrace
+        '    StrErrMes = "SPC????????" + ", " + ex.Message & ex.StackTrace
         '    Call SaveLog(Now(), StrErrMes)
         '    Exit Sub
         'End Try
 
     End Function
 
-    'SPCデータを取得する
+    'SPC????????
     Public Function getAlarmMaster() As String()()
 
 
@@ -419,7 +420,7 @@ Module Module2
         For i As Integer = 0 To UBound(_Master, 1)
             ReDim _Master(i)(3 - 1)
             For j As Integer = 0 To UBound(_Master(i), 1)
-                _Master(i)(j) = "0,00000000" 'アラーム状態,アラーム詳細 j=0:X,1:R,2:MR
+                _Master(i)(j) = "0,00000000" '??????,?????? j=0:X,1:R,2:MR
             Next
         Next
         getAlarmMaster = _Master
@@ -452,41 +453,41 @@ Module Module2
                 Continue For
             End If
 
-            Dim come As Integer = 1 'コメント埋まってない
+            Dim come As Integer = 1 '??????????
             Dim CommentFlag As Boolean = False
-            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyIncharge"))) Then 'アラームコメント入力済の場合
+            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyIncharge"))) Then '??????????????
                 If AlarmTable.Rows(i)("cSurveyIncharge") <> "" Then
-                    come = 2 'コメント埋まり
+                    come = 2 '???????
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyResult"))) Then 'アラームコメント入力済の場合
+            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyResult"))) Then '??????????????
                 If AlarmTable.Rows(i)("cSurveyResult") <> "" Then
-                    come = 2 'コメント埋まり
+                    come = 2 '???????
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatIncharge"))) Then 'アラームコメント入力済の場合
+            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatIncharge"))) Then '??????????????
                 If AlarmTable.Rows(i)("cTreatIncharge") <> "" Then
-                    come = 2 'コメント埋まり
+                    come = 2 '???????
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatResult"))) Then 'アラームコメント入力済の場合
+            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatResult"))) Then '??????????????
                 If AlarmTable.Rows(i)("cTreatResult") <> "" Then
-                    come = 2 'コメント埋まり
+                    come = 2 '???????
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatEffect"))) Then 'アラームコメント入力済の場合
+            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatEffect"))) Then '??????????????
                 If AlarmTable.Rows(i)("cTreatEffect") <> "" Then
-                    come = 2 'コメント埋まり
+                    come = 2 '???????
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cMaintenanceID"))) Then 'アラームコメント入力済の場合
+            If (Not IsDBNull(AlarmTable.Rows(i)("cMaintenanceID"))) Then '??????????????
                 If AlarmTable.Rows(i)("cMaintenanceID") <> "" Then
-                    come = 2 'コメント埋まり
+                    come = 2 '???????
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cApproverName"))) Then 'アラーム発生中の場合
+            If (Not IsDBNull(AlarmTable.Rows(i)("cApproverName"))) Then '??????????
                 If AlarmTable.Rows(i)("cApproverName") <> "" Then
-                    come = 3 'QC承認済み
+                    come = 3 'QC????
                 End If
             End If
 
@@ -521,13 +522,13 @@ Module Module2
     End Function
 
 
-    'SPCアラームデータを取得
+    'SPC??????????
     Public Sub GetAlarmData_kai()
 
 
         Dim aDataBuf(,) As String
 
-        'アラーム解析結果
+        '????????
         Dim AlarmResult(8 - 1) As Boolean
 
 
@@ -540,17 +541,17 @@ Module Module2
             Next
 
 
-            'If PropertyTable.Rows(PropertyTable.Rows.Count - 1)("aStartDate") <= CDate(aDataBuf(j, p_dWorkDate)) Then 'strAlarmStartDateはグラフごとに変えたい
+            'If PropertyTable.Rows(PropertyTable.Rows.Count - 1)("aStartDate") <= CDate(aDataBuf(j, p_dWorkDate)) Then 'strAlarmStartDate???????????
 
 
-            If CBool(aDataBuf(j, p_cSpcRule0)) Then AlarmResult(0) = checkSpcRule0(aDataBuf, j, _X) '(SPCルール1) 1点が3σ制限を越える
-            If CBool(aDataBuf(j, p_cSpcRule1)) Then AlarmResult(1) = checkSpcRule1(aDataBuf, j, _X) '(SPCルール2) 8点連続で片側に出現
-            If CBool(aDataBuf(j, p_cSpcRule2)) Then AlarmResult(2) = checkSpcRule2(aDataBuf, j, _X) '(SPCルール3) 3点のうち2点が2σ制限を越える
-            If CBool(aDataBuf(j, p_cSpcRule3)) Then AlarmResult(3) = checkSpcRule3(aDataBuf, j, _X) '(SPCルール4) 5点のうち4点が1σ制限を越える
-            If CBool(aDataBuf(j, p_cSpcRule4)) Then AlarmResult(4) = checkSpcRule4(aDataBuf, j, _X) '(SPCルール5) 15点連続で1σ制限内に出現
-            If CBool(aDataBuf(j, p_cSpcRule5)) Then AlarmResult(5) = checkSpcRule5(aDataBuf, j, _X) '(SPCルール6) 8点連続で1σ制限を越える
-            If CBool(aDataBuf(j, p_cSpcRule6)) Then AlarmResult(6) = checkSpcRule6(aDataBuf, j, _X) '(SPCルール7) 7点連続上昇or下降
-            If CBool(aDataBuf(j, p_cSpcRule7)) Then AlarmResult(7) = checkSpcRule7(aDataBuf, j, _X) '(SPCルール8) 14点連続で交互に上下する
+            If CBool(aDataBuf(j, p_cSpcRule0)) Then AlarmResult(0) = checkSpcRule0(aDataBuf, j, _X) '(SPC???1) 1??3???????
+            If CBool(aDataBuf(j, p_cSpcRule1)) Then AlarmResult(1) = checkSpcRule1(aDataBuf, j, _X) '(SPC???2) 8?????????
+            If CBool(aDataBuf(j, p_cSpcRule2)) Then AlarmResult(2) = checkSpcRule2(aDataBuf, j, _X) '(SPC???3) 3????2??2???????
+            If CBool(aDataBuf(j, p_cSpcRule3)) Then AlarmResult(3) = checkSpcRule3(aDataBuf, j, _X) '(SPC???4) 5????4??1???????
+            If CBool(aDataBuf(j, p_cSpcRule4)) Then AlarmResult(4) = checkSpcRule4(aDataBuf, j, _X) '(SPC???5) 15????1???????
+            If CBool(aDataBuf(j, p_cSpcRule5)) Then AlarmResult(5) = checkSpcRule5(aDataBuf, j, _X) '(SPC???6) 8????1???????
+            If CBool(aDataBuf(j, p_cSpcRule6)) Then AlarmResult(6) = checkSpcRule6(aDataBuf, j, _X) '(SPC???7) 7?????or??
+            If CBool(aDataBuf(j, p_cSpcRule7)) Then AlarmResult(7) = checkSpcRule7(aDataBuf, j, _X) '(SPC???8) 14???????????
 
 
 
@@ -567,12 +568,12 @@ Module Module2
 
 
 
-            'Rについては3σだけ見る
+            'R?????3?????
             For i As Integer = 0 To UBound(AlarmResult, 1)
                 AlarmResult(i) = False
             Next
 
-            AlarmResult(0) = checkSpcRule0(aDataBuf, j, _R) '(SPCルール1) 1点が3σ制限を越える
+            AlarmResult(0) = checkSpcRule0(aDataBuf, j, _R) '(SPC???1) 1??3???????
 
 
             For i As Integer = 0 To UBound(AlarmResult, 1)
@@ -602,7 +603,7 @@ Module Module2
             p = 0
             For k = 0 To PropertyTable.Rows.Count - 1
                 If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
-                    If readMaster(M_Data(j), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then '1つのグラフに対して、複数のPropatyがあるときどれの規格値をとるか判定
+                    If readMaster(M_Data(j), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then '1?????????????Propaty?????????????????
                         p = k
                     End If
                 End If
@@ -669,13 +670,13 @@ Module Module2
 
         checkData = True
 
-        If j + 1 < p Then 'まず今の点の前に(numP-1)個点があるか
+        If j + 1 < p Then '????????(numP-1)??????
             Return False
         End If
 
-        For k As Integer = 1 To p - 1 'numP点全部cl,ucl,lcl,devが同じか(規格がnumP点全部同じ)
+        For k As Integer = 1 To p - 1 'numP???cl,ucl,lcl,dev????(???numP?????)
             If Not (aDataBuf(j, p_cXcl) = aDataBuf(j - k, p_cXcl) And aDataBuf(j, p_cXucl) = aDataBuf(j - k, p_cXucl) And aDataBuf(j, p_cXlcl) = aDataBuf(j - k, p_cXlcl) And aDataBuf(j, p_cXdev) = aDataBuf(j - k, p_cXdev)) Then
-                Return False '規格が違うものあり
+                Return False '?????????
             End If
         Next
 
@@ -684,23 +685,23 @@ Module Module2
     Private Function checkSpcRule1(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule1 = False
 
-        Dim numP As Integer = 8 '使う点数
+        Dim numP As Integer = 8 '????
 
-        '点の個数 規格が同じかチェック
+        '???? ??????????
         If checkData(aDataBuf, j, numP) = False Then Return False
 
-        '値からセンター値を引いて、符号が全部同じだったら片側に8点
+        '???????????????????????????8?
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim atai(numP - 1) As Single
         For i As Integer = 0 To UBound(atai, 1)
             atai(i) = CSng(readMaster(M_Data(j - i), mode)) - cl
             If atai(i) = 0 Then
-                Return False 'センターにあったらF
+                Return False '?????????F
             End If
         Next
 
-        Dim c_m As Integer = 0 'マイナスの数
-        Dim c_p As Integer = 0 'プラスの数
+        Dim c_m As Integer = 0 '??????
+        Dim c_p As Integer = 0 '?????
         For i As Integer = 0 To UBound(atai, 1)
             If atai(i) < 0 Then
                 c_m += 1
@@ -708,7 +709,7 @@ Module Module2
                 c_p += 1
             End If
         Next
-        If c_m = numP Or c_p = numP Then 'オールプラスオールマイナス
+        If c_m = numP Or c_p = numP Then '?????????????
             Return True
         End If
 
@@ -716,16 +717,16 @@ Module Module2
     Private Function checkSpcRule2(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule2 = False
 
-        Dim numP As Integer = 3 '使う点数
+        Dim numP As Integer = 3 '????
 
-        '点の個数 規格が同じかチェック
+        '???? ??????????
         If checkData(aDataBuf, j, numP) = False Then Return False
 
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim dev As Single = CSng(aDataBuf(j, p_cXdev))
 
-        Dim atai2siguma_p(numP - 1) As Single '値-(cl+2*siguma)
-        Dim atai2siguma_m(numP - 1) As Single '値-(cl-2*siguma)
+        Dim atai2siguma_p(numP - 1) As Single '?-(cl+2*siguma)
+        Dim atai2siguma_m(numP - 1) As Single '?-(cl-2*siguma)
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             atai2siguma_p(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl + 2 * dev)
             atai2siguma_m(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl - 2 * dev)
@@ -734,7 +735,7 @@ Module Module2
         Dim c As Integer = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If 0 < atai2siguma_p(i) Then
-                c += 1 'cl+2*sigumaを上回っている
+                c += 1 'cl+2*siguma???????
             End If
         Next
         If 2 <= c Then
@@ -743,7 +744,7 @@ Module Module2
         c = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If atai2siguma_m(i) < 0 Then
-                c += 1 'cl-2*sigumaを下回っている
+                c += 1 'cl-2*siguma???????
             End If
         Next
         If 2 <= c Then
@@ -756,17 +757,17 @@ Module Module2
     Private Function checkSpcRule3(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule3 = False
 
-        Dim numP As Integer = 5 '使う点数
+        Dim numP As Integer = 5 '????
 
-        '点の個数 規格が同じかチェック
+        '???? ??????????
         If checkData(aDataBuf, j, numP) = False Then Return False
 
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim dev As Single = CSng(aDataBuf(j, p_cXdev))
 
 
-        Dim atai2siguma_p(numP - 1) As Single '値-(cl+siguma)
-        Dim atai2siguma_m(numP - 1) As Single '値-(cl-siguma)
+        Dim atai2siguma_p(numP - 1) As Single '?-(cl+siguma)
+        Dim atai2siguma_m(numP - 1) As Single '?-(cl-siguma)
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             atai2siguma_p(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl + dev)
             atai2siguma_m(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl - dev)
@@ -775,7 +776,7 @@ Module Module2
         Dim c As Integer = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If 0 < atai2siguma_p(i) Then
-                c += 1 'cl+sigumaを上回っている
+                c += 1 'cl+siguma???????
             End If
         Next
         If 4 <= c Then
@@ -784,7 +785,7 @@ Module Module2
         c = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If atai2siguma_m(i) < 0 Then
-                c += 1 'cl-sigumaを下回っている
+                c += 1 'cl-siguma???????
             End If
         Next
         If 4 <= c Then
@@ -796,9 +797,9 @@ Module Module2
     Private Function checkSpcRule4(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule4 = False
 
-        Dim numP As Integer = 15 '使う点数
+        Dim numP As Integer = 15 '????
 
-        '点の個数 規格が同じかチェック
+        '???? ??????????
         If checkData(aDataBuf, j, numP) = False Then Return False
 
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
@@ -810,7 +811,7 @@ Module Module2
         Next
 
 
-        'cl-σ～cl+σ範囲内ではない点があったらアラームではない(False)
+        'cl-?~cl+??????????????????????(False)
         For i As Integer = 0 To UBound(atai, 1)
             If atai(i) < cl - dev Then
                 Return False
@@ -819,7 +820,7 @@ Module Module2
                 Return False
             End If
         Next
-        'ここまで来たら全点cl-σ～cl+σの点である(アラームである)(True)
+        '?????????cl-?~cl+??????(???????)(True)
         Return True
 
 
@@ -827,16 +828,16 @@ Module Module2
     Private Function checkSpcRule5(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule5 = False
 
-        Dim numP As Integer = 8 '使う点数
+        Dim numP As Integer = 8 '????
 
-        '点の個数 規格が同じかチェック
+        '???? ??????????
         If checkData(aDataBuf, j, numP) = False Then Return False
 
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim dev As Single = CSng(aDataBuf(j, p_cXdev))
 
-        Dim atai2siguma_p(numP - 1) As Single '値-(cl+siguma)
-        Dim atai2siguma_m(numP - 1) As Single '値-(cl-siguma)
+        Dim atai2siguma_p(numP - 1) As Single '?-(cl+siguma)
+        Dim atai2siguma_m(numP - 1) As Single '?-(cl-siguma)
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             atai2siguma_p(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl + dev)
             atai2siguma_m(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl - dev)
@@ -846,17 +847,17 @@ Module Module2
         Dim c_m As Integer = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If 0 < atai2siguma_p(i) Then
-                c_p += 1 'cl+sigumaを上回っている
+                c_p += 1 'cl+siguma???????
             End If
         Next
 
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If atai2siguma_m(i) < 0 Then
-                c_m += 1 'cl-sigumaを下回っている
+                c_m += 1 'cl-siguma???????
             End If
         Next
 
-        '全点cl-σ～cl+σの範囲外で、両側にあるとアラーム(True)
+        '??cl-?~cl+?????????????????(True)
         If c_p = 0 Then Return False
         If c_m = 0 Then Return False
 
@@ -869,9 +870,9 @@ Module Module2
     Private Function checkSpcRule6(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule6 = False
 
-        Dim numP As Integer = 7 '使う点数
+        Dim numP As Integer = 7 '????
 
-        '点の個数 規格が同じかチェック
+        '???? ??????????
         If checkData(aDataBuf, j, numP) = False Then Return False
 
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
@@ -886,7 +887,7 @@ Module Module2
         For i As Integer = 0 To UBound(atai, 1) - 1
             atai_sa(i) = atai(i) - atai(i + 1)
             If atai_sa(i) = 0 Then
-                Return False '差がなかったらF
+                Return False '???????F
             End If
         Next
 
@@ -894,13 +895,13 @@ Module Module2
         Dim c As Integer = 0
         For i As Integer = 0 To UBound(atai_sa, 1)
             If 0 < atai_sa(i) Then
-                c += 1 '差分が正
+                c += 1 '????
             ElseIf atai_sa(i) < 0 Then
-                c -= 1 '差分が負
+                c -= 1 '????
             End If
         Next
 
-        If Math.Abs(c) = numP - 1 Then '差がオールプラスまたはオールマイナス
+        If Math.Abs(c) = numP - 1 Then '??????????????????
             Return True
         End If
 
@@ -909,9 +910,9 @@ Module Module2
     Private Function checkSpcRule7(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule7 = False
 
-        Dim numP As Integer = 14 '使う点数
+        Dim numP As Integer = 14 '????
 
-        '点の個数 規格が同じかチェック
+        '???? ??????????
         If checkData(aDataBuf, j, numP) = False Then Return False
 
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
@@ -926,7 +927,7 @@ Module Module2
         For i As Integer = 0 To UBound(atai, 1) - 1
             atai_sa(i) = atai(i) - atai(i + 1)
             If atai_sa(i) = 0 Then
-                Return False '差がなかったらF
+                Return False '???????F
             End If
         Next
 
@@ -935,16 +936,16 @@ Module Module2
         Dim f_sa As Integer = 0
         For i As Integer = 0 To UBound(atai_sa, 1)
             If 0 < atai_sa(i) Then
-                c += 1 '差分が正
+                c += 1 '????
             ElseIf atai_sa(i) < 0 Then
-                c -= 1 '差分が負
+                c -= 1 '????
             End If
 
             If i = 0 Then
                 f_sa = c
             End If
 
-            '交互に上下するならば、c は (1 0 1 0 1 0) か (-1 0 -1 0 -1 0)   当てはまらなかったらアラームではない(false)
+            '???????????c ? (1 0 1 0 1 0) ? (-1 0 -1 0 -1 0)   ??????????????????(false)
             If i Mod 2 = 0 Then
                 If Not c = f_sa Then Return False
             ElseIf i Mod 2 = 1 Then
@@ -957,7 +958,7 @@ Module Module2
 
 
     End Function
-    'サーバーよりアラームリストを取得する
+    '??????????????????
     Public Function GetAlarmInfo_Server_kai(ByVal _ID As String, ByVal _Mode As String) As Boolean
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -997,12 +998,12 @@ Module Module2
             Cn.Dispose()
             table.Dispose()
 
-            StrErrMes = "アラームリスト取得エラー" + ", " + ex.Message & ex.StackTrace
+            StrErrMes = "????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Function
         End Try
     End Function
-    'サーバーよりアラームリストを取得する
+    '??????????????????
     Public Function getAlarm() As DataTable
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -1044,20 +1045,20 @@ Module Module2
             Cn.Dispose()
             _atable.Dispose()
 
-            StrErrMes = "アラームリスト取得エラー" + ", " + ex.Message & ex.StackTrace
+            StrErrMes = "????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Function
         End Try
     End Function
     '*******************************************************************
-    'SPCアラームデータをサーバーにインサートする
+    'SPC????????????????????
     '*******************************************************************
     Public Sub INSERT_AlarmInfo_kai(ByVal _ID As String, ByVal _Mode As String, ByVal _Alarm() As Boolean)
 
         Dim Cn As New SqlConnection
         Dim strSQL As String
         Dim SQLCm As SqlCommand = Cn.CreateCommand
-        Dim trans As SqlTransaction 'トランザクション定義
+        Dim trans As SqlTransaction '??????????
 
         Try
 
@@ -1110,23 +1111,23 @@ Module Module2
             If IsNothing(trans) = False Then
                 trans.Rollback()
             End If
-            StrErrMes = "SPCアラームデータ更新エラー" + ", " + ex.Message & ex.StackTrace
+            StrErrMes = "SPC????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
 
     End Sub
-    'グラフを描画する
+    '????????
     Public Sub GraphDisp()
 
-        'X側のグラフプロットを行う
+        'X????????????
         GraphDisp1(StrResolution)
 
-        'R側のグラフプロットを行う
+        'R????????????
         GraphDisp2(StrResolution, MRFlag)
-        '測定日時等の詳細表示を行う
+        '?????????????
         GraphDisp4(StrResolution)
-        'ヒストグラムを表示する
+        '???????????
         GraphDisp7(StrResolution)
 
 
@@ -1137,7 +1138,7 @@ Module Module2
 
         Dim xpn, ypn, xp, n, yp, yh, i, j, pno, jk, yps, ypf, ypa, k, p As Integer
         Dim Bairitu, yp0 As Double
-        Dim f As New Font("ＭＳ Ｐゴシック", 10)
+        Dim f As New Font("MS P????", 10)
         Dim dbl1, dbl2, dblLow, Data1, DataMAX, DataMIN As Double
         Dim strData As String
         Dim colbuf(5000) As Integer
@@ -1147,15 +1148,15 @@ Module Module2
         Dim strLcl As String
         Dim strCl As String
 
-        Dim Hsum As Double '平方和
-        Dim Bnum As Double '分散
-        Dim Siguma As Double '標準偏差
-        Dim sum, ave As Double '和
-        Dim Jsum As Double '二乗の和
+        Dim Hsum As Double '???
+        Dim Bnum As Double '??
+        Dim Siguma As Double '????
+        Dim sum, ave As Double '?
+        Dim Jsum As Double '????
         Dim c As Integer
         Dim UpperCpk, LowerCpk As Double
 
-        'グラフィック設定=============================================
+        '????????=============================================
         Dim g As Graphics
         If Size = "MAX" Then
             With Form1.PictureBox1
@@ -1182,7 +1183,7 @@ Module Module2
         Dim CPen As New Pen(Color.Green, 2)
         CPen.DashStyle = Drawing2D.DashStyle.Solid
 
-        'グラフライン用青
+        '????????
         Dim DPen As New Pen(Color.Blue, 2)
         DPen.DashStyle = Drawing2D.DashStyle.Solid
         Dim EPen As New Pen(Color.Green, 1)
@@ -1251,18 +1252,18 @@ Module Module2
         yp = 0
 
         If Size = "MAX" Then
-            yh = 428 'ピクチャーボックスの縦幅サイズ
+            yh = 428 '???????????????
         ElseIf Size = "Middle" Then
-            yh = 362  'ピクチャーボックスの縦幅サイズ
+            yh = 362  '???????????????
         ElseIf Size = "MIN" Then
-            yh = 260 'ピクチャーボックスの縦幅サイズ
+            yh = 260 '???????????????
         End If
 
 
-        jk = DispStartPosition  '現在のグラフ表示開始位置を取得する
+        jk = DispStartPosition  '?????????????????
         PropertyNo = PropertyTable.Rows.Count - 1
 
-        '規格値ラインを表示する========================
+        '???????????========================
         dbl1 = PropertyTable.Rows(PropertyNo)("cScl")
         dbl2 = PropertyTable.Rows(PropertyNo)("cTolerance") / 5
         If IsDBNull(PropertyTable.Rows(PropertyNo)("cUnit")) = False Then
@@ -1275,34 +1276,34 @@ Module Module2
         ElseIf PropertyTable.Rows(PropertyNo)("cLimitType") = "Upper" Then
             strStanUR = "<= " & PropertyTable.Rows(PropertyNo)("cUsl") & " " & strUnit
         ElseIf PropertyTable.Rows(PropertyNo)("cLimitType") = "Lower" Then
-            strStanUR = ">= " & PropertyTable.Rows(PropertyNo)("cLsl") & " " & strUnit 'Ver2.11 change cUsl →cLsl
+            strStanUR = ">= " & PropertyTable.Rows(PropertyNo)("cLsl") & " " & strUnit 'Ver2.11 change cUsl cLsl
         End If
 
 
         If Size = "MAX" Then
-            '規格を表示
+            '?????
             Form1.LabelBase.Text = strStanUR
         ElseIf Size = "Middle" Then
-            '規格を表示
+            '?????
             FormMiddle.LabelBase.Text = strStanUR
         ElseIf Size = "MIN" Then
-            '規格を表示
+            '?????
             FormSmall.LabelBase.Text = strStanUR
         End If
 
         strStep = CStr(dbl2)      'STEP
 
         If Size = "MAX" Then
-            Bairitu = 40 / dbl2       '縦40Pix
+            Bairitu = 40 / dbl2       '?40Pix
         ElseIf Size = "Middle" Then
-            Bairitu = 35 / dbl2       '縦35Pix
+            Bairitu = 35 / dbl2       '?35Pix
         ElseIf Size = "MIN" Then
-            Bairitu = 25 / dbl2       '縦25Pix
+            Bairitu = 25 / dbl2       '?25Pix
         End If
 
         dblLow = dbl1 - dbl2 * 5
 
-
+        null_bit = 1
         sum = 0
         c = 0
         Jsum = 0
@@ -1318,7 +1319,7 @@ Module Module2
                     jk += 1
                     Continue For
                 End If
-                If String.IsNullOrEmpty(M_Data(jk)) = "" Then
+                If String.IsNullOrEmpty(M_Data(jk)) Then
                     jk += 1
                     Continue For
                 End If
@@ -1336,7 +1337,7 @@ Module Module2
                             p = k
                         End If
                     End If
-                    jk += 1
+                    'jk += 1
 
                 Next
 
@@ -1366,8 +1367,8 @@ Module Module2
                     yp = yp0 * Bairitu
                 End If
 
-                'Upper:上限のみ、Lower:下限のみ
-                '上限規格ラインを描画
+                'Upper:?????Lower:????
+                '??????????
                 If X_gType <> "Lower" Then
 
                     'If Size = "MAX" Then
@@ -1381,7 +1382,7 @@ Module Module2
                     g.DrawLine(HPen, xpn - x00, ypn, xpn + x00, ypn)
                 End If
                 If X_gType <> "Upper" Then
-                    '下限規格ラインを描画
+                    '??????????
 
                     'If Size = "MAX" Then
                     '    ypn = 428
@@ -1394,30 +1395,30 @@ Module Module2
                     g.DrawLine(HPen, xpn - x00, ypn, xpn + x00, ypn)
                 End If
 
-                '------------   CL,UCL,LCLのライン   -------------
+                '------------   CL,UCL,LCL????   -------------
 
-                'CLラインの描画を行う
+                'CL?????????
                 Data1 = (X_CL - dblLow) * Bairitu
                 ypn = yp + yh - Data1
 
                 g.DrawLine(APen, xpn - x00, ypn, xpn + x00, ypn)
                 ycl = ypn
-                'UCLラインの描画を行う
+                'UCL?????????
                 Data1 = (X_UCL - dblLow) * Bairitu
                 ypn = yp + yh - Data1
 
                 g.DrawLine(FPen, xpn - x00, ypn, xpn + x00, ypn)
                 yucl = ypn
-                'LCLラインの描画を行う
+                'LCL?????????
                 Data1 = (X_LCL - dblLow) * Bairitu
                 ypn = yp + yh - Data1
                 g.DrawLine(FPen, xpn - x00, ypn, xpn + x00, ypn)
                 ylcl = ypn
-                'グラフプロット用変数Data1
+                '??????????Data1
                 Data1 = (CDbl(strData) - dblLow) * Bairitu
 
 
-                'Cpkを求めるために和と二乗の和を求める
+                'Cpk?????????????????
                 sum += CDbl(strData)
                 Jsum += CDbl(strData) * CDbl(strData)
 
@@ -1427,9 +1428,9 @@ Module Module2
                 ypn = yp + yh - Data1
 
 
-                'アラームじゃない場合0
+                '??????????0
                 colbuf(j) = 0
-                'アラームの場合1
+                '???????1
                 Dim ala As Integer = readMaster(M_Alarm(jk)(0), 0)
 
 
@@ -1451,7 +1452,7 @@ Module Module2
                         ypf = ypa + 50
                     End If
 
-                    g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23) '旗の縦線
+                    g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23) '????
 
                     If Size = "MAX" Then
                         x01 = 15
@@ -1462,7 +1463,7 @@ Module Module2
                     End If
 
                     k = 0
-                    For ii = 0 To 7 '旗(赤緑)
+                    For ii = 0 To 7 '?(??)
                         If ala = 3 Then
                             g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
                         ElseIf ala = 2 Then
@@ -1475,13 +1476,13 @@ Module Module2
                 End If
 
 
-                jk += 1
+
 
                 xpnbuf_X(j) = xpn
                 ypnbuf_X(j) = ypn
                 If j > 0 And null_bit = 0 Then
 
-                    g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) 'グラフの線
+                    g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) '?????
 
                 End If
 
@@ -1528,7 +1529,7 @@ Module Module2
         End If
 
 
-        '管理値ラベルを表示する===============================
+        '???????????===============================
         If Size = "MAX" Then
 
             strUcl = CStr(X_UCL)
@@ -1580,22 +1581,22 @@ Module Module2
         End If
         '=====================================================
 
-        'グラフプロットを行う===============================================
-        n = j 'グラフのプロット数を取得
+        '??????????===============================================
+        n = j '????????????
         jk = DispStartPosition
         For j = 0 To n - 1
             xpn = xpnbuf_X(j)
             ypn = ypnbuf_X(j)
             If xpn <> "0" Then
                 If readMaster(M_Data(jk), _cate) <> "R" Then
-                    If colbuf(j) = 1 Then 'SPCアラーム発生有の場合赤点をプロット
+                    If colbuf(j) = 1 Then 'SPC?????????????????
                         g.FillEllipse(c1, xpn - 4, ypn - 4, 7, 7)
                         g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
-                    Else 'SPCアラーム発生無の場合緑点をプロット
+                    Else 'SPC?????????????????
                         g.FillEllipse(c2, xpn - 4, ypn - 4, 7, 7)
                         g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
                     End If
-                Else '再測定の場合青点をプロット
+                Else '?????????????
                     g.FillEllipse(c4, xpn - 4, ypn - 4, 7, 7)
                     g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
                 End If
@@ -1606,8 +1607,8 @@ Module Module2
         Next
         '====================================================================
 
-        '軸ラベルに数値を表示する============================
-        dbl1 = X_SCL       'センター値
+        '????????????============================
+        dbl1 = X_SCL       '?????
         dbl2 = X_kousa / 5       'STEP
         dbl1 = dbl1 + dbl2 * 5 + yp0
         For i = 0 To 10
@@ -1640,8 +1641,8 @@ Module Module2
             dbl1 -= dbl2
         Next
         '====================================================
-        'グラフ罫線を描画する==================================================
-        '縦軸
+        '??????????==================================================
+        '??
 
         If Size = "MAX" Then
             x02 = 30
@@ -1655,17 +1656,17 @@ Module Module2
         End If
 
         For j = 1 To 35
-            g.DrawLine(BPen, xp + j * x02, 0, xp + j * x02, 500) '縦線
+            g.DrawLine(BPen, xp + j * x02, 0, xp + j * x02, 500) '??
         Next
-        '横軸
-        If X_Shiguma <> 0 Then 'σがある場合横軸の間隔は1σとする
+        '??
+        If X_Shiguma <> 0 Then '????????????1????
             yps = yp + yh - (CDbl(X_CL) - dblLow) * Bairitu
             For j = 0 To 200
                 g.DrawLine(BPen, xp, CInt(yps + j * X_Shiguma / strStep * x03), xp + 36 * 30, CInt(yps + j * X_Shiguma / strStep * x03))
                 g.DrawLine(BPen, xp, CInt(yps - j * X_Shiguma / strStep * x03), xp + 36 * 30, CInt(yps - j * X_Shiguma / strStep * x03))
             Next
 
-        Else 'σがない場合横軸の間隔は40ピクセル固定とする
+        Else '????????????40?????????
             For j = 1 To 15
                 g.DrawLine(BPen, xp, yp + j * x03, xp + 36 * 30, yp + j * x03)
             Next
@@ -1700,12 +1701,12 @@ Module Module2
         End If
 
     End Sub
-    'Rのグラフ作成
+    'R??????
     Public Sub GraphDisp2(ByVal Size As String, ByVal MR As Boolean)
 
         Dim xpn, ypn, ypf, ypa, xp, yp, yh, i, p As Integer
         Dim Bairitu As Double
-        Dim f As New Font("ＭＳ Ｐゴシック", 10)
+        Dim f As New Font("MS P????", 10)
         Dim dbl1, dbl2, dblLow, Data1 As Double
         Dim strData As String
         Dim colbuf(5000) As Integer
@@ -1714,7 +1715,7 @@ Module Module2
         Dim UclChangeFlag2 As Boolean
         Dim dblSiguma, dblCl As Double
         Dim yuclR, yclR, k As Integer
-        'グラフィック設定=============================================
+        '????????=============================================
         Dim g As Graphics
 
         If Size = "MAX" Then
@@ -1859,23 +1860,23 @@ Module Module2
             g.DrawLine(BPen, xp, yp + j * x01, xp + 35 * x00, yp + j * x01)
         Next
 
-        If MR Then 'MRグラフ
-            If PropertyTable.Rows(PropertyNo)("cMRucl") = 0 Then 'MRの管理値が入力されていない場合、R側のスケールに合わせる
+        If MR Then 'MR???
+            If PropertyTable.Rows(PropertyNo)("cMRucl") = 0 Then 'MR????????????????R???????????
                 dbl2 = (PropertyTable.Rows(PropertyNo)("cRucl") * 30) / 100   'STEP
             Else
                 dbl2 = (PropertyTable.Rows(PropertyNo)("cMRucl") * 30) / 100   'STEP
             End If
-        Else 'Rグラフ
+        Else 'R???
             dbl2 = (PropertyTable.Rows(PropertyNo)("cRucl") * x02) / 100   'STEP
 
         End If
 
-        Bairitu = x03 / dbl2       '縦40Pix
+        Bairitu = x03 / dbl2       '?40Pix
 
         null_bit = 1
 
 
-        i = DispStartPosition '現在の表示開始位置を取得
+        i = DispStartPosition '????????????
 
         If Size = "MAX" Then
             'x04 = 15 + 120
@@ -1896,9 +1897,9 @@ Module Module2
             If M_Data(i) Is Nothing OrElse M_Data(i) = "" Then
                 If i < UBound(M_Data) Then i += 1
                 Continue For
-                End If
+            End If
 
-                If MR Then
+            If MR Then
                 strData = readMaster(M_Data(i), _MR)
             Else
                 strData = readMaster(M_Data(i), _R)
@@ -1907,7 +1908,7 @@ Module Module2
             If strData <> "" Then
 
                 xpn = xp + j * (x00 / Graphsmallcount) + x04
-                '------------   CL,UCL,LCLのライン   -------------
+                '------------   CL,UCL,LCL????   -------------
 
                 p = 0
 
@@ -1939,14 +1940,14 @@ Module Module2
 
 
 
-                'CLを表示する
+                'CL?????
                 Data1 = (CDbl(dblCl)) * Bairitu
                 ypn = yp + yh - Data1                '
                 If ypn > yp + yh Then ypn = yp + yh
                 g.DrawLine(APen, xpn - x05, ypn, xpn + x05, ypn)
                 yclR = ypn
 
-                'UCLを表示する
+                'UCL?????
                 Data1 = (CDbl(dblSiguma)) * Bairitu
                 ypn = yp + yh - Data1                '
                 If ypn > yp + yh Then ypn = yp + yh
@@ -1965,14 +1966,14 @@ Module Module2
                     ala = readMaster(M_Alarm(i)(1), 0)
                 End If
 
-                'アラームじゃない場合0
+                '??????????0
                 colbuf(j) = 0
-                'アラームの場合1
+                '???????1
                 If ala = 1 Then
                     colbuf(j) = 1
                 End If
 
-                'コメントが入っている場合フラグを表示
+                '??????????????????
                 If ala = 2 Or ala = 3 Then
                     colbuf(j) = 1
                     ypf = ypn
@@ -1990,9 +1991,9 @@ Module Module2
                     g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23)
                     k = 0
                     For ii = 0 To 7
-                        If ala = 3 Then 'QC承認が入ってる場合緑旗表示
+                        If ala = 3 Then 'QC?????????????
                             g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + 15 - ii)
-                        ElseIf ala = 2 Then 'QC承認が入っていない場合赤旗表示
+                        ElseIf ala = 2 Then 'QC???????????????
                             g.DrawLine(A1Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + 15 - ii)
                         End If
 
@@ -2004,7 +2005,7 @@ Module Module2
                 ypnbuf_R(j) = ypn
                 'BufNoR(j) = i
                 If j > 0 And null_bit = 0 Then
-                    g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) 'グラフの線
+                    g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) '?????
                 End If
                 null_bit = 0
                 xp_old = xpn
@@ -2036,15 +2037,15 @@ Module Module2
         End If
 
 
-        'グラフのプロットを行う==========================
+        '???????????==========================
         For j = 0 To 30 * Graphsmallcount
             xpn = xpnbuf_R(j)
             ypn = ypnbuf_R(j)
             If xpn <> "0" Then
-                If colbuf(j) = 1 Then 'アラーム有りの場合赤プロット表示
+                If colbuf(j) = 1 Then '????????????????
                     g.FillEllipse(c1, xpn - 4, ypn - 4, 7, 7)
                     g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
-                Else 'アラーム無しの場合青プロット表示
+                Else '????????????????
                     g.FillEllipse(c2, xpn - 4, ypn - 4, 7, 7)
                     g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
                 End If
@@ -2052,7 +2053,7 @@ Module Module2
         Next
         '================================================
 
-        '軸ラベルの表示を行う==========================
+        '??????????==========================
         If Size = "MAX" Then
             x06 = 9
         ElseIf Size = "Middle" Then
@@ -2098,15 +2099,15 @@ Module Module2
 
     End Sub
 
-    '作業者・測定値・測定日等を表示する
+    '?????????????????
     Public Sub GraphDisp4(ByVal Size As String)
 
         Dim j, k, xp, yp As Integer
-        Dim f As New Font("ＭＳ Ｐゴシック", 8)
-        Dim f2 As New Font("ＭＳ Ｐゴシック", 7)
+        Dim f As New Font("Segoe UI", 8, FontStyle.Regular)
+        Dim f2 As New Font("Segoe UI", 7, FontStyle.Regular)
         Dim g As Graphics
-        Dim rect As New RectangleF '文字の描画場所
-        Dim sf As New StringFormat() '文字の描画場所
+        Dim rect As New RectangleF '???????
+        Dim sf As New StringFormat() '???????
         sf.Alignment = StringAlignment.Center
         sf.LineAlignment = StringAlignment.Center
 
@@ -2127,6 +2128,7 @@ Module Module2
                 g = Graphics.FromImage(.Image)
             End With
         End If
+        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias
 
         Dim Stf As New StringFormat(StringFormatFlags.DirectionVertical)
         Dim str1 As String
@@ -2134,7 +2136,7 @@ Module Module2
         Dim APen As New Pen(Color.Black, 1)
         APen.DashStyle = Drawing2D.DashStyle.Solid
 
-        Dim c1 As New SolidBrush(Color.FromArgb(255, 208, 241, 255))  '水色
+        Dim c1 As New SolidBrush(Color.FromArgb(255, 208, 241, 255))  '??
 
         xp = 0
         yp = 0
@@ -2193,17 +2195,17 @@ Module Module2
                 Dim strR As String = readMaster(M_Data(k), _R)
                 dt1 = CDate(wdate)
                 str1 = dt1.Month.ToString.PadLeft(2, "0") & Environment.NewLine & dt1.Day.ToString.PadLeft(2, "0")
-                '測定日を表示
+                '??????
                 rect = New RectangleF(xp + (j - x05) * x00, yp + 2, x00, x01)
                 g.DrawString(str1, f, Brushes.Black, rect, sf)
                 rect = New RectangleF(xp, yp + 2, 2 * x00, x01)
                 g.DrawString("Date", f, Brushes.Black, rect, sf)
-                '測定値Xを表示
+                '???X???
                 rect = New RectangleF(xp + (j - x05) * x00 + 1, yp + x01 + 2, x00, x02)
                 g.DrawString(strX, f, Brushes.Black, rect, sf)
                 rect = New RectangleF(xp, yp + x01 + 2, 2 * x00, x02)
                 g.DrawString("XBar", f, Brushes.Black, rect, sf)
-                '測定値Rを表示
+                '???R???
                 rect = New RectangleF(xp + (j - x05) * x00 + 1, yp + x01 + x02 + 2, x00, x03)
                 g.DrawString(strR, f, Brushes.Black, rect, sf)
                 rect = New RectangleF(xp, yp + x01 + x02 + 2, 2 * x00, x02)
@@ -2232,57 +2234,20 @@ Module Module2
 
 
     End Sub
-    'ヒストグラムを表示する
+    '???????????
     Public Sub GraphDisp7(ByVal Size As String)
-
         Dim xp, yp, yh, i, j, jk, yps, ul, ll As Integer
         Dim Bairitu, yp0 As Double
-        Dim f As New Font("ＭＳ Ｐゴシック", 10)
-        Dim dbl1, dbl2, dblLow As Double
-        Dim xpnbuf(31), ypnbuf(31), colbuf(31) As Integer
+        Dim dbl1, dbl2, dblLow, dblData As Double
+        'Dim xpnbuf(31), ypnbuf(31), colbuf(31) As Integer
         Dim HistogramBuf(3000) As String
-        Dim HistogramCount As Integer
+        Dim HistogramCount As Integer = 0
         Dim strData, strStep As String
-        Dim dblData As Double
-        Dim pBuf(8) As String
-        Dim Cl_s1, s1_s2, s2_s3, s3_s4, s4_s5, s5_s6, s6_s7, s7_s8, s8_s9, s9_s10 As Integer 'UCL側用
-        Dim Cl_ms1, ms1_ms2, ms2_ms3, ms3_ms4, ms4_ms5, ms5_ms6, ms6_ms7, ms7_ms8, ms8_ms9, ms9_ms10 As Integer 'LCL側用
+        Dim Cl_s1, s1_s2, s2_s3, s3_s4, s4_s5, s5_s6, s6_s7, s7_s8, s8_s9, s9_s10 As Integer 'UCL??
+        Dim Cl_ms1, ms1_ms2, ms2_ms3, ms3_ms4, ms4_ms5, ms5_ms6, ms6_ms7, ms7_ms8, ms8_ms9, ms9_ms10 As Integer 'LCL??
+        Dim local_yucl, local_ylcl, local_ycl As Integer
 
-        '変数・バッファーの初期化============
-        For i = 0 To 3000
-            HistogramBuf(i) = ""
-        Next
-        For i = 0 To 8
-            pBuf(i) = ""
-        Next
-        HistogramCount = 0
-        strData = ""
-        dblData = 0
-        Cl_s1 = 0
-        s1_s2 = 0
-        s2_s3 = 0
-        s3_s4 = 0
-        s4_s5 = 0
-        s5_s6 = 0
-        s6_s7 = 0
-        s7_s8 = 0
-        s8_s9 = 0
-        s9_s10 = 0
 
-        Cl_ms1 = 0
-        ms1_ms2 = 0
-        ms2_ms3 = 0
-        ms3_ms4 = 0
-        ms4_ms5 = 0
-        ms5_ms6 = 0
-        ms6_ms7 = 0
-        ms7_ms8 = 0
-        ms8_ms9 = 0
-        ms9_ms10 = 0
-
-        '====================================
-
-        'グラフィック設定を行う=====================
         Dim g As Graphics
 
         If Size = "MAX" Then
@@ -2290,17 +2255,22 @@ Module Module2
                 .Image = New Bitmap(Form1.PictureBox9.Width, Form1.PictureBox9.Height)
                 g = Graphics.FromImage(.Image)
             End With
+            yh = 428
         ElseIf Size = "Middle" Then
             With FormMiddle.PictureBox9
                 .Image = New Bitmap(FormMiddle.PictureBox9.Width, FormMiddle.PictureBox9.Height)
                 g = Graphics.FromImage(.Image)
             End With
+            yh = 362
         ElseIf Size = "MIN" Then
             With FormSmall.PictureBox9
                 .Image = New Bitmap(FormSmall.PictureBox9.Width, FormSmall.PictureBox9.Height)
                 g = Graphics.FromImage(.Image)
             End With
+            yh = 260
         End If
+        g.Clear(Color.White)
+        g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
         Dim APen As New Pen(Color.Green, 2)
         APen.DashStyle = Drawing2D.DashStyle.Dot
@@ -2311,29 +2281,12 @@ Module Module2
         Dim CPen As New Pen(Color.Orange, 1)
         CPen.DashStyle = Drawing2D.DashStyle.Solid
 
-        Dim DPen As New Pen(Color.Blue, 2)
-        DPen.DashStyle = Drawing2D.DashStyle.Solid
-
-        Dim EPen As New Pen(Color.Green, 1)
-        EPen.DashStyle = Drawing2D.DashStyle.Solid
-
         Dim FPen As New Pen(Color.Red, 2)
         FPen.DashStyle = Drawing2D.DashStyle.Dash
 
-        Dim GPen As New Pen(Color.Red, 2)
-        GPen.DashStyle = Drawing2D.DashStyle.Solid
-
         Dim HPen As New Pen(Color.Red, 3)
         HPen.DashStyle = Drawing2D.DashStyle.Solid
-        Dim IPen As New Pen(Color.Green, 2)
-        IPen.DashStyle = Drawing2D.DashStyle.Solid
 
-        Dim c1 As New SolidBrush(Color.FromArgb(255, 255, 38, 38))  'Red
-        Dim c2 As New SolidBrush(Color.FromArgb(255, 238, 228, 255))  '
-        Dim c3 As New SolidBrush(Color.FromArgb(255, 255, 250, 55))  '3
-
-        Dim A1Pen As New Pen(Color.Red, 1)
-        A1Pen.DashStyle = Drawing2D.DashStyle.Solid
         Dim B1Pen As New Pen(Color.Black, 1)
         B1Pen.DashStyle = Drawing2D.DashStyle.Solid
         '===============================================================
@@ -2346,50 +2299,68 @@ Module Module2
         If Size = "MAX" Then
             x00 = 40
             x01 = 25
-            yh = 428
+            x02 = 2
+            x03 = 10
         ElseIf Size = "Middle" Then
             x00 = 35
             x01 = 20
-            yh = 362
+            x02 = 1
+            x03 = 5
         ElseIf Size = "MIN" Then
             x00 = 25
             x01 = 20
-            yh = 260
+            x02 = 1
+            x03 = 5
         End If
 
         xp = 0
         yp = 0
         yp0 = 0
-        yps = 0
+
+        Dim p As Integer = 0
         If PropertyTable IsNot Nothing AndAlso PropertyTable.Rows.Count > 0 Then
-            Dim lastRow As Integer = PropertyTable.Rows.Count - 1
-            X_SCL = PropertyTable.Rows(lastRow)("cScl")
-            X_kousa = PropertyTable.Rows(lastRow)("cTolerance")
-            X_CL = PropertyTable.Rows(lastRow)("cXcl")
-            X_USL = PropertyTable.Rows(lastRow)("cUsl")
-            X_LSL = PropertyTable.Rows(lastRow)("cLsl")
-            X_Shiguma = PropertyTable.Rows(lastRow)("cXdev")
-            X_gType = PropertyTable.Rows(lastRow)("cLimitType")
+            If DispStartPosition < M_Data.Length AndAlso M_Data(DispStartPosition) IsNot Nothing Then
+                Dim currentDataDate As String = readMaster(M_Data(DispStartPosition), _wDate)
+                For k = 0 To PropertyTable.Rows.Count - 1
+                    If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
+                        If String.Compare(currentDataDate, PropertyTable.Rows(k)("cApprovalDate").ToString()) > 0 Then
+                            p = k
+                        End If
+                    End If
+                Next
+            End If
+            X_SCL = PropertyTable.Rows(p)("cScl")
+            X_kousa = PropertyTable.Rows(p)("cTolerance")
+            X_CL = PropertyTable.Rows(p)("cXcl")
+            X_USL = PropertyTable.Rows(p)("cUsl")
+            X_LSL = PropertyTable.Rows(p)("cLsl")
+            X_UCL = PropertyTable.Rows(p)("cXucl")
+            X_LCL = PropertyTable.Rows(p)("cXlcl")
+            X_Shiguma = PropertyTable.Rows(p)("cXdev")
+            X_gType = PropertyTable.Rows(p)("cLimitType")
+        Else
+            g.Dispose()
+            Exit Sub
         End If
 
         dbl1 = X_SCL
         dbl2 = X_kousa / 5 'STEP
         If dbl2 = 0 Then dbl2 = 1
         strStep = CStr(dbl2)      'STEP
-        Bairitu = x00 / dbl2       '縦40Pix
+        Bairitu = x00 / dbl2       '?40Pix
         dblLow = dbl1 - dbl2 * 5
+
         If X_gType = "UpperLower" Then
             yp0 = ((X_USL + X_LSL) / 2 - X_SCL)
             yp = yp0 * Bairitu
         End If
 
-        '規格値線を表示する
-        If PropertyNo <> 0 Then
-            ul = yp + yh - (X_USL - dblLow) * Bairitu
-            g.DrawLine(HPen, 0, ul, 1500, ul)
-            ll = yp + yh - (X_LSL - dblLow) * Bairitu
-            g.DrawLine(HPen, 0, ll, 1500, ll)
-        End If
+
+        ul = yp + yh - (X_USL - dblLow) * Bairitu
+        g.DrawLine(HPen, 0, ul, 1500, ul)
+        ll = yp + yh - (X_LSL - dblLow) * Bairitu
+        g.DrawLine(HPen, 0, ll, 1500, ll)
+
 
         jk = DispStartPosition
 
@@ -2398,10 +2369,13 @@ Module Module2
         Next
 
         yps = yp + yh - (X_CL - dblLow) * Bairitu
+
         If X_Shiguma <> 0 Then
             For j = 0 To 100
-                g.DrawLine(BPen, xp, CInt(yps + j * X_Shiguma / strStep * x00), xp + 36 * 30, CInt(yps + j * X_Shiguma / strStep * x00))
-                g.DrawLine(BPen, xp, CInt(yps - j * X_Shiguma / strStep * x00), xp + 36 * 30, CInt(yps - j * X_Shiguma / strStep * x00))
+                Dim y_plus As Integer = CInt(yps + j * X_Shiguma / strStep * x00)
+                Dim y_minus As Integer = CInt(yps - j * X_Shiguma / strStep * x00)
+                g.DrawLine(BPen, xp, y_plus, xp + 36 * 30, y_plus)
+                g.DrawLine(BPen, xp, y_minus, xp + 36 * 30, y_minus)
             Next
         Else
             For j = 1 To 15
@@ -2422,163 +2396,107 @@ Module Module2
             End If
         Next
 
+        If X_Shiguma = 0 And HistogramCount > 1 Then
+            Dim h_sum As Double = 0
+            Dim h_sumSq As Double = 0
+            For i = 0 To HistogramCount - 1
+                Dim val As Double = CDbl(HistogramBuf(i))
+                h_sum += val
+                h_sumSq += val * val
+            Next
+            Dim h_mean As Double = h_sum / HistogramCount
+            Dim h_var As Double = (h_sumSq - (h_sum * h_sum) / HistogramCount) / (HistogramCount - 1)
+            If h_var > 0 Then X_Shiguma = Math.Sqrt(h_var)
+            If X_CL = 0 Then X_CL = h_mean
+        End If
 
-        '管理値ラインを表示=================
+        If X_Shiguma <= 0.000001 Then X_Shiguma = dbl2
+        yps = yp + yh - (X_CL - dblLow) * Bairitu
 
-        g.DrawLine(FPen, 0, yucl, 300, yucl)
-        g.DrawLine(FPen, 0, ylcl, 300, ylcl)
-        g.DrawLine(APen, 0, ycl, 300, ycl)
 
-        '===================================
+        local_yucl = yp + yh - (X_UCL - dblLow) * Bairitu
+        local_ylcl = yp + yh - (X_LCL - dblLow) * Bairitu
+        local_ycl = yp + yh - (X_CL - dblLow) * Bairitu
+        '?????????=================
+
+        g.DrawLine(FPen, 0, local_yucl, 1500, local_yucl)
+        g.DrawLine(FPen, 0, local_ylcl, 1500, local_ylcl)
+        g.DrawLine(APen, 0, local_ycl, 1500, local_ycl)
+
+        Dim barWidth As Integer = x03
+        If Graphsmallcount >= 2 Then barWidth = x02
+
+        If X_Shiguma <> 0 Then
+            For i = 0 To HistogramCount - 1
+                dblData = HistogramBuf(i)
+                If dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) Then '-0.5?~0.5????
+                    Cl_s1 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) Then '1?-2????
+                    s1_s2 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) Then '2?-3????
+                    s2_s3 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) Then '3?-4????
+                    s3_s4 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) Then '4?-5????
+                    s4_s5 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) Then '5?-6????
+                    s5_s6 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) Then '6?-7????
+                    s6_s7 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) Then '7?-8????
+                    s7_s8 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '8?-9????
+                    s8_s9 += barWidth
+                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '9??????
+                    s9_s10 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) * 1.5)) Then 'CL--1????
+                    Cl_ms1 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 1.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) Then '-1?--2????
+                    ms1_ms2 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) Then '-2?--3????
+                    ms2_ms3 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) Then '-3?--4????
+                    ms3_ms4 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) Then '-4?--5????
+                    ms4_ms5 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) Then '-5?--6????
+                    ms5_ms6 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) Then '-6?--7????
+                    ms6_ms7 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) Then '-7?--8????
+                    ms7_ms8 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-8?--9????
+                    ms8_ms9 += barWidth
+                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-9??????
+                    ms9_ms10 += barWidth
+                End If
+            Next
+        End If
+
+
+
         If Size = "MAX" Then
-            x02 = 2
-            x03 = 10
+            Form1.Label24.Text = "0"
+            Form1.Label25.Text = "25"
+            Form1.Label26.Text = "50"
+            Form1.Label27.Text = "75"
+            Form1.Label28.Text = "100"
         ElseIf Size = "Middle" Then
-            x02 = 1
-            x03 = 5
+            'FormMiddle.Label24.Text = "0"
+            'FormMiddle.Label25.Text = "25"
+            'FormMiddle.Label26.Text = "50"
+            'FormMiddle.Label27.Text = "75"
+            'FormMiddle.Label28.Text = "100"
         ElseIf Size = "MIN" Then
-            x02 = 1
-            x03 = 5
-        End If
-        If Graphsmallcount >= 2 Then '縮小表示している場合
-            '10σ分のヒストグラムを表示する(10σを超える場合はすべて10σ部分に含まれる)
-            For i = 0 To HistogramCount - 1
-                dblData = HistogramBuf(i)
-                If dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) Then '-0.5σ～0.5σの場合
-                    Cl_s1 += x02
-                ElseIf dblData > (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) Then '1σ-2σの場合
-                    s1_s2 += x02
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) Then '2σ-3σの場合
-                    s2_s3 += x02
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) Then '3σ-4σの場合
-                    s3_s4 += x02
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) Then '4σ-5σの場合
-                    s4_s5 += x02
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) Then '5σ-6σの場合
-                    s5_s6 += x02
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) Then '6σ-7σの場合
-                    s6_s7 += x02
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) Then '7σ-8σの場合
-                    s7_s8 += x02
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '8σ-9σの場合
-                    s8_s9 += x02
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '9σ以上の場合
-                    s9_s10 += x02
-                ElseIf dblData <= (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) * 1.5)) Then 'CL--1σの場合
-                    Cl_ms1 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 1.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) Then '-1σ--2σの場合
-                    ms1_ms2 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) Then '-2σ--3σの場合
-                    ms2_ms3 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) Then '-3σ--4σの場合
-                    ms3_ms4 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) Then '-4σ--5σの場合
-                    ms4_ms5 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) Then '-5σ--6σの場合
-                    ms5_ms6 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) Then '-6σ--7σの場合
-                    ms6_ms7 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) Then '-7σ--8σの場合
-                    ms7_ms8 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-8σ--9σの場合
-                    ms8_ms9 += x02
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-9σ以上の場合
-                    ms9_ms10 += x02
-                End If
-            Next
-
-
-
-            If Size = "MAX" Then
-                Form1.Label24.Text = "0"
-                Form1.Label25.Text = "25"
-                Form1.Label26.Text = "50"
-                Form1.Label27.Text = "75"
-                Form1.Label28.Text = "100"
-            ElseIf Size = "Middle" Then
-                'FormMiddle.Label24.Text = "0"
-                'FormMiddle.Label25.Text = "25"
-                'FormMiddle.Label26.Text = "50"
-                'FormMiddle.Label27.Text = "75"
-                'FormMiddle.Label28.Text = "100"
-            ElseIf Size = "MIN" Then
-                'FormSmall.Label24.Text = "0"
-                'FormSmall.Label25.Text = "25"
-                'FormSmall.Label26.Text = "50"
-                'FormSmall.Label27.Text = "75"
-                'FormSmall.Label28.Text = "100"
-            End If
-
-        Else
-            '10σ分のヒストグラムを表示する(10σを超える場合はすべて10σ部分に含まれる)
-            For i = 0 To HistogramCount - 1
-                dblData = HistogramBuf(i)
-                If dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) Then '-0.5σ～0.5σの場合
-                    Cl_s1 += x03
-                ElseIf dblData > (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) Then '1σ-2σの場合
-                    s1_s2 += x03
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) Then '2σ-3σの場合
-                    s2_s3 += x03
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) Then '3σ-4σの場合
-                    s3_s4 += x03
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) Then '4σ-5σの場合
-                    s4_s5 += x03
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) Then '5σ-6σの場合
-                    s5_s6 += x03
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) Then '6σ-7σの場合
-                    s6_s7 += x03
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) Then '7σ-8σの場合
-                    s7_s8 += x03
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '8σ-9σの場合
-                    s8_s9 += x03
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '9σ以上の場合
-                    s9_s10 += x03
-                ElseIf dblData <= (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) * 1.5)) Then 'CL--1σの場合
-                    Cl_ms1 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 1.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) Then '-1σ--2σの場合
-                    ms1_ms2 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) Then '-2σ--3σの場合
-                    ms2_ms3 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) Then '-3σ--4σの場合
-                    ms3_ms4 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) Then '-4σ--5σの場合
-                    ms4_ms5 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) Then '-5σ--6σの場合
-                    ms5_ms6 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) Then '-6σ--7σの場合
-                    ms6_ms7 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) Then '-7σ--8σの場合
-                    ms7_ms8 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-8σ--9σの場合
-                    ms8_ms9 += x03
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-9σ以上の場合
-                    ms9_ms10 += x03
-                End If
-            Next
-
-            If Size = "MAX" Then
-                Form1.Label24.Text = "0"
-                Form1.Label25.Text = "5"
-                Form1.Label26.Text = "10"
-                Form1.Label27.Text = "15"
-                Form1.Label28.Text = "20"
-            ElseIf Size = "Middle" Then
-                'FormMiddle.Label24.Text = "0"
-                'FormMiddle.Label25.Text = "5"
-                'FormMiddle.Label26.Text = "10"
-                'FormMiddle.Label27.Text = "15"
-                'FormMiddle.Label28.Text = "20"
-            ElseIf Size = "MIN" Then
-                'FormSmall.Label24.Text = "0"
-                'FormSmall.Label25.Text = "5"
-                'FormSmall.Label26.Text = "10"
-                'FormSmall.Label27.Text = "15"
-                'FormSmall.Label28.Text = "20"
-            End If
+            'FormSmall.Label24.Text = "0"
+            'FormSmall.Label25.Text = "25"
+            'FormSmall.Label26.Text = "50"
+            'FormSmall.Label27.Text = "75"
+            'FormSmall.Label28.Text = "100"
         End If
 
 
-        '-0.5σ～-1.5σのヒストグラムを表示==================================
+        '-0.5?~-1.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma / 2)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
 
@@ -2593,7 +2511,7 @@ Module Module2
 
         Next
 
-        '-1.5σ～-2.5σのヒストグラムを表示==================================
+        '-1.5?~-2.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - X_Shiguma * 1.5) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2606,7 +2524,7 @@ Module Module2
             End If
         Next
 
-        '-2.5σ～-3.5σのヒストグラムを表示==================================
+        '-2.5?~-3.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 2.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2619,7 +2537,7 @@ Module Module2
             End If
         Next
 
-        '-3.5σ～-4.5σのヒストグラムを表示==================================
+        '-3.5?~-4.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 3.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2632,7 +2550,7 @@ Module Module2
             End If
         Next
 
-        '-4.5σ～-5.5σのヒストグラムを表示==================================
+        '-4.5?~-5.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 4.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2645,7 +2563,7 @@ Module Module2
             End If
         Next
 
-        '-5.5σ～-6.5σのヒストグラムを表示==================================
+        '-5.5?~-6.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 5.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2658,7 +2576,7 @@ Module Module2
             End If
         Next
 
-        '-6.5σ～-7.5σのヒストグラムを表示==================================
+        '-6.5?~-7.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 6.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2671,7 +2589,7 @@ Module Module2
             End If
         Next
 
-        '-7.5σ～-8.5σのヒストグラムを表示==================================
+        '-7.5?~-8.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 7.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2684,7 +2602,7 @@ Module Module2
             End If
         Next
 
-        '-8.5σ～-9.5σのヒストグラムを表示==================================
+        '-8.5?~-9.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 8.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2697,7 +2615,7 @@ Module Module2
             End If
         Next
 
-        '-9.5σ～-10.5σのヒストグラムを表示==================================
+        '-9.5?~-10.5???????????==================================
         yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 9.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2710,7 +2628,7 @@ Module Module2
             End If
         Next
 
-        '-0.5σ～0.5σのヒストグラムを表示==================================
+        '-0.5?~0.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2723,7 +2641,7 @@ Module Module2
             End If
         Next
 
-        '0.5σ～1.5σのヒストグラムを表示==================================
+        '0.5?~1.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2736,7 +2654,7 @@ Module Module2
             End If
         Next
 
-        '1.5σ～2.5σのヒストグラムを表示==================================
+        '1.5?~2.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2749,7 +2667,7 @@ Module Module2
             End If
         Next
 
-        '2.5σ～3.5σのヒストグラムを表示==================================
+        '2.5?~3.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2762,7 +2680,7 @@ Module Module2
             End If
         Next
 
-        '3.5σ～4.5σのヒストグラムを表示==================================
+        '3.5?~4.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2775,7 +2693,7 @@ Module Module2
             End If
         Next
 
-        '4.5σ～5.5σのヒストグラムを表示==================================
+        '4.5?~5.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2788,7 +2706,7 @@ Module Module2
             End If
         Next
 
-        '5.5σ～6.5σのヒストグラムを表示==================================
+        '5.5?~6.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2801,7 +2719,7 @@ Module Module2
             End If
         Next
 
-        '6.5σ～7.5σのヒストグラムを表示==================================
+        '6.5?~7.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2814,7 +2732,7 @@ Module Module2
             End If
         Next
 
-        '7.5σ～8.5σのヒストグラムを表示==================================
+        '7.5?~8.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2827,7 +2745,7 @@ Module Module2
             End If
         Next
 
-        '8.5σ～9.5σのヒストグラムを表示==================================
+        '8.5?~9.5???????????==================================
         yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 9.5)) - dblLow) * Bairitu
         For j = 0 To CInt(X_Shiguma / strStep * x00)
             If j = 0 Then
@@ -2841,15 +2759,11 @@ Module Module2
         Next
 
 
-        c1.Dispose()
-        c2.Dispose()
-        c3.Dispose()
-        f.Dispose()
         g.Dispose()
 
     End Sub
 
-    'サーバーよりツリー項目一覧を取得する
+    '??????????????????
     Public Function getTreeData() As String(,)
 
         getTreeData = Nothing
@@ -2923,8 +2837,8 @@ Module Module2
             strSQL &= " AND SPC_Property.cTreeName9 =  SPC_Alarm.cTreeName9"
             strSQL &= " AND SPC_Property.cTreeName10 =  SPC_Alarm.cTreeName10"
 
-            strSQL &= " WHERE SPC_Property.aStartDate < SPC_Master.dWorkDate" 'アラーム対象である
-            strSQL &= " AND SPC_Alarm.cApproverName = ''" 'QC未承認である
+            strSQL &= " WHERE SPC_Property.aStartDate < SPC_Master.dWorkDate" '?????????
+            strSQL &= " AND SPC_Alarm.cApproverName = ''" 'QC??????
 
 
             Adapter = New SqlDataAdapter()
@@ -2956,7 +2870,7 @@ Module Module2
             Cn.Dispose()
             P_Table.Dispose()
             AMP_Table.Dispose()
-            StrErrMes = "ツリー項目一覧取得エラー" + ", " + ex.Message & ex.StackTrace
+            StrErrMes = "????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Return Nothing
         End Try
@@ -2964,7 +2878,7 @@ Module Module2
 
     End Function
 
-#Region "マウス関係"
+#Region "?????"
     Public mouseY As Integer
     Public i_old As Integer = 1000
     Public Sub popUp(ByVal mx1 As Integer, ByVal my1 As Integer, ByVal objName As String)
@@ -2996,7 +2910,7 @@ Module Module2
 
                 If Not (xpnbuf_X(i) - 10 < mx1 And xpnbuf_X(i) + 10 > mx1) Then Continue For
 
-                If 0 < ypnbuf_X(i) Then '上にはみ出てるの対応
+                If 0 < ypnbuf_X(i) Then '??????????
                     If Not (ypnbuf_X(i) - 10 < my1 And ypnbuf_X(i) + 10 > my1) Then Continue For
                 End If
                 dc = 1
@@ -3006,7 +2920,7 @@ Module Module2
 
                 If Not (xpnbuf_R(i) - 10 < mx1 And xpnbuf_R(i) + 10 > mx1) Then Continue For
 
-                If 0 < ypnbuf_R(i) Then '上にはみ出てるの対応
+                If 0 < ypnbuf_R(i) Then '??????????
                     If Not (ypnbuf_R(i) - 10 < my1 And ypnbuf_R(i) + 10 > my1) Then Continue For
                 End If
                 dc = 1
@@ -3024,10 +2938,10 @@ Module Module2
 
 
 
-        If i_old = i Then Exit Sub '横座標が前と違ったら
+        If i_old = i Then Exit Sub '??????????
 
 
-        'popUp位置調整(Xの時はpic2の高さ。Rの時はpic1の高さ)
+        'popUp????(X???pic2????R???pic1???)
         Dim form_top As Integer
         Dim form_left As Integer
         Dim pic1_top As Integer
@@ -3068,7 +2982,7 @@ Module Module2
             pic_left = pic1_left
         End If
 
-        mouseY = form_top + pic_top + 30 'フォーム上のバー分
+        mouseY = form_top + pic_top + 30 '?????????
 
 
 
@@ -3237,23 +3151,23 @@ Module Module2
 
             Dim SPCMes(8 - 1) As String
             If StrLanguage = "Japanese" Then
-                SPCMes(0) = "①1点が3σ制限を越える"
-                SPCMes(1) = "②8点連続で片側に出現"
-                SPCMes(2) = "③3点のうち2点が2σ制限を越える"
-                SPCMes(3) = "④5点のうち4点が1σ制限を越える"
-                SPCMes(4) = "⑤15点連続で1σ制限内に出現"
-                SPCMes(5) = "⑥8点連続で1σ制限を越える"
-                SPCMes(6) = "⑦7点連続上昇or下降"
-                SPCMes(7) = "⑧14点連続で交互に上下する"
+                SPCMes(0) = "?1??3???????"
+                SPCMes(1) = "?8?????????"
+                SPCMes(2) = "?3????2??2???????"
+                SPCMes(3) = "?5????4??1???????"
+                SPCMes(4) = "?15????1???????"
+                SPCMes(5) = "?8????1???????"
+                SPCMes(6) = "?7?????or??"
+                SPCMes(7) = "?14???????????"
             ElseIf StrLanguage = "English" Then
-                SPCMes(0) = "①Any single data point falls outside The 3σ limit from the centerline"
-                SPCMes(1) = "②Eight consecutive points fall on the same side of the centerline"
-                SPCMes(2) = "③Two out of three consecutive points fall beyond the 2σ limit"
-                SPCMes(3) = "④Four out of five consecutive points fall beyond the 1σ limit"
-                SPCMes(4) = "⑤Fifteen consective points fall within ±1σ"
-                SPCMes(5) = "⑥Eight consective points fall beyond the 1σ limit"
-                SPCMes(6) = "⑦Seven consective points fall continuous rise or descent"
-                SPCMes(7) = "⑧Fourteen consective points fall alternate up and down"
+                SPCMes(0) = "?Any single data point falls outside The 3? limit from the centerline"
+                SPCMes(1) = "?Eight consecutive points fall on the same side of the centerline"
+                SPCMes(2) = "?Two out of three consecutive points fall beyond the 2? limit"
+                SPCMes(3) = "?Four out of five consecutive points fall beyond the 1? limit"
+                SPCMes(4) = "?Fifteen consective points fall within ?1?"
+                SPCMes(5) = "?Eight consective points fall beyond the 1? limit"
+                SPCMes(6) = "?Seven consective points fall continuous rise or descent"
+                SPCMes(7) = "?Fourteen consective points fall alternate up and down"
             End If
             Dim p As Integer = 0
             If Mode = "X" Then
@@ -3292,7 +3206,7 @@ Module Module2
             FormPopupNew.ResumeLayout(False)
 
 
-            FormPopupNew.Width = x1 + ((UBound(FormPopupNew.Values, 1) \ 5) + 1) * (Va0_x + x2 + Va_x + x3) - x3 + x4 + 6 '+6は外枠分
+            FormPopupNew.Width = x1 + ((UBound(FormPopupNew.Values, 1) \ 5) + 1) * (Va0_x + x2 + Va_x + x3) - x3 + x4 + 6 '+6????
             FormPopupNew.Height = FormPopupNew.Labels(11).Bottom + y7 + 29
 
 
@@ -3368,15 +3282,15 @@ Module Module2
             Exit Sub
         End If
 
-        If InStr(M_Alarm(SerectPoint)(p), "1") = 0 Then Exit Sub 'アラーム無し
+        If InStr(M_Alarm(SerectPoint)(p), "1") = 0 Then Exit Sub '??????
 
 
-        If btnName = "Right" Then '右クリック
-            '右クリック時アラームコメント入力画面を表示する
+        If btnName = "Right" Then '?????
+            '???????????????????????
             Get_AlarmInfo("Write", _mode)
             FormAlarmInput.Show()
-        ElseIf btnName = "Left" Then    '左クリック時アラームコメント表示画面を表示する
-            'アラームコメント表示画面表示
+        ElseIf btnName = "Left" Then    '???????????????????????
+            '??????????????
             Get_AlarmInfo("Read", _mode)
             FormAlarmDisp.Show()
         End If
@@ -3384,8 +3298,8 @@ Module Module2
 
     End Sub
 
-    'サーバーよりアラームデータを取得する
-    Public Sub Get_AlarmInfo(ByVal _RorW As String, ByVal _mode As String) 'データIDより検索 Mode→Read or Write
+    '??????????????????
+    Public Sub Get_AlarmInfo(ByVal _RorW As String, ByVal _mode As String) '???ID???? ModeRead or Write
         Dim strID As String = readMaster(M_Data(SerectPoint), _id)
 
         Dim Cn As New System.Data.SqlClient.SqlConnection
@@ -3430,13 +3344,13 @@ Module Module2
             Adapter.Dispose()
             Cn.Dispose()
 
-            StrErrMes = "アラームデータ取得エラー" + ", " + ex.Message & ex.StackTrace
+            StrErrMes = "????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
     End Sub
 
-    'アラームコメントを表示する
+    '?????????????
     ' [Module2.vb]
     ' ก๊อปปี้ไปวางทับ Sub Display_AlarmInfo ของเดิมทั้งหมด
     Public Sub Display_AlarmInfo(ByVal _table As DataTable, ByVal _RorW As String, ByVal _mode As String)
@@ -3450,39 +3364,39 @@ Module Module2
 
             If StrLanguage = "Japanese" Then
                 If _table.Rows(0)("cSpcrule1").ToString = "True" Then
-                    strAlm &= "①1点が3σ制限を越える"
+                    strAlm &= "?1??3???????"
                 ElseIf _table.Rows(0)("cSpcrule2").ToString = "True" Then
-                    strAlm &= "②8点連続で片側に出現"
+                    strAlm &= "?8?????????"
                 ElseIf _table.Rows(0)("cSpcrule3").ToString = "True" Then
-                    strAlm &= "③3点のうち2点が2σ制限を越える"
+                    strAlm &= "?3????2??2???????"
                 ElseIf _table.Rows(0)("cSpcrule4").ToString = "True" Then
-                    strAlm &= "④5点のうち4点が1σ制限を越える"
+                    strAlm &= "?5????4??1???????"
                 ElseIf _table.Rows(0)("cSpcrule5").ToString = "True" Then
-                    strAlm &= "⑤15点連続で1σ制限内に出現"
+                    strAlm &= "?15????1???????"
                 ElseIf _table.Rows(0)("cSpcrule6").ToString = "True" Then
-                    strAlm &= "⑥8点連続で1σ制限を越える"
+                    strAlm &= "?8????1???????"
                 ElseIf _table.Rows(0)("cSpcrule7").ToString = "True" Then
-                    strAlm &= "⑦7点連続上昇or下降"
+                    strAlm &= "?7?????or??"
                 ElseIf _table.Rows(0)("cSpcrule8").ToString = "True" Then
-                    strAlm &= "⑧14点連続で交互に上下する"
+                    strAlm &= "?14???????????"
                 End If
             ElseIf StrLanguage = "English" Then
                 If _table.Rows(0)("cSpcrule1").ToString = "True" Then
-                    strAlm &= "①Any single data point falls outside The 3σ limit from the centerline"
+                    strAlm &= "?Any single data point falls outside The 3? limit from the centerline"
                 ElseIf _table.Rows(0)("cSpcrule2").ToString = "True" Then
-                    strAlm &= "②Eight consecutive points fall on the same side of the centerline"
+                    strAlm &= "?Eight consecutive points fall on the same side of the centerline"
                 ElseIf _table.Rows(0)("cSpcrule3").ToString = "True" Then
-                    strAlm &= "③Two out of three consecutive points fall beyond the 2σ limit"
+                    strAlm &= "?Two out of three consecutive points fall beyond the 2? limit"
                 ElseIf _table.Rows(0)("cSpcrule4").ToString = "True" Then
-                    strAlm &= "④Four out of five consecutive points fall beyond the 1σ limit"
+                    strAlm &= "?Four out of five consecutive points fall beyond the 1? limit"
                 ElseIf _table.Rows(0)("cSpcrule5").ToString = "True" Then
-                    strAlm &= "⑤Fifteen consective points fall within ±1σ"
+                    strAlm &= "?Fifteen consective points fall within ?1?"
                 ElseIf _table.Rows(0)("cSpcrule6").ToString = "True" Then
-                    strAlm &= "⑥Eight consective points fall beyond the 1σ limit"
+                    strAlm &= "?Eight consective points fall beyond the 1? limit"
                 ElseIf _table.Rows(0)("cSpcrule7").ToString = "True" Then
-                    strAlm &= "⑦Seven consective points fall continuous rise or descent"
+                    strAlm &= "?Seven consective points fall continuous rise or descent"
                 ElseIf _table.Rows(0)("cSpcrule8").ToString = "True" Then
-                    strAlm &= "⑧Fourteen consective points fall alternate up and down"
+                    strAlm &= "?Fourteen consective points fall alternate up and down"
                 End If
             End If
 
