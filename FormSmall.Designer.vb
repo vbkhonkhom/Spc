@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FormSmall
     Inherits System.Windows.Forms.Form
 
     'フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class FormSmall
     'メモ: 以下のプロシージャは Windows フォーム デザイナで必要です。
     'Windows フォーム デザイナを使用して変更できます。  
     'コード エディタを使って変更しないでください。
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormSmall))
         Me.PictureBox7 = New System.Windows.Forms.PictureBox()
@@ -116,6 +116,11 @@ Partial Class FormSmall
         Me.TextItem = New System.Windows.Forms.TextBox()
         Me.txtStan_No = New System.Windows.Forms.Label()
         Me.ButtonLoad = New System.Windows.Forms.Button()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -766,7 +771,7 @@ Partial Class FormSmall
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.PropertyToolStripMenuItem, Me.SPCRuleToolStripMenuItem, Me.SettingToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(1006, 26)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1026, 26)
         Me.MenuStrip1.TabIndex = 253
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -1021,11 +1026,66 @@ Partial Class FormSmall
         Me.ButtonLoad.Text = "Load Test Data"
         Me.ButtonLoad.UseVisualStyleBackColor = True
         '
+        'Label28
+        '
+        Me.Label28.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label28.Location = New System.Drawing.Point(984, 385)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(35, 19)
+        Me.Label28.TabIndex = 325
+        Me.Label28.Text = "200"
+        Me.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label27
+        '
+        Me.Label27.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label27.Location = New System.Drawing.Point(954, 385)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(35, 19)
+        Me.Label27.TabIndex = 324
+        Me.Label27.Text = "150"
+        Me.Label27.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label26
+        '
+        Me.Label26.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label26.Location = New System.Drawing.Point(923, 385)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(35, 19)
+        Me.Label26.TabIndex = 323
+        Me.Label26.Text = "100"
+        Me.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label25
+        '
+        Me.Label25.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label25.Location = New System.Drawing.Point(884, 385)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(35, 19)
+        Me.Label25.TabIndex = 322
+        Me.Label25.Text = "50"
+        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label24
+        '
+        Me.Label24.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label24.Location = New System.Drawing.Point(851, 385)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(35, 19)
+        Me.Label24.TabIndex = 321
+        Me.Label24.Text = "0"
+        Me.Label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'FormSmall
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(1006, 668)
+        Me.ClientSize = New System.Drawing.Size(1026, 668)
+        Me.Controls.Add(Me.Label28)
+        Me.Controls.Add(Me.Label27)
+        Me.Controls.Add(Me.Label26)
+        Me.Controls.Add(Me.Label25)
+        Me.Controls.Add(Me.Label24)
         Me.Controls.Add(Me.ButtonLoad)
         Me.Controls.Add(Me.txtStan_No)
         Me.Controls.Add(Me.TextItem)
@@ -1195,4 +1255,9 @@ Partial Class FormSmall
     Friend WithEvents UserToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents txtStan_No As System.Windows.Forms.Label
     Friend WithEvents ButtonLoad As Button
+    Friend WithEvents Label28 As Label
+    Friend WithEvents Label27 As Label
+    Friend WithEvents Label26 As Label
+    Friend WithEvents Label25 As Label
+    Friend WithEvents Label24 As Label
 End Class

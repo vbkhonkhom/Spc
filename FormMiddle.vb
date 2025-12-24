@@ -321,4 +321,5 @@ Public Class FormMiddle
         LoadDataFromTextFile()
         GraphDisp()
     End Sub
+
 End Class

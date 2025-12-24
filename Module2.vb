@@ -1193,7 +1193,7 @@ Module Module2
         Dim GPen As New Pen(Color.Red, 2)
         GPen.DashStyle = Drawing2D.DashStyle.Solid
         Dim HPen As New Pen(Color.Red, 3)
-        HPen.DashStyle = Drawing2D.DashStyle.Solid
+        HPen.DashStyle = Drawing2D.DashStyle.Dot
         Dim IPen As New Pen(Color.Blue, 1)
         IPen.DashStyle = Drawing2D.DashStyle.Solid
         Dim JPen As New Pen(Color.Blue, 1)
@@ -1271,12 +1271,15 @@ Module Module2
         End If
 
         Dim strStanUR As String = ""
-        If PropertyTable.Rows(PropertyNo)("cLimitType") = "UpperLower" Then
-            strStanUR = PropertyTable.Rows(PropertyNo)("cLsl") & " - " & PropertyTable.Rows(PropertyNo)("cUsl") & " " & strUnit
+        Dim sLSL As String = Format(PropertyTable.Rows(PropertyNo)("cLsl"), "0.000")
+        Dim sUSL As String = Format(PropertyTable.Rows(PropertyNo)("cUsl"), "0.000")
+
+        If PropertyTable.Rows(PropertyNo)("cLimitType") = "UpperLower" Or PropertyTable.Rows(PropertyNo)("cLimitType") = "Fixed" Then
+            strStanUR = sLSL & " - " & sUSL & " " & strUnit
         ElseIf PropertyTable.Rows(PropertyNo)("cLimitType") = "Upper" Then
-            strStanUR = "<= " & PropertyTable.Rows(PropertyNo)("cUsl") & " " & strUnit
+            strStanUR = "<= " & sUSL & " " & strUnit
         ElseIf PropertyTable.Rows(PropertyNo)("cLimitType") = "Lower" Then
-            strStanUR = ">= " & PropertyTable.Rows(PropertyNo)("cLsl") & " " & strUnit 'Ver2.11 change cUsl cLsl
+            strStanUR = ">= " & sLSL & " " & strUnit 'Ver2.11 change cUsl cLsl
         End If
 
 
@@ -2285,7 +2288,7 @@ Module Module2
         FPen.DashStyle = Drawing2D.DashStyle.Dash
 
         Dim HPen As New Pen(Color.Red, 3)
-        HPen.DashStyle = Drawing2D.DashStyle.Solid
+        HPen.DashStyle = Drawing2D.DashStyle.Dot
 
         Dim B1Pen As New Pen(Color.Black, 1)
         B1Pen.DashStyle = Drawing2D.DashStyle.Solid
@@ -2300,17 +2303,17 @@ Module Module2
             x00 = 40
             x01 = 25
             x02 = 2
-            x03 = 10
+            x03 = 3
         ElseIf Size = "Middle" Then
             x00 = 35
             x01 = 20
             x02 = 1
-            x03 = 5
+            x03 = 3
         ElseIf Size = "MIN" Then
             x00 = 25
             x01 = 20
             x02 = 1
-            x03 = 5
+            x03 = 3
         End If
 
         xp = 0
@@ -2426,6 +2429,29 @@ Module Module2
         Dim barWidth As Integer = x03
         If Graphsmallcount >= 2 Then barWidth = x02
 
+        Dim ScaleUnit As Double = 0
+        If barWidth > 0 Then ScaleUnit = x01 / barWidth
+
+        If Size = "MAX" Then
+            Form1.Label24.Text = "0"
+            Form1.Label25.Text = Format(ScaleUnit * 1, "0")
+            Form1.Label26.Text = Format(ScaleUnit * 2, "0")
+            Form1.Label27.Text = Format(ScaleUnit * 3, "0")
+            Form1.Label28.Text = Format(ScaleUnit * 4, "0")
+        ElseIf Size = "Middle" Then
+            FormMiddle.Label24.Text = "0"
+            FormMiddle.Label25.Text = Format(ScaleUnit * 1, "0")
+            FormMiddle.Label26.Text = Format(ScaleUnit * 2, "0")
+            FormMiddle.Label27.Text = Format(ScaleUnit * 3, "0")
+            FormMiddle.Label28.Text = Format(ScaleUnit * 4, "0")
+        ElseIf Size = "MIN" Then
+            FormSmall.Label24.Text = "0"
+            FormSmall.Label25.Text = Format(ScaleUnit * 2, "0")
+            FormSmall.Label26.Text = Format(ScaleUnit * 2, "0")
+            FormSmall.Label27.Text = Format(ScaleUnit * 4, "0")
+            FormSmall.Label28.Text = Format(ScaleUnit * 5, "0")
+        End If
+
         If X_Shiguma <> 0 Then
             For i = 0 To HistogramCount - 1
                 dblData = HistogramBuf(i)
@@ -2475,25 +2501,7 @@ Module Module2
 
 
 
-        If Size = "MAX" Then
-            Form1.Label24.Text = "0"
-            Form1.Label25.Text = "25"
-            Form1.Label26.Text = "50"
-            Form1.Label27.Text = "75"
-            Form1.Label28.Text = "100"
-        ElseIf Size = "Middle" Then
-            'FormMiddle.Label24.Text = "0"
-            'FormMiddle.Label25.Text = "25"
-            'FormMiddle.Label26.Text = "50"
-            'FormMiddle.Label27.Text = "75"
-            'FormMiddle.Label28.Text = "100"
-        ElseIf Size = "MIN" Then
-            'FormSmall.Label24.Text = "0"
-            'FormSmall.Label25.Text = "25"
-            'FormSmall.Label26.Text = "50"
-            'FormSmall.Label27.Text = "75"
-            'FormSmall.Label28.Text = "100"
-        End If
+
 
 
         '-0.5?~-1.5???????????==================================

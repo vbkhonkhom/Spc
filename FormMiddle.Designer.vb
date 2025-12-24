@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FormMiddle
     Inherits System.Windows.Forms.Form
 
     'フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class FormMiddle
     'メモ: 以下のプロシージャは Windows フォーム デザイナで必要です。
     'Windows フォーム デザイナを使用して変更できます。  
     'コード エディタを使って変更しないでください。
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMiddle))
         Me.labLCL = New System.Windows.Forms.Label()
@@ -117,6 +117,11 @@ Partial Class FormMiddle
         Me.TextItem = New System.Windows.Forms.TextBox()
         Me.txtStan_No = New System.Windows.Forms.Label()
         Me.ButtonLoad = New System.Windows.Forms.Button()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
         Me.GroupBox4.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -262,7 +267,7 @@ Partial Class FormMiddle
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.PropertyToolStripMenuItem, Me.SPCRuleToolStripMenuItem, Me.SettingToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(1259, 28)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1268, 28)
         Me.MenuStrip1.TabIndex = 309
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -640,7 +645,7 @@ Partial Class FormMiddle
         '
         Me.PictureBox9.BackColor = System.Drawing.Color.WhiteSmoke
         Me.PictureBox9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.PictureBox9.Location = New System.Drawing.Point(1082, 119)
+        Me.PictureBox9.Location = New System.Drawing.Point(1083, 119)
         Me.PictureBox9.Name = "PictureBox9"
         Me.PictureBox9.Size = New System.Drawing.Size(165, 380)
         Me.PictureBox9.TabIndex = 302
@@ -1033,11 +1038,66 @@ Partial Class FormMiddle
         Me.ButtonLoad.Text = "Load Test Data"
         Me.ButtonLoad.UseVisualStyleBackColor = True
         '
+        'Label28
+        '
+        Me.Label28.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label28.Location = New System.Drawing.Point(1229, 502)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(35, 19)
+        Me.Label28.TabIndex = 324
+        Me.Label28.Text = "200"
+        Me.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label27
+        '
+        Me.Label27.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label27.Location = New System.Drawing.Point(1190, 502)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(35, 19)
+        Me.Label27.TabIndex = 323
+        Me.Label27.Text = "150"
+        Me.Label27.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label26
+        '
+        Me.Label26.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label26.Location = New System.Drawing.Point(1148, 502)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(35, 19)
+        Me.Label26.TabIndex = 322
+        Me.Label26.Text = "100"
+        Me.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label25
+        '
+        Me.Label25.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label25.Location = New System.Drawing.Point(1097, 502)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(35, 19)
+        Me.Label25.TabIndex = 321
+        Me.Label25.Text = "50"
+        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'Label24
+        '
+        Me.Label24.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label24.Location = New System.Drawing.Point(1059, 502)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(35, 19)
+        Me.Label24.TabIndex = 320
+        Me.Label24.Text = "0"
+        Me.Label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'FormMiddle
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(1259, 896)
+        Me.ClientSize = New System.Drawing.Size(1268, 896)
+        Me.Controls.Add(Me.Label28)
+        Me.Controls.Add(Me.Label27)
+        Me.Controls.Add(Me.Label26)
+        Me.Controls.Add(Me.Label25)
+        Me.Controls.Add(Me.Label24)
         Me.Controls.Add(Me.ButtonLoad)
         Me.Controls.Add(Me.txtStan_No)
         Me.Controls.Add(Me.TextItem)
@@ -1209,4 +1269,9 @@ Partial Class FormMiddle
     Friend WithEvents StandardNoToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents txtStan_No As System.Windows.Forms.Label
     Friend WithEvents ButtonLoad As Button
+    Friend WithEvents Label28 As Label
+    Friend WithEvents Label27 As Label
+    Friend WithEvents Label26 As Label
+    Friend WithEvents Label25 As Label
+    Friend WithEvents Label24 As Label
 End Class

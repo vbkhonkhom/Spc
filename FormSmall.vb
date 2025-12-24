@@ -275,4 +275,5 @@ Public Class FormSmall
         LoadDataFromTextFile()
         GraphDisp()
     End Sub
+
 End Class

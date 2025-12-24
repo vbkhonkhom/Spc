@@ -287,7 +287,7 @@ Partial Class Form1
         'Label27
         '
         Me.Label27.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label27.Location = New System.Drawing.Point(1467, 573)
+        Me.Label27.Location = New System.Drawing.Point(1458, 573)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(35, 19)
         Me.Label27.TabIndex = 138
@@ -297,7 +297,7 @@ Partial Class Form1
         'Label26
         '
         Me.Label26.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label26.Location = New System.Drawing.Point(1417, 573)
+        Me.Label26.Location = New System.Drawing.Point(1409, 573)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(35, 19)
         Me.Label26.TabIndex = 137
@@ -307,7 +307,7 @@ Partial Class Form1
         'Label25
         '
         Me.Label25.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label25.Location = New System.Drawing.Point(1362, 573)
+        Me.Label25.Location = New System.Drawing.Point(1358, 573)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(35, 19)
         Me.Label25.TabIndex = 136

@@ -1541,12 +1541,15 @@ Public Class Form1
 
         Dim lines() As String = File.ReadAllLines(filePath)
 
+
         ' 2. รีเซ็ตค่าเริ่มต้น (สำคัญมาก! ห้ามลบ)
         SPCDataNum = 0
         Graphsmallcount = 1  ' <--- [แก้จุดที่ 1] ต้องตั้งเป็น 1 เสมอ ไม่งั้นกราฟเด้ง
-
-        ReDim M_Data(0)
+        ReDim M_Data(-1)
         ReDim M_Alarm(lines.Length) ' สร้าง Alarm รอไว้กันเด้ง
+
+        Dim xValues As New System.Collections.Generic.List(Of Double)
+        Dim rValues As New System.Collections.Generic.List(Of Double)
 
         ' 3. อ่านข้อมูลจากไฟล์ (โครงสร้างไฟล์ของคุณถูกต้องแล้ว)
         For i As Integer = 1 To lines.Length - 1
@@ -1562,7 +1565,12 @@ Public Class Form1
 
             ' เช็คว่ามีคอลัมน์ครบตามไฟล์ testdata หรือไม่
             If cols.Length > 21 Then
-                SPCDataNum += 1
+                ReDim Preserve M_Data(SPCDataNum)
+
+                Dim valX As Double = Val(cols(5))
+                Dim valR As Double = Val(cols(20))
+                xValues.Add(valX)
+                rValues.Add(valR)
 
                 ' จัด Format ข้อมูล: ID, Date Time, Mean, Range, MR, Operator, Lot, Status
                 Dim rawRow As String = ""
@@ -1575,7 +1583,7 @@ Public Class Form1
                 rawRow &= cols(0) & ","
                 rawRow &= "Pass"
 
-                ReDim Preserve M_Data(SPCDataNum)
+
                 M_Data(SPCDataNum) = rawRow
 
                 ' สร้าง Alarm หลอกๆ กัน Error
@@ -1588,32 +1596,36 @@ Public Class Form1
                 If SPCDataNum < MesureValueBuf.Length Then
                     MesureValueBuf(SPCDataNum) = cols(5)
                 End If
-
-                ' อ่านค่า Limit (ใช้ TryCatch กันไฟล์มีปัญหา)
-                Try
-                    X_UCL = Val(cols(9))
-                    X_LCL = Val(cols(10))
-                    X_CL = (X_UCL + X_LCL) / 2
-                    R_UCL = Val(cols(14))
-                    R_LCL = Val(cols(15))
-                    R_CL = (R_UCL + R_LCL) / 2
-                    X_USL = Val(cols(12))
-                    X_LSL = Val(cols(13))
-                Catch ex As Exception
-                End Try
+                SPCDataNum += 1
             End If
         Next
 
+
+        If xValues.Count > 0 Then
+            X_CL = Math.Round(xValues.Average(), 2)
+            Dim sumSq As Double = 0
+            For Each v As Double In xValues
+                sumSq += Math.Pow(v - X_CL, 2)
+            Next
+            Dim stdDev As Double = 0
+            If xValues.Count > 1 Then stdDev = Math.Sqrt(sumSq / (xValues.Count - 1))
+            If stdDev = 0 Then stdDev = 1
+            X_UCL = Math.Round(X_CL + (3 * stdDev), 2)
+            X_LCL = Math.Round(X_CL - (3 * stdDev), 2)
+
+            If rValues.Count > 0 Then
+                R_CL = Math.Round(rValues.Average(), 2)
+                R_UCL = Math.Round(R_CL * 2.11, 2)
+                R_LCL = 0
+            End If
+
+            X_USL = X_UCL
+            X_LSL = X_LCL
+        End If
         ' ==================================================================
         ' 4. [แก้จุดที่ 2] สร้างตาราง PropertyTable จำลอง (เพราะไม่ได้โหลดจาก DB)
         ' ==================================================================
         Dim dt As New DataTable()
-
-        ' ประกาศชื่อคอลัมน์ใส่ตัวแปร (กันพิมพ์ผิด)
-        Dim col_cMRdev As String = "cMRdev"
-        Dim col_cMR As String = "cMR"
-        Dim col_cSpcRule As String = "cSpcRule"
-
         ' สร้างคอลัมน์ให้ครบทุกตัวที่กราฟต้องใช้
         dt.Columns.Add("cScl", GetType(Double))
         dt.Columns.Add("cTolerance", GetType(Double))
@@ -1630,43 +1642,45 @@ Public Class Form1
         dt.Columns.Add("cRdev", GetType(Double))
         dt.Columns.Add("cMRucl", GetType(Double))
         dt.Columns.Add("cMRcl", GetType(Double))
-        dt.Columns.Add(col_cMRdev, GetType(Double))
-        dt.Columns.Add(col_cMR, GetType(String))
+        dt.Columns.Add("cMRdev", GetType(Double))
+        dt.Columns.Add("cMR", GetType(String))
         dt.Columns.Add("cApprovalDate", GetType(DateTime))
         dt.Columns.Add("cMachineNo", GetType(String))
         dt.Columns.Add("cControlItem", GetType(String))
 
         For k As Integer = 1 To 8
-            dt.Columns.Add(col_cSpcRule & k, GetType(Boolean))
+            dt.Columns.Add("cSpcRule" & k, GetType(Boolean))
         Next
 
         ' ใส่ข้อมูลจำลอง 1 แถว เพื่อให้กราฟมีค่าไปวาดเส้น Limit
         Try
             Dim dr As DataRow = dt.NewRow()
-            dr("cScl") = (X_UCL + X_LCL) / 2
-            dr("cTolerance") = Math.Abs(X_USL - X_LSL)
-            If IsDBNull(dr("cTolerance")) OrElse dr("cTolerance") = 0 Then dr("cTolerance") = 1
+            dr("cScl") = X_CL
+            dr("cTolerance") = Math.Round((X_UCL - X_LCL) * 1.2, 2)
+            If dr("cTolerance") <= 0 Then dr("cTolerance") = 10
             dr("cUnit") = "Unit"
-            dr("cLimitType") = "UpperLower"
+            dr("cLimitType") = "Fixed"
             dr("cUsl") = X_USL
             dr("cLsl") = X_LSL
             dr("cXcl") = X_CL
             dr("cXucl") = X_UCL
             dr("cXlcl") = X_LCL
-            dr("cXdev") = 0
+            dr("cXdev") = Math.Round(Math.Abs(X_UCL - X_LCL) / 6, 2)
+
             dr("cRucl") = R_UCL
             dr("cRcl") = R_CL
-            dr("cRdev") = 0
+            dr("cRdev") = Math.Round(R_CL / 2, 2)
+
             dr("cMRucl") = 0
             dr("cMRcl") = 0
-            dr(col_cMRdev) = 0
-            dr(col_cMR) = "0"
+            dr("cMRdev") = 0
+            dr("cMR") = "0"
             dr("cApprovalDate") = DateTime.Now.AddYears(-10)
             dr("cMachineNo") = "TextFile"
             dr("cControlItem") = "Data"
 
             For k As Integer = 1 To 8
-                dr(col_cSpcRule & k) = False
+                dr("cSpcRule" & k) = False
             Next
 
             dt.Rows.Add(dr)
