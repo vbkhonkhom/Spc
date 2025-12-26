@@ -1176,7 +1176,7 @@ Module Module2
         End If
 
 
-        Dim APen As New Pen(Color.Green, 2)
+        Dim APen As New Pen(Color.Green, 3)
         APen.DashStyle = Drawing2D.DashStyle.Dot
         Dim BPen As New Pen(Color.Black, 1)
         BPen.DashStyle = Drawing2D.DashStyle.Dot
@@ -1193,7 +1193,7 @@ Module Module2
         Dim GPen As New Pen(Color.Red, 2)
         GPen.DashStyle = Drawing2D.DashStyle.Solid
         Dim HPen As New Pen(Color.Red, 3)
-        HPen.DashStyle = Drawing2D.DashStyle.Dot
+        HPen.DashStyle = Drawing2D.DashStyle.Solid
         Dim IPen As New Pen(Color.Blue, 1)
         IPen.DashStyle = Drawing2D.DashStyle.Solid
         Dim JPen As New Pen(Color.Blue, 1)
@@ -2252,522 +2252,529 @@ Module Module2
 
 
         Dim g As Graphics
+        Try
 
-        If Size = "MAX" Then
-            With Form1.PictureBox9
-                .Image = New Bitmap(Form1.PictureBox9.Width, Form1.PictureBox9.Height)
-                g = Graphics.FromImage(.Image)
-            End With
-            yh = 428
-        ElseIf Size = "Middle" Then
-            With FormMiddle.PictureBox9
-                .Image = New Bitmap(FormMiddle.PictureBox9.Width, FormMiddle.PictureBox9.Height)
-                g = Graphics.FromImage(.Image)
-            End With
-            yh = 362
-        ElseIf Size = "MIN" Then
-            With FormSmall.PictureBox9
-                .Image = New Bitmap(FormSmall.PictureBox9.Width, FormSmall.PictureBox9.Height)
-                g = Graphics.FromImage(.Image)
-            End With
-            yh = 260
-        End If
-        g.Clear(Color.White)
-        g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+            If String.IsNullOrEmpty(Size) Then Size = "MAX"
 
-        Dim APen As New Pen(Color.Green, 2)
-        APen.DashStyle = Drawing2D.DashStyle.Dot
+            If Size = "MAX" Then
+                With Form1.PictureBox9
+                    .Image = New Bitmap(Form1.PictureBox9.Width, Form1.PictureBox9.Height)
+                    g = Graphics.FromImage(.Image)
+                End With
+                yh = 428
+            ElseIf Size = "Middle" Then
+                With FormMiddle.PictureBox9
+                    .Image = New Bitmap(FormMiddle.PictureBox9.Width, FormMiddle.PictureBox9.Height)
+                    g = Graphics.FromImage(.Image)
+                End With
+                yh = 362
+            ElseIf Size = "MIN" Then
+                With FormSmall.PictureBox9
+                    .Image = New Bitmap(FormSmall.PictureBox9.Width, FormSmall.PictureBox9.Height)
+                    g = Graphics.FromImage(.Image)
+                End With
+                yh = 260
+            Else
+                With Form1.PictureBox9
+                    .Image = New Bitmap(Form1.PictureBox9.Width, Form1.PictureBox9.Height)
+                    g = Graphics.FromImage(.Image)
+                End With
+                yh = 428
+                Size = "MAX"
+            End If
+            g.Clear(Color.White)
+            g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
 
-        Dim BPen As New Pen(Color.Black, 1)
-        BPen.DashStyle = Drawing2D.DashStyle.Dot
+            Dim APen As New Pen(Color.Green, 2)
+            APen.DashStyle = Drawing2D.DashStyle.Dot
 
-        Dim CPen As New Pen(Color.Orange, 1)
-        CPen.DashStyle = Drawing2D.DashStyle.Solid
+            Dim BPen As New Pen(Color.Black, 1)
+            BPen.DashStyle = Drawing2D.DashStyle.Dot
 
-        Dim FPen As New Pen(Color.Red, 2)
-        FPen.DashStyle = Drawing2D.DashStyle.Dash
+            Dim CPen As New Pen(Color.Orange, 1)
+            CPen.DashStyle = Drawing2D.DashStyle.Solid
 
-        Dim HPen As New Pen(Color.Red, 3)
-        HPen.DashStyle = Drawing2D.DashStyle.Dot
+            Dim FPen As New Pen(Color.Red, 2)
+            FPen.DashStyle = Drawing2D.DashStyle.Dash
 
-        Dim B1Pen As New Pen(Color.Black, 1)
-        B1Pen.DashStyle = Drawing2D.DashStyle.Solid
-        '===============================================================
+            Dim HPen As New Pen(Color.Red, 3)
+            HPen.DashStyle = Drawing2D.DashStyle.Solid
 
-        Dim x00 As Integer
-        Dim x01 As Integer
-        Dim x02 As Integer
-        Dim x03 As Integer
-        'Dim x04 As Integer
-        If Size = "MAX" Then
-            x00 = 40
-            x01 = 25
-            x02 = 2
-            x03 = 3
-        ElseIf Size = "Middle" Then
-            x00 = 35
-            x01 = 20
-            x02 = 1
-            x03 = 3
-        ElseIf Size = "MIN" Then
-            x00 = 25
-            x01 = 20
-            x02 = 1
-            x03 = 3
-        End If
+            Dim B1Pen As New Pen(Color.Black, 1)
+            B1Pen.DashStyle = Drawing2D.DashStyle.Solid
+            '===============================================================
 
-        xp = 0
-        yp = 0
-        yp0 = 0
+            Dim x00 As Integer
+            Dim x01 As Integer
+            Dim x02 As Integer
+            Dim x03 As Integer
 
-        Dim p As Integer = 0
-        If PropertyTable IsNot Nothing AndAlso PropertyTable.Rows.Count > 0 Then
-            If DispStartPosition < M_Data.Length AndAlso M_Data(DispStartPosition) IsNot Nothing Then
-                Dim currentDataDate As String = readMaster(M_Data(DispStartPosition), _wDate)
-                For k = 0 To PropertyTable.Rows.Count - 1
-                    If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
-                        If String.Compare(currentDataDate, PropertyTable.Rows(k)("cApprovalDate").ToString()) > 0 Then
-                            p = k
+
+
+            If Size = "MAX" Then
+                x00 = 40
+                x01 = 25
+                x02 = 2
+                x03 = 5
+            ElseIf Size = "Middle" Then
+                x00 = 35
+                x01 = 20
+                x02 = 1
+                x03 = 3
+            ElseIf Size = "MIN" Then
+                x00 = 25
+                x01 = 20
+                x02 = 1
+                x03 = 2
+            End If
+
+            xp = 0
+            yp = 0
+            yp0 = 0
+
+            Dim p As Integer = 0
+            If PropertyTable IsNot Nothing AndAlso PropertyTable.Rows.Count > 0 Then
+                If DispStartPosition < M_Data.Length AndAlso M_Data(DispStartPosition) IsNot Nothing Then
+                    Dim currentDataDate As String = readMaster(M_Data(DispStartPosition), _wDate)
+                    For k = 0 To PropertyTable.Rows.Count - 1
+                        If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
+                            If String.Compare(currentDataDate, PropertyTable.Rows(k)("cApprovalDate").ToString()) > 0 Then
+                                p = k
+                            End If
                         End If
+                    Next
+                End If
+                X_SCL = PropertyTable.Rows(p)("cScl")
+                X_kousa = PropertyTable.Rows(p)("cTolerance")
+                X_CL = PropertyTable.Rows(p)("cXcl")
+                X_USL = PropertyTable.Rows(p)("cUsl")
+                X_LSL = PropertyTable.Rows(p)("cLsl")
+                X_UCL = PropertyTable.Rows(p)("cXucl")
+                X_LCL = PropertyTable.Rows(p)("cXlcl")
+                X_Shiguma = PropertyTable.Rows(p)("cXdev")
+                X_gType = PropertyTable.Rows(p)("cLimitType")
+            Else
+                g.Dispose()
+                Exit Sub
+            End If
+
+            dbl1 = X_SCL
+            dbl2 = X_kousa / 5 'STEP
+            If dbl2 = 0 Then dbl2 = 1
+            strStep = CStr(dbl2)      'STEP
+            Bairitu = x00 / dbl2       '?40Pix
+            dblLow = dbl1 - dbl2 * 5
+
+            If X_gType = "UpperLower" Then
+                yp0 = ((X_USL + X_LSL) / 2 - X_SCL)
+                yp = yp0 * Bairitu
+            End If
+
+
+            ul = yp + yh - (X_USL - dblLow) * Bairitu
+            g.DrawLine(HPen, 0, ul, 1500, ul)
+            ll = yp + yh - (X_LSL - dblLow) * Bairitu
+            g.DrawLine(HPen, 0, ll, 1500, ll)
+
+
+            jk = DispStartPosition
+
+            For j = 1 To 100
+                g.DrawLine(BPen, xp + j * x01, 0, xp + j * x01, 1000)
+            Next
+
+            yps = yp + yh - (X_CL - dblLow) * Bairitu
+
+            If X_Shiguma <> 0 Then
+                For j = 0 To 100
+                    Dim y_plus As Integer = CInt(yps + j * X_Shiguma / strStep * x00)
+                    Dim y_minus As Integer = CInt(yps - j * X_Shiguma / strStep * x00)
+                    g.DrawLine(BPen, xp, y_plus, xp + 36 * 30, y_plus)
+                    g.DrawLine(BPen, xp, y_minus, xp + 36 * 30, y_minus)
+                Next
+            Else
+                For j = 1 To 15
+                    g.DrawLine(BPen, xp, yp + j * x00, xp + 36 * 30, yp + j * x00)
+                Next
+            End If
+
+
+            For i = DispStartPosition To DispStartPosition + 29 + (30 * (Graphsmallcount - 1))
+                If i > UBound(M_Data) Then Exit For
+                If M_Data(i) Is Nothing Then Continue For
+                strData = readMaster(M_Data(i), _X)
+                If strData <> "" Then
+                    HistogramBuf(HistogramCount) = strData
+                    HistogramCount += 1
+                    jk += 1
+                End If
+            Next
+
+            If X_Shiguma = 0 And HistogramCount > 1 Then
+                Dim h_sum As Double = 0
+                Dim h_sumSq As Double = 0
+                For i = 0 To HistogramCount - 1
+                    Dim val As Double = CDbl(HistogramBuf(i))
+                    h_sum += val
+                    h_sumSq += val * val
+                Next
+                Dim h_mean As Double = h_sum / HistogramCount
+                Dim h_var As Double = (h_sumSq - (h_sum * h_sum) / HistogramCount) / (HistogramCount - 1)
+                If h_var > 0 Then X_Shiguma = Math.Sqrt(h_var)
+                If X_CL = 0 Then X_CL = h_mean
+            End If
+
+            If X_Shiguma <= 0.000001 Then X_Shiguma = dbl2
+            yps = yp + yh - (X_CL - dblLow) * Bairitu
+
+
+            local_yucl = yp + yh - (X_UCL - dblLow) * Bairitu
+            local_ylcl = yp + yh - (X_LCL - dblLow) * Bairitu
+            local_ycl = yp + yh - (X_CL - dblLow) * Bairitu
+            '?????????=================
+
+            g.DrawLine(FPen, 0, local_yucl, 1500, local_yucl)
+            g.DrawLine(FPen, 0, local_ylcl, 1500, local_ylcl)
+            g.DrawLine(APen, 0, local_ycl, 1500, local_ycl)
+
+            Dim barWidth As Integer = 3
+
+
+            Dim ScaleUnit As Double = 0
+            ScaleUnit = 25.0 / 3.0
+            If Size = "MIN" Or Size = "Middle" Then ScaleUnit = 20.0 / 3.0
+
+
+            If Size = "MAX" Then
+                Form1.Label24.Text = "0"
+                Form1.Label25.Text = Format(ScaleUnit * 1, "0")
+                Form1.Label26.Text = Format(ScaleUnit * 2, "0")
+                Form1.Label27.Text = Format(ScaleUnit * 3, "0")
+                Form1.Label28.Text = Format(ScaleUnit * 4, "0")
+            ElseIf Size = "Middle" Then
+                FormMiddle.Label24.Text = "0"
+                FormMiddle.Label25.Text = Format(ScaleUnit * 1, "0")
+                FormMiddle.Label26.Text = Format(ScaleUnit * 2, "0")
+                FormMiddle.Label27.Text = Format(ScaleUnit * 3, "0")
+                FormMiddle.Label28.Text = Format(ScaleUnit * 4, "0")
+            ElseIf Size = "MIN" Then
+                FormSmall.Label24.Text = "0"
+                FormSmall.Label25.Text = Format(ScaleUnit * 1, "0")
+                FormSmall.Label26.Text = Format(ScaleUnit * 2, "0")
+                FormSmall.Label27.Text = Format(ScaleUnit * 3, "0")
+                FormSmall.Label28.Text = Format(ScaleUnit * 4, "0")
+            End If
+
+            If X_Shiguma <> 0 Then
+                For i = 0 To HistogramCount - 1
+                    dblData = HistogramBuf(i)
+                    If dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) Then '-0.5?~0.5????
+                        Cl_s1 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) Then '1?-2????
+                        s1_s2 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) Then '2?-3????
+                        s2_s3 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) Then '3?-4????
+                        s3_s4 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) Then '4?-5????
+                        s4_s5 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) Then '5?-6????
+                        s5_s6 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) Then '6?-7????
+                        s6_s7 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) Then '7?-8????
+                        s7_s8 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '8?-9????
+                        s8_s9 += barWidth
+                    ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '9??????
+                        s9_s10 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) * 1.5)) Then 'CL--1????
+                        Cl_ms1 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 1.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) Then '-1?--2????
+                        ms1_ms2 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) Then '-2?--3????
+                        ms2_ms3 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) Then '-3?--4????
+                        ms3_ms4 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) Then '-4?--5????
+                        ms4_ms5 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) Then '-5?--6????
+                        ms5_ms6 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) Then '-6?--7????
+                        ms6_ms7 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) Then '-7?--8????
+                        ms7_ms8 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-8?--9????
+                        ms8_ms9 += barWidth
+                    ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-9??????
+                        ms9_ms10 += barWidth
                     End If
                 Next
             End If
-            X_SCL = PropertyTable.Rows(p)("cScl")
-            X_kousa = PropertyTable.Rows(p)("cTolerance")
-            X_CL = PropertyTable.Rows(p)("cXcl")
-            X_USL = PropertyTable.Rows(p)("cUsl")
-            X_LSL = PropertyTable.Rows(p)("cLsl")
-            X_UCL = PropertyTable.Rows(p)("cXucl")
-            X_LCL = PropertyTable.Rows(p)("cXlcl")
-            X_Shiguma = PropertyTable.Rows(p)("cXdev")
-            X_gType = PropertyTable.Rows(p)("cLimitType")
-        Else
-            g.Dispose()
-            Exit Sub
-        End If
 
-        dbl1 = X_SCL
-        dbl2 = X_kousa / 5 'STEP
-        If dbl2 = 0 Then dbl2 = 1
-        strStep = CStr(dbl2)      'STEP
-        Bairitu = x00 / dbl2       '?40Pix
-        dblLow = dbl1 - dbl2 * 5
+            '-0.5?~-1.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma / 2)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
 
-        If X_gType = "UpperLower" Then
-            yp0 = ((X_USL + X_LSL) / 2 - X_SCL)
-            yp = yp0 * Bairitu
-        End If
-
-
-        ul = yp + yh - (X_USL - dblLow) * Bairitu
-        g.DrawLine(HPen, 0, ul, 1500, ul)
-        ll = yp + yh - (X_LSL - dblLow) * Bairitu
-        g.DrawLine(HPen, 0, ll, 1500, ll)
-
-
-        jk = DispStartPosition
-
-        For j = 1 To 100
-            g.DrawLine(BPen, xp + j * x01, 0, xp + j * x01, 1000)
-        Next
-
-        yps = yp + yh - (X_CL - dblLow) * Bairitu
-
-        If X_Shiguma <> 0 Then
-            For j = 0 To 100
-                Dim y_plus As Integer = CInt(yps + j * X_Shiguma / strStep * x00)
-                Dim y_minus As Integer = CInt(yps - j * X_Shiguma / strStep * x00)
-                g.DrawLine(BPen, xp, y_plus, xp + 36 * 30, y_plus)
-                g.DrawLine(BPen, xp, y_minus, xp + 36 * 30, y_minus)
-            Next
-        Else
-            For j = 1 To 15
-                g.DrawLine(BPen, xp, yp + j * x00, xp + 36 * 30, yp + j * x00)
-            Next
-        End If
-
-
-        For i = DispStartPosition To DispStartPosition + 29 + (30 * (Graphsmallcount - 1))
-            If i > UBound(M_Data) Then Exit For
-            If M_Data(i) Is Nothing Then Continue For
-            strData = readMaster(M_Data(i), _X)
-            'strData = SPCXDataBuf(i)
-            If strData <> "" Then
-                HistogramBuf(HistogramCount) = strData
-                HistogramCount += 1
-                jk += 1
-            End If
-        Next
-
-        If X_Shiguma = 0 And HistogramCount > 1 Then
-            Dim h_sum As Double = 0
-            Dim h_sumSq As Double = 0
-            For i = 0 To HistogramCount - 1
-                Dim val As Double = CDbl(HistogramBuf(i))
-                h_sum += val
-                h_sumSq += val * val
-            Next
-            Dim h_mean As Double = h_sum / HistogramCount
-            Dim h_var As Double = (h_sumSq - (h_sum * h_sum) / HistogramCount) / (HistogramCount - 1)
-            If h_var > 0 Then X_Shiguma = Math.Sqrt(h_var)
-            If X_CL = 0 Then X_CL = h_mean
-        End If
-
-        If X_Shiguma <= 0.000001 Then X_Shiguma = dbl2
-        yps = yp + yh - (X_CL - dblLow) * Bairitu
-
-
-        local_yucl = yp + yh - (X_UCL - dblLow) * Bairitu
-        local_ylcl = yp + yh - (X_LCL - dblLow) * Bairitu
-        local_ycl = yp + yh - (X_CL - dblLow) * Bairitu
-        '?????????=================
-
-        g.DrawLine(FPen, 0, local_yucl, 1500, local_yucl)
-        g.DrawLine(FPen, 0, local_ylcl, 1500, local_ylcl)
-        g.DrawLine(APen, 0, local_ycl, 1500, local_ycl)
-
-        Dim barWidth As Integer = x03
-        If Graphsmallcount >= 2 Then barWidth = x02
-
-        Dim ScaleUnit As Double = 0
-        If barWidth > 0 Then ScaleUnit = x01 / barWidth
-
-        If Size = "MAX" Then
-            Form1.Label24.Text = "0"
-            Form1.Label25.Text = Format(ScaleUnit * 1, "0")
-            Form1.Label26.Text = Format(ScaleUnit * 2, "0")
-            Form1.Label27.Text = Format(ScaleUnit * 3, "0")
-            Form1.Label28.Text = Format(ScaleUnit * 4, "0")
-        ElseIf Size = "Middle" Then
-            FormMiddle.Label24.Text = "0"
-            FormMiddle.Label25.Text = Format(ScaleUnit * 1, "0")
-            FormMiddle.Label26.Text = Format(ScaleUnit * 2, "0")
-            FormMiddle.Label27.Text = Format(ScaleUnit * 3, "0")
-            FormMiddle.Label28.Text = Format(ScaleUnit * 4, "0")
-        ElseIf Size = "MIN" Then
-            FormSmall.Label24.Text = "0"
-            FormSmall.Label25.Text = Format(ScaleUnit * 2, "0")
-            FormSmall.Label26.Text = Format(ScaleUnit * 2, "0")
-            FormSmall.Label27.Text = Format(ScaleUnit * 4, "0")
-            FormSmall.Label28.Text = Format(ScaleUnit * 5, "0")
-        End If
-
-        If X_Shiguma <> 0 Then
-            For i = 0 To HistogramCount - 1
-                dblData = HistogramBuf(i)
-                If dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) Then '-0.5?~0.5????
-                    Cl_s1 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) Then '1?-2????
-                    s1_s2 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) Then '2?-3????
-                    s2_s3 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) Then '3?-4????
-                    s3_s4 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) Then '4?-5????
-                    s4_s5 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) Then '5?-6????
-                    s5_s6 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) Then '6?-7????
-                    s6_s7 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) Then '7?-8????
-                    s7_s8 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) And dblData <= (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '8?-9????
-                    s8_s9 += barWidth
-                ElseIf dblData > (CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) Then '9??????
-                    s9_s10 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - (CDbl(X_Shiguma) / 2)) And dblData > (CDbl(X_CL) - (CDbl(X_Shiguma) * 1.5)) Then 'CL--1????
-                    Cl_ms1 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 1.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) Then '-1?--2????
-                    ms1_ms2 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 2.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) Then '-2?--3????
-                    ms2_ms3 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 3.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) Then '-3?--4????
-                    ms3_ms4 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 4.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) Then '-4?--5????
-                    ms4_ms5 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 5.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) Then '-5?--6????
-                    ms5_ms6 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 6.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) Then '-6?--7????
-                    ms6_ms7 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 7.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) Then '-7?--8????
-                    ms7_ms8 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 8.5)) And dblData > (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-8?--9????
-                    ms8_ms9 += barWidth
-                ElseIf dblData <= (CDbl(X_CL) - CDbl(X_Shiguma * 9.5)) Then '-9??????
-                    ms9_ms10 += barWidth
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, Cl_ms1, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, Cl_ms1, j + yps)
+                    g.DrawLine(B1Pen, Cl_ms1, yps, Cl_ms1, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, Cl_ms1, j + yps)
                 End If
             Next
-        End If
 
+            '-1.5?~-2.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - X_Shiguma * 1.5) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms1_ms2, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms1_ms2, j + yps)
+                    g.DrawLine(B1Pen, ms1_ms2, yps, ms1_ms2, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms1_ms2, j + yps)
+                End If
+            Next
 
+            '-2.5?~-3.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 2.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms2_ms3, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms2_ms3, j + yps)
+                    g.DrawLine(B1Pen, ms2_ms3, yps, ms2_ms3, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms2_ms3, j + yps)
+                End If
+            Next
 
+            '-3.5?~-4.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 3.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms3_ms4, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms3_ms4, j + yps)
+                    g.DrawLine(B1Pen, ms3_ms4, yps, ms3_ms4, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms3_ms4, j + yps)
+                End If
+            Next
 
+            '-4.5?~-5.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 4.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms4_ms5, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms4_ms5, j + yps)
+                    g.DrawLine(B1Pen, ms4_ms5, yps, ms4_ms5, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms4_ms5, j + yps)
+                End If
+            Next
 
+            '-5.5?~-6.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 5.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms5_ms6, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms5_ms6, j + yps)
+                    g.DrawLine(B1Pen, ms5_ms6, yps, ms5_ms6, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms5_ms6, j + yps)
+                End If
+            Next
 
-        '-0.5?~-1.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma / 2)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
+            '-6.5?~-7.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 6.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms6_ms7, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms6_ms7, j + yps)
+                    g.DrawLine(B1Pen, ms6_ms7, yps, ms6_ms7, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms6_ms7, j + yps)
+                End If
+            Next
 
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, Cl_ms1, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, Cl_ms1, j + yps)
-                g.DrawLine(B1Pen, Cl_ms1, yps, Cl_ms1, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, Cl_ms1, j + yps)
-            End If
+            '-7.5?~-8.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 7.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms7_ms8, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms7_ms8, j + yps)
+                    g.DrawLine(B1Pen, ms7_ms8, yps, ms7_ms8, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms7_ms8, j + yps)
+                End If
+            Next
 
-        Next
+            '-8.5?~-9.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 8.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms8_ms9, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms8_ms9, j + yps)
+                    g.DrawLine(B1Pen, ms8_ms9, yps, ms8_ms9, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms8_ms9, j + yps)
+                End If
+            Next
 
-        '-1.5?~-2.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - X_Shiguma * 1.5) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms1_ms2, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms1_ms2, j + yps)
-                g.DrawLine(B1Pen, ms1_ms2, yps, ms1_ms2, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms1_ms2, j + yps)
-            End If
-        Next
+            '-9.5?~-10.5???????????==================================
+            yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 9.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms9_ms10, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, ms9_ms10, j + yps)
+                    g.DrawLine(B1Pen, ms9_ms10, yps, ms9_ms10, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, ms9_ms10, j + yps)
+                End If
+            Next
 
-        '-2.5?~-3.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 2.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms2_ms3, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms2_ms3, j + yps)
-                g.DrawLine(B1Pen, ms2_ms3, yps, ms2_ms3, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms2_ms3, j + yps)
-            End If
-        Next
+            '-0.5?~0.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, Cl_s1, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, Cl_s1, j + yps)
+                    g.DrawLine(B1Pen, Cl_s1, yps, Cl_s1, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, Cl_s1, j + yps)
+                End If
+            Next
 
-        '-3.5?~-4.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 3.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms3_ms4, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms3_ms4, j + yps)
-                g.DrawLine(B1Pen, ms3_ms4, yps, ms3_ms4, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms3_ms4, j + yps)
-            End If
-        Next
+            '0.5?~1.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s1_s2, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s1_s2, j + yps)
+                    g.DrawLine(B1Pen, s1_s2, yps, s1_s2, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s1_s2, j + yps)
+                End If
+            Next
 
-        '-4.5?~-5.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 4.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms4_ms5, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms4_ms5, j + yps)
-                g.DrawLine(B1Pen, ms4_ms5, yps, ms4_ms5, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms4_ms5, j + yps)
-            End If
-        Next
+            '1.5?~2.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s2_s3, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s2_s3, j + yps)
+                    g.DrawLine(B1Pen, s2_s3, yps, s2_s3, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s2_s3, j + yps)
+                End If
+            Next
 
-        '-5.5?~-6.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 5.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms5_ms6, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms5_ms6, j + yps)
-                g.DrawLine(B1Pen, ms5_ms6, yps, ms5_ms6, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms5_ms6, j + yps)
-            End If
-        Next
+            '2.5?~3.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s3_s4, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s3_s4, j + yps)
+                    g.DrawLine(B1Pen, s3_s4, yps, s3_s4, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s3_s4, j + yps)
+                End If
+            Next
 
-        '-6.5?~-7.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 6.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms6_ms7, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms6_ms7, j + yps)
-                g.DrawLine(B1Pen, ms6_ms7, yps, ms6_ms7, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms6_ms7, j + yps)
-            End If
-        Next
+            '3.5?~4.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s4_s5, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s4_s5, j + yps)
+                    g.DrawLine(B1Pen, s4_s5, yps, s4_s5, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s4_s5, j + yps)
+                End If
+            Next
 
-        '-7.5?~-8.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 7.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms7_ms8, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms7_ms8, j + yps)
-                g.DrawLine(B1Pen, ms7_ms8, yps, ms7_ms8, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms7_ms8, j + yps)
-            End If
-        Next
+            '4.5?~5.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s5_s6, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s5_s6, j + yps)
+                    g.DrawLine(B1Pen, s5_s6, yps, s5_s6, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s5_s6, j + yps)
+                End If
+            Next
 
-        '-8.5?~-9.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 8.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms8_ms9, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms8_ms9, j + yps)
-                g.DrawLine(B1Pen, ms8_ms9, yps, ms8_ms9, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms8_ms9, j + yps)
-            End If
-        Next
+            '5.5?~6.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s6_s7, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s6_s7, j + yps)
+                    g.DrawLine(B1Pen, s6_s7, yps, s6_s7, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s6_s7, j + yps)
+                End If
+            Next
 
-        '-9.5?~-10.5???????????==================================
-        yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 9.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, ms9_ms10, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, ms9_ms10, j + yps)
-                g.DrawLine(B1Pen, ms9_ms10, yps, ms9_ms10, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, ms9_ms10, j + yps)
-            End If
-        Next
+            '6.5?~7.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s7_s8, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s7_s8, j + yps)
+                    g.DrawLine(B1Pen, s7_s8, yps, s7_s8, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s7_s8, j + yps)
+                End If
+            Next
 
-        '-0.5?~0.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, Cl_s1, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, Cl_s1, j + yps)
-                g.DrawLine(B1Pen, Cl_s1, yps, Cl_s1, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, Cl_s1, j + yps)
-            End If
-        Next
+            '7.5?~8.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s8_s9, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s8_s9, j + yps)
+                    g.DrawLine(B1Pen, s8_s9, yps, s8_s9, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s8_s9, j + yps)
+                End If
+            Next
 
-        '0.5?~1.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s1_s2, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s1_s2, j + yps)
-                g.DrawLine(B1Pen, s1_s2, yps, s1_s2, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s1_s2, j + yps)
-            End If
-        Next
-
-        '1.5?~2.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s2_s3, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s2_s3, j + yps)
-                g.DrawLine(B1Pen, s2_s3, yps, s2_s3, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s2_s3, j + yps)
-            End If
-        Next
-
-        '2.5?~3.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s3_s4, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s3_s4, j + yps)
-                g.DrawLine(B1Pen, s3_s4, yps, s3_s4, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s3_s4, j + yps)
-            End If
-        Next
-
-        '3.5?~4.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s4_s5, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s4_s5, j + yps)
-                g.DrawLine(B1Pen, s4_s5, yps, s4_s5, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s4_s5, j + yps)
-            End If
-        Next
-
-        '4.5?~5.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s5_s6, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s5_s6, j + yps)
-                g.DrawLine(B1Pen, s5_s6, yps, s5_s6, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s5_s6, j + yps)
-            End If
-        Next
-
-        '5.5?~6.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s6_s7, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s6_s7, j + yps)
-                g.DrawLine(B1Pen, s6_s7, yps, s6_s7, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s6_s7, j + yps)
-            End If
-        Next
-
-        '6.5?~7.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s7_s8, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s7_s8, j + yps)
-                g.DrawLine(B1Pen, s7_s8, yps, s7_s8, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s7_s8, j + yps)
-            End If
-        Next
-
-        '7.5?~8.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s8_s9, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s8_s9, j + yps)
-                g.DrawLine(B1Pen, s8_s9, yps, s8_s9, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s8_s9, j + yps)
-            End If
-        Next
-
-        '8.5?~9.5???????????==================================
-        yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 9.5)) - dblLow) * Bairitu
-        For j = 0 To CInt(X_Shiguma / strStep * x00)
-            If j = 0 Then
-                g.DrawLine(B1Pen, 0, j + yps, s9_s10, j + yps)
-            ElseIf j = CInt(X_Shiguma / strStep * x00) Then
-                g.DrawLine(B1Pen, 0, j + yps, s9_s10, j + yps)
-                g.DrawLine(B1Pen, s9_s10, yps, s9_s10, j + yps)
-            Else
-                g.DrawLine(CPen, 0, j + yps, s9_s10, j + yps)
-            End If
-        Next
-
-
-        g.Dispose()
+            '8.5?~9.5???????????==================================
+            yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 9.5)) - dblLow) * Bairitu
+            For j = 0 To CInt(X_Shiguma / strStep * x00)
+                If j = 0 Then
+                    g.DrawLine(B1Pen, 0, j + yps, s9_s10, j + yps)
+                ElseIf j = CInt(X_Shiguma / strStep * x00) Then
+                    g.DrawLine(B1Pen, 0, j + yps, s9_s10, j + yps)
+                    g.DrawLine(B1Pen, s9_s10, yps, s9_s10, j + yps)
+                Else
+                    g.DrawLine(CPen, 0, j + yps, s9_s10, j + yps)
+                End If
+            Next
+            g.Dispose()
+        Catch ex As Exception
+        End Try
 
     End Sub
 
@@ -3032,6 +3039,13 @@ Module Module2
 
         po = DispStartPosition + d
 
+        If M_Data Is Nothing Then Exit Sub
+
+        If po < 0 OrElse po > UBound(M_Data) Then Exit Sub
+
+        If M_Data(po) Is Nothing Then Exit Sub
+
+        If po >= MesureValueBuf.Length Then Exit Sub
 
         If readMaster(M_Data(po), _X) <> "" Then
 

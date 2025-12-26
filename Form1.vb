@@ -1572,6 +1572,16 @@ Public Class Form1
                 xValues.Add(valX)
                 rValues.Add(valR)
 
+
+                If cols.Length > 13 Then
+                    Dim fileUSL As Double = Val(cols(12))
+                    Dim fileLSL As Double = Val(cols(13))
+                    If fileUSL <> 0 Or fileLSL <> 0 Then
+                        X_USL = fileUSL
+                        X_LSL = fileLSL
+                    End If
+                End If
+
                 ' จัด Format ข้อมูล: ID, Date Time, Mean, Range, MR, Operator, Lot, Status
                 Dim rawRow As String = ""
                 rawRow &= i & ","
@@ -1602,7 +1612,7 @@ Public Class Form1
 
 
         If xValues.Count > 0 Then
-            X_CL = Math.Round(xValues.Average(), 2)
+            X_CL = Math.Round(xValues.Average(), 3)
             Dim sumSq As Double = 0
             For Each v As Double In xValues
                 sumSq += Math.Pow(v - X_CL, 2)
@@ -1610,17 +1620,17 @@ Public Class Form1
             Dim stdDev As Double = 0
             If xValues.Count > 1 Then stdDev = Math.Sqrt(sumSq / (xValues.Count - 1))
             If stdDev = 0 Then stdDev = 1
-            X_UCL = Math.Round(X_CL + (3 * stdDev), 2)
-            X_LCL = Math.Round(X_CL - (3 * stdDev), 2)
+            X_UCL = Math.Round(X_CL + (3 * stdDev), 3)
+            X_LCL = Math.Round(X_CL - (3 * stdDev), 3)
 
             If rValues.Count > 0 Then
-                R_CL = Math.Round(rValues.Average(), 2)
-                R_UCL = Math.Round(R_CL * 2.11, 2)
+                R_CL = Math.Round(rValues.Average(), 3)
+                R_UCL = Math.Round(R_CL * 2.11, 3)
                 R_LCL = 0
             End If
 
-            X_USL = X_UCL
-            X_LSL = X_LCL
+            'X_USL = X_UCL
+            'X_LSL = X_LCL
         End If
         ' ==================================================================
         ' 4. [แก้จุดที่ 2] สร้างตาราง PropertyTable จำลอง (เพราะไม่ได้โหลดจาก DB)
@@ -1656,8 +1666,20 @@ Public Class Form1
         Try
             Dim dr As DataRow = dt.NewRow()
             dr("cScl") = X_CL
-            dr("cTolerance") = Math.Round((X_UCL - X_LCL) * 1.2, 2)
-            If dr("cTolerance") <= 0 Then dr("cTolerance") = 10
+            Dim dist_Control As Double = Math.Abs(X_UCL - X_CL)
+            If Math.Abs(X_LSL - X_CL) > dist_Control Then dist_Control = Math.Abs(X_LCL - X_CL)
+            Dim dist_Spec As Double = 0
+            If X_USL <> 0 Or X_LSL <> 0 Then
+                dist_Spec = Math.Abs(X_USL - X_CL)
+                If Math.Abs(X_LSL - X_CL) > dist_Spec Then dist_Spec = Math.Abs(X_LSL - X_CL)
+            End If
+
+            Dim max_Dist As Double = dist_Control
+            If dist_Spec > max_Dist Then max_Dist = dist_Spec
+
+            If max_Dist = 0 Then max_Dist = 1
+            dr("cTolerance") = Math.Round(max_Dist * 1.2, 3)
+
             dr("cUnit") = "Unit"
             dr("cLimitType") = "Fixed"
             dr("cUsl") = X_USL
@@ -1665,11 +1687,11 @@ Public Class Form1
             dr("cXcl") = X_CL
             dr("cXucl") = X_UCL
             dr("cXlcl") = X_LCL
-            dr("cXdev") = Math.Round(Math.Abs(X_UCL - X_LCL) / 6, 2)
+            dr("cXdev") = Math.Round(Math.Abs(X_UCL - X_LCL) / 6, 3)
 
             dr("cRucl") = R_UCL
             dr("cRcl") = R_CL
-            dr("cRdev") = Math.Round(R_CL / 2, 2)
+            dr("cRdev") = Math.Round(R_CL / 2, 3)
 
             dr("cMRucl") = 0
             dr("cMRcl") = 0
