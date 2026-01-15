@@ -262,7 +262,7 @@ Partial Class FormMiddle
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.MenuStrip1.BackColor = System.Drawing.Color.LightSteelBlue
         Me.MenuStrip1.Font = New System.Drawing.Font("Meiryo", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.PropertyToolStripMenuItem, Me.SPCRuleToolStripMenuItem, Me.SettingToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
@@ -399,7 +399,7 @@ Partial Class FormMiddle
         '
         'AboutToolStripMenuItem
         '
-        Me.AboutToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.AboutToolStripMenuItem.BackColor = System.Drawing.Color.LightSteelBlue
         Me.AboutToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SoftwareVersion206ToolStripMenuItem})
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
         Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(59, 24)
@@ -940,7 +940,7 @@ Partial Class FormMiddle
         '
         'labTitle
         '
-        Me.labTitle.BackColor = System.Drawing.Color.DarkRed
+        Me.labTitle.BackColor = System.Drawing.Color.SteelBlue
         Me.labTitle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.labTitle.Font = New System.Drawing.Font("Impact", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.labTitle.ForeColor = System.Drawing.SystemColors.ControlLightLight
@@ -1091,7 +1091,7 @@ Partial Class FormMiddle
         'FormMiddle
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.BackColor = System.Drawing.Color.LightSteelBlue
         Me.ClientSize = New System.Drawing.Size(1268, 896)
         Me.Controls.Add(Me.Label28)
         Me.Controls.Add(Me.Label27)

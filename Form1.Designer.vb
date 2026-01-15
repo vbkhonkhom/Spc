@@ -287,7 +287,7 @@ Partial Class Form1
         'Label27
         '
         Me.Label27.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label27.Location = New System.Drawing.Point(1458, 573)
+        Me.Label27.Location = New System.Drawing.Point(1461, 573)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(35, 19)
         Me.Label27.TabIndex = 138
@@ -561,7 +561,7 @@ Partial Class Form1
         '
         'labTitle
         '
-        Me.labTitle.BackColor = System.Drawing.Color.DarkRed
+        Me.labTitle.BackColor = System.Drawing.Color.SteelBlue
         Me.labTitle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.labTitle.Font = New System.Drawing.Font("Impact", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.labTitle.ForeColor = System.Drawing.SystemColors.ControlLightLight
@@ -978,7 +978,7 @@ Partial Class Form1
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.MenuStrip1.BackColor = System.Drawing.Color.LightSteelBlue
         Me.MenuStrip1.Font = New System.Drawing.Font("Meiryo", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.PropertyToolStripMenuItem, Me.SPCRuleToolStripMenuItem, Me.SettingToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
@@ -1182,7 +1182,7 @@ Partial Class Form1
         'Form1
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.BackColor = System.Drawing.Color.LightSteelBlue
         Me.ClientSize = New System.Drawing.Size(1547, 978)
         Me.Controls.Add(Me.ButtonLoad)
         Me.Controls.Add(Me.txtStan_No)

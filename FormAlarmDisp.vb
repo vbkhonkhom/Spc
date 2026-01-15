@@ -1,5 +1,4 @@
 ﻿Public Class FormAlarmDisp
-
     Private Sub FormAlarmDisp_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         'Dim po As Integer
         'Dim temp() As String
@@ -113,7 +112,6 @@
     End Sub
     '日本語・英語表記の切り替えを行う
     Public Sub Translation_AlarmDisp()
-
         If StrLanguage = "Japanese" Then '日本語表記の場合
             Label1.Text = "発生日："
             Label3.Text = "異常内容："
@@ -141,6 +139,5 @@
             Label15.Text = "Maintenance record"
             Label16.Text = "Alarm Comment"
         End If
-
     End Sub
 End Class

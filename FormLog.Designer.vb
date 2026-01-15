@@ -22,8 +22,8 @@ Partial Class FormLog
     'コード エディタを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView
-        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
+        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -44,6 +44,7 @@ Partial Class FormLog
         'FormLog
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(1003, 518)
         Me.Controls.Add(Me.DataGridView1)
         Me.Name = "FormLog"

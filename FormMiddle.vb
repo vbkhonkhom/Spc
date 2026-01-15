@@ -233,25 +233,6 @@ Public Class FormMiddle
         Me.Hide()
     End Sub
 
-    Private Sub PictureBox1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox1.Click
-
-    End Sub
-    'PopUpを表示する
-    Private Sub _MouseMove(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles PictureBox1.MouseMove, PictureBox2.MouseMove
-        popUp(e.X, e.Y, sender.name)
-    End Sub
-    Private Sub _MouseLeave(ByVal sender As Object, ByVal e As System.EventArgs) Handles PictureBox1.MouseLeave, PictureBox2.MouseLeave
-        i_old = 1000
-        FormPopupNew.Close()
-    End Sub
-    'アラームコメントを表示・入力する
-    Private Sub _MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles PictureBox1.MouseDown, PictureBox2.MouseDown
-        alarmInfo(e.X, e.Y, sender.name, e.Button.ToString)
-    End Sub
-    Private Sub PictureBox2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox2.Click
-
-    End Sub
-
     Private Sub SPCRuleToolStripMenuItem1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SPCRuleToolStripMenuItem1.Click
         FormSPCRule.Show() 'SPC詳細設定画面を表示する
     End Sub

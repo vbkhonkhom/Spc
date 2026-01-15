@@ -22,17 +22,17 @@ Partial Class FormProperty
     'コード エディタを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.DateTimePicker2 = New System.Windows.Forms.DateTimePicker
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker
-        Me.Button1 = New System.Windows.Forms.Button
-        Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog
-        Me.Button2 = New System.Windows.Forms.Button
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.DateTimePicker3 = New System.Windows.Forms.DateTimePicker
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.DateTimePicker4 = New System.Windows.Forms.DateTimePicker
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.DateTimePicker2 = New System.Windows.Forms.DateTimePicker()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.DateTimePicker3 = New System.Windows.Forms.DateTimePicker()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.DateTimePicker4 = New System.Windows.Forms.DateTimePicker()
         Me.SuspendLayout()
         '
         'Label2
@@ -49,7 +49,7 @@ Partial Class FormProperty
         '
         Me.DateTimePicker2.Location = New System.Drawing.Point(161, 59)
         Me.DateTimePicker2.Name = "DateTimePicker2"
-        Me.DateTimePicker2.Size = New System.Drawing.Size(127, 19)
+        Me.DateTimePicker2.Size = New System.Drawing.Size(127, 20)
         Me.DateTimePicker2.TabIndex = 30
         '
         'Label1
@@ -66,7 +66,7 @@ Partial Class FormProperty
         '
         Me.DateTimePicker1.Location = New System.Drawing.Point(161, 27)
         Me.DateTimePicker1.Name = "DateTimePicker1"
-        Me.DateTimePicker1.Size = New System.Drawing.Size(127, 19)
+        Me.DateTimePicker1.Size = New System.Drawing.Size(127, 20)
         Me.DateTimePicker1.TabIndex = 28
         '
         'Button1
@@ -106,7 +106,7 @@ Partial Class FormProperty
         '
         Me.DateTimePicker3.Location = New System.Drawing.Point(161, 190)
         Me.DateTimePicker3.Name = "DateTimePicker3"
-        Me.DateTimePicker3.Size = New System.Drawing.Size(127, 19)
+        Me.DateTimePicker3.Size = New System.Drawing.Size(127, 20)
         Me.DateTimePicker3.TabIndex = 35
         '
         'Label4
@@ -123,12 +123,13 @@ Partial Class FormProperty
         '
         Me.DateTimePicker4.Location = New System.Drawing.Point(161, 158)
         Me.DateTimePicker4.Name = "DateTimePicker4"
-        Me.DateTimePicker4.Size = New System.Drawing.Size(127, 19)
+        Me.DateTimePicker4.Size = New System.Drawing.Size(127, 20)
         Me.DateTimePicker4.TabIndex = 33
         '
         'FormProperty
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(317, 268)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.Label3)

@@ -189,7 +189,7 @@ Partial Class FormSmall
         '
         'labTitle
         '
-        Me.labTitle.BackColor = System.Drawing.Color.DarkRed
+        Me.labTitle.BackColor = System.Drawing.Color.SteelBlue
         Me.labTitle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.labTitle.Cursor = System.Windows.Forms.Cursors.Hand
         Me.labTitle.Font = New System.Drawing.Font("Impact", 18.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -766,7 +766,7 @@ Partial Class FormSmall
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.MenuStrip1.BackColor = System.Drawing.Color.LightSteelBlue
         Me.MenuStrip1.Font = New System.Drawing.Font("Meiryo", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.PropertyToolStripMenuItem, Me.SPCRuleToolStripMenuItem, Me.SettingToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
@@ -1079,7 +1079,7 @@ Partial Class FormSmall
         'FormSmall
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.BackColor = System.Drawing.Color.LightSteelBlue
         Me.ClientSize = New System.Drawing.Size(1026, 668)
         Me.Controls.Add(Me.Label28)
         Me.Controls.Add(Me.Label27)

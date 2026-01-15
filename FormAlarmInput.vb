@@ -20,22 +20,13 @@ Public Class FormAlarmInput
         Dim Updateflag As Boolean = False
 
         Dim strID As String = readMaster(M_Data(SerectPoint), _id)
-
-
-
         Try
-
-
             Cn.ConnectionString = StrServerConnection
-
             Cn.Open()
             trans = Cn.BeginTransaction
             SQLCm.Transaction = trans
-
-
             strSQL = ""
             strSQL = "UPDATE SPC_Alarm SET "
-
             If TextPerson.Text <> "" Then
                 strSQL &= " cSurveyIncharge= '" & TextPerson.Text & "'"
                 Updateflag = True
@@ -110,10 +101,7 @@ Public Class FormAlarmInput
                 If Not TextQC.Text = "" Then
                     M_Alarm(SerectPoint)(p) = "3" & M_Alarm(SerectPoint)(p).Substring(1)
                 End If
-
             End If
-
-
         Catch ex As Exception
             If IsNothing(trans) = False Then
                 trans.Rollback()
@@ -122,13 +110,10 @@ Public Class FormAlarmInput
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
-
     End Sub
     Private Sub FormAlarmInput_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
         '日本語・英語表記の切り替えを行う
         Translation_AlarmInput()
-
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
@@ -136,13 +121,10 @@ Public Class FormAlarmInput
     End Sub
 
     Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
-
-
         UserName = ""
         JP_Message = "QCID、パスワードを入力して下さい。"
         EN_Message = "Enter QCID and Password"
         UserName = Input_Pass_to_Get_UserName(JP_Message, EN_Message, 1, 1) '0:IDPass合ってれば名前取得　1:QC承認者であるかも判定 
-
         If UserName <> "" Then
             TextQC.Text = UserName
             UPDATE_AlarmComment_QC(UserName)
@@ -155,33 +137,23 @@ Public Class FormAlarmInput
     'アラームコメントをアップデートする(QC承認)
     '*******************************************************************
     Public Sub UPDATE_AlarmComment_QC(ByVal User As String)
-
         Dim Cn As New SqlConnection
         Dim strSQL As String
         Dim SQLCm As SqlCommand = Cn.CreateCommand
         Dim trans As SqlTransaction 'トランザクション定義
         Dim temp() As String
         Dim Updateflag As Boolean = False
-
         Dim strID As String = readMaster(M_Data(SerectPoint), _id)
-
         Try
-
-
             Cn.ConnectionString = StrServerConnection
-
             Cn.Open()
             trans = Cn.BeginTransaction
             SQLCm.Transaction = trans
-
-
             strSQL = ""
             strSQL = "UPDATE SPC_Alarm SET "
             strSQL &= " cApprovalDate= '" & DateTime.Now & "'"
             strSQL &= ","
             strSQL &= " cApproverName= '" & User & "'"
-
-
             strSQL &= " WHERE "
             strSQL &= " iID ='" & strID & "'"
             strSQL &= " AND cGraphFormat = '" & TextMode.Text & "'"
@@ -189,14 +161,10 @@ Public Class FormAlarmInput
                 strSQL &= " AND"
                 strSQL &= " cTreeName" & i + 1 & " = '" & TreeName(i) & "'"
             Next
-
             SQLCm.CommandText = strSQL
             SQLCm.ExecuteNonQuery()
-
             trans.Commit()
             Cn.Close()
-
-
             Dim p As Integer = 0
             If TextMode.Text = "X" Then
                 p = 0
@@ -206,7 +174,6 @@ Public Class FormAlarmInput
                 p = 2
             End If
             M_Alarm(SerectPoint)(p) = "3" & M_Alarm(SerectPoint)(p).Substring(1)
-
         Catch ex As Exception
             If IsNothing(trans) = False Then
                 trans.Rollback()
@@ -215,25 +182,20 @@ Public Class FormAlarmInput
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
-
     End Sub
     Public Function Input_Pass_to_Get_UserName(ByVal J_Message As String, ByVal E_Message As String, ByVal m As Integer, ByVal l As Integer) As String
         Dim strPassword As String = ""
         Dim temp() As String
-
         Input_Pass_to_Get_UserName = ""
-
         If StrLanguage = "Japanese" Then
             strPassword = InputBox(J_Message)
         ElseIf StrLanguage = "English" Then
             strPassword = InputBox(E_Message)
         End If
-
         If strPassword = "" Then
             MsgBox("Enter the ID and Password")
             Exit Function
         End If
-
         temp = Split(strPassword, " ") 'ID 半角スペース Pass で入力
         If Not UBound(temp, 1) = 1 Then
             MsgBox("Enter the ID + " & Chr(34) & " " & Chr(34) & " + Password")
@@ -244,7 +206,6 @@ Public Class FormAlarmInput
     End Function
     '日本語・英語表記の切り替えを行う
     Public Sub Translation_AlarmInput()
-
         If StrLanguage = "Japanese" Then '日本語表記の場合
             Label1.Text = "発生日："
             Label3.Text = "異常内容："
@@ -276,8 +237,5 @@ Public Class FormAlarmInput
             Button1.Text = "Registration"
             Button3.Text = "Password"
         End If
-
     End Sub
-
-
 End Class

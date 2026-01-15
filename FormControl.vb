@@ -6,13 +6,11 @@ Imports System.Runtime.InteropServices
 Imports System.Net
 Imports System.Data.SqlClient
 Public Class FormControl
-
     Public Declare Sub Sleep Lib "kernel32.dll" (ByVal dwMilliseconds As Integer)
     'unicodeのEcodingクラスに作成
     Dim encUni As Encoding = Encoding.GetEncoding("utf-16")
     's-jisのEncodingクラスの作成
     Dim encSjis As Encoding = Encoding.GetEncoding("shift-jis")
-
     Private Sub FormControl_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         '日本語・英語表記の切り替えを行う
         Translation_FormControl()
@@ -21,7 +19,6 @@ Public Class FormControl
         For i As Integer = 0 To UBound(gType, 1)
             ComboBox_Format.Items.Add(gType(i))
         Next
-
         DTP_Dstartdate.Value = strStartDate
         DTP_Astartdate.Value = strAlarmStartDate
         '==========================================
@@ -38,16 +35,13 @@ Public Class FormControl
         'Me.Text_Upper.Text = 0
         'Me.Text_Lower.Text = 0
         '==========================================
-
         Me.CheckBox1.Checked = True
         Me.CheckBox2.Checked = True
         Me.CheckBox3.Checked = True
         Get_ProcessInfo()
         Get_TreeInfo()
-
     End Sub
 
-    'サーバーよりツリー一覧を取得する
     Public Sub Get_TreeInfo()
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -58,7 +52,6 @@ Public Class FormControl
         Dim Exist1, Exist2, Exist3, Exist4, Exist5, Exist6, Exist7, Exist8, Exist9, Exist10 As Boolean
         Dim table As New DataTable
         Try
-
             ComboBox_Tree1.Items.Clear()
             ComboBox_Tree2.Items.Clear()
             ComboBox_Tree3.Items.Clear()
@@ -241,8 +234,6 @@ Public Class FormControl
                 End If
                 '--------------------------------------------------------
             Next
-
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
@@ -253,7 +244,6 @@ Public Class FormControl
         End Try
     End Sub
 
-    'サーバーよりプロセス一覧を取得する
     Public Sub Get_ProcessInfo()
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -261,14 +251,10 @@ Public Class FormControl
         Dim n As Integer
         Dim table As New DataTable
         Try
-
             ComboBox_Process.Items.Clear()
-
             Cn.ConnectionString = StrServerConnection
             table.Clear()
-
             strSQL = "SELECT DISTINCT cProcessName"
-
             strSQL &= " FROM SPC_Master"
             strSQL &= " ORDER BY cProcessName"
             Adapter = New SqlDataAdapter()
@@ -276,7 +262,6 @@ Public Class FormControl
             Adapter.SelectCommand.CommandType = CommandType.Text
             Adapter.Fill(table)
             n = table.Rows.Count
-
             Adapter.Dispose()
             Cn.Dispose()
 
@@ -287,20 +272,15 @@ Public Class FormControl
             For i = 0 To n - 1
                 ComboBox_Process.Items.Add(table.Rows(i)("cProcessName"))
             Next
-
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
-
             StrErrMes = "プロセス一覧取得エラー" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
     End Sub
 
-
-    'サーバーより設備No一覧を取得する
     Public Sub Get_McNoInfo(ByVal _Process As String)
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -308,9 +288,7 @@ Public Class FormControl
         Dim n As Integer
         Dim table As New DataTable
         Try
-
             ComboBox_McNo.Items.Clear()
-
             Cn.ConnectionString = StrServerConnection
             table.Clear()
 
@@ -334,8 +312,6 @@ Public Class FormControl
             For i = 0 To n - 1
                 ComboBox_McNo.Items.Add(table.Rows(i)("cMachineNo"))
             Next
-
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
@@ -346,7 +322,6 @@ Public Class FormControl
         End Try
     End Sub
 
-    'サーバーより管理項目一覧を取得する
     Public Sub Get_ControlItemInfo(ByVal _McNo As String)
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -392,7 +367,7 @@ Public Class FormControl
         End Try
     End Sub
 
-    'サーバーより機種一覧を取得する
+
     Public Sub Get_DeviceInfo(ByVal _McNo As String, ByVal _ControlItem As String)
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -400,7 +375,6 @@ Public Class FormControl
         Dim n As Integer
         Dim table As New DataTable
         Try
-
             ComboBox_Device.Items.Clear()
 
             Cn.ConnectionString = StrServerConnection
@@ -427,8 +401,6 @@ Public Class FormControl
             For i = 0 To n - 1
                 ComboBox_Device.Items.Add(table.Rows(i)("cDeviceName"))
             Next
-
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
@@ -439,7 +411,7 @@ Public Class FormControl
         End Try
     End Sub
 
-    'サーバーより測定条件を取得する
+
     Public Sub Get_FilterInfo(ByVal _McNo As String, ByVal _ControlItem As String)
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -487,8 +459,6 @@ Public Class FormControl
                 table.Dispose()
                 Exit Sub
             End If
-
-
             c1 = 0
             c2 = 0
             c3 = 0
@@ -671,8 +641,6 @@ Public Class FormControl
                 End If
                 '--------------------------------------------------------
             Next
-
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
@@ -682,7 +650,7 @@ Public Class FormControl
             Exit Sub
         End Try
     End Sub
-    'SPCプロパティのMAXIDを取得する
+
     Public Function Get_PropertyNo() As String
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -718,7 +686,6 @@ Public Class FormControl
 
             'Form2.Show()
             'Form2.DataGridView1.DataSource = table
-
 
         Catch ex As System.Exception
             Get_PropertyNo = ""

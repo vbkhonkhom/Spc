@@ -22,127 +22,127 @@ Partial Class FormControl
     'コード エディタを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.Panel1 = New System.Windows.Forms.Panel
-        Me.ComboBox_Tree10 = New System.Windows.Forms.ComboBox
-        Me.Label53 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree9 = New System.Windows.Forms.ComboBox
-        Me.Label54 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree8 = New System.Windows.Forms.ComboBox
-        Me.Label55 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree7 = New System.Windows.Forms.ComboBox
-        Me.Label56 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree6 = New System.Windows.Forms.ComboBox
-        Me.Label57 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree5 = New System.Windows.Forms.ComboBox
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree4 = New System.Windows.Forms.ComboBox
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree3 = New System.Windows.Forms.ComboBox
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree2 = New System.Windows.Forms.ComboBox
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.Label13 = New System.Windows.Forms.Label
-        Me.ComboBox_Tree1 = New System.Windows.Forms.ComboBox
-        Me.Panel2 = New System.Windows.Forms.Panel
-        Me.ComboBox_Filter10 = New System.Windows.Forms.ComboBox
-        Me.Label45 = New System.Windows.Forms.Label
-        Me.Label58 = New System.Windows.Forms.Label
-        Me.ComboBox_Filter5 = New System.Windows.Forms.ComboBox
-        Me.ComboBox_Filter9 = New System.Windows.Forms.ComboBox
-        Me.Label44 = New System.Windows.Forms.Label
-        Me.Label59 = New System.Windows.Forms.Label
-        Me.ComboBox_Filter4 = New System.Windows.Forms.ComboBox
-        Me.ComboBox_Filter8 = New System.Windows.Forms.ComboBox
-        Me.Label43 = New System.Windows.Forms.Label
-        Me.Label60 = New System.Windows.Forms.Label
-        Me.ComboBox_Filter3 = New System.Windows.Forms.ComboBox
-        Me.ComboBox_Filter7 = New System.Windows.Forms.ComboBox
-        Me.Label23 = New System.Windows.Forms.Label
-        Me.Label61 = New System.Windows.Forms.Label
-        Me.ComboBox_Filter2 = New System.Windows.Forms.ComboBox
-        Me.ComboBox_Filter6 = New System.Windows.Forms.ComboBox
-        Me.Label62 = New System.Windows.Forms.Label
-        Me.Label10 = New System.Windows.Forms.Label
-        Me.ComboBox_Filter1 = New System.Windows.Forms.ComboBox
-        Me.Label11 = New System.Windows.Forms.Label
-        Me.Panel3 = New System.Windows.Forms.Panel
-        Me.Label49 = New System.Windows.Forms.Label
-        Me.Label48 = New System.Windows.Forms.Label
-        Me.Label15 = New System.Windows.Forms.Label
-        Me.ComboBox_Format = New System.Windows.Forms.ComboBox
-        Me.Label47 = New System.Windows.Forms.Label
-        Me.Label18 = New System.Windows.Forms.Label
-        Me.TextBox5 = New System.Windows.Forms.TextBox
-        Me.Text_Lower = New System.Windows.Forms.TextBox
-        Me.Text_Upper = New System.Windows.Forms.TextBox
-        Me.Label17 = New System.Windows.Forms.Label
-        Me.Label16 = New System.Windows.Forms.Label
-        Me.TextR_S = New System.Windows.Forms.TextBox
-        Me.TextR_UCL = New System.Windows.Forms.TextBox
-        Me.TextR_CL = New System.Windows.Forms.TextBox
-        Me.TextX_S = New System.Windows.Forms.TextBox
-        Me.TextX_LCL = New System.Windows.Forms.TextBox
-        Me.TextX_UCL = New System.Windows.Forms.TextBox
-        Me.TextX_CL = New System.Windows.Forms.TextBox
-        Me.Label22 = New System.Windows.Forms.Label
-        Me.Label24 = New System.Windows.Forms.Label
-        Me.LabR_CL = New System.Windows.Forms.Label
-        Me.Label21 = New System.Windows.Forms.Label
-        Me.Label20 = New System.Windows.Forms.Label
-        Me.Label19 = New System.Windows.Forms.Label
-        Me.Label12 = New System.Windows.Forms.Label
-        Me.DTP_Rdate = New System.Windows.Forms.DateTimePicker
-        Me.Label25 = New System.Windows.Forms.Label
-        Me.Button1 = New System.Windows.Forms.Button
-        Me.ListBox1 = New System.Windows.Forms.ListBox
-        Me.CheckBox8 = New System.Windows.Forms.CheckBox
-        Me.CheckBox7 = New System.Windows.Forms.CheckBox
-        Me.CheckBox6 = New System.Windows.Forms.CheckBox
-        Me.CheckBox5 = New System.Windows.Forms.CheckBox
-        Me.CheckBox4 = New System.Windows.Forms.CheckBox
-        Me.CheckBox3 = New System.Windows.Forms.CheckBox
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox
-        Me.Label34 = New System.Windows.Forms.Label
-        Me.Label35 = New System.Windows.Forms.Label
-        Me.Label36 = New System.Windows.Forms.Label
-        Me.Label37 = New System.Windows.Forms.Label
-        Me.Label38 = New System.Windows.Forms.Label
-        Me.Label39 = New System.Windows.Forms.Label
-        Me.Label40 = New System.Windows.Forms.Label
-        Me.Label41 = New System.Windows.Forms.Label
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.Label50 = New System.Windows.Forms.Label
-        Me.Label27 = New System.Windows.Forms.Label
-        Me.Label28 = New System.Windows.Forms.Label
-        Me.Label29 = New System.Windows.Forms.Label
-        Me.Label30 = New System.Windows.Forms.Label
-        Me.Label31 = New System.Windows.Forms.Label
-        Me.Label32 = New System.Windows.Forms.Label
-        Me.Label33 = New System.Windows.Forms.Label
-        Me.Label42 = New System.Windows.Forms.Label
-        Me.CheckBox9 = New System.Windows.Forms.CheckBox
-        Me.Label26 = New System.Windows.Forms.Label
-        Me.Label7 = New System.Windows.Forms.Label
-        Me.ComboBox_Process = New System.Windows.Forms.ComboBox
-        Me.ComboBox_McNo = New System.Windows.Forms.ComboBox
-        Me.Label8 = New System.Windows.Forms.Label
-        Me.ComboBox_Item = New System.Windows.Forms.ComboBox
-        Me.Label9 = New System.Windows.Forms.Label
-        Me.ComboBox_Device = New System.Windows.Forms.ComboBox
-        Me.Label46 = New System.Windows.Forms.Label
-        Me.DTP_Astartdate = New System.Windows.Forms.DateTimePicker
-        Me.DTP_Dstartdate = New System.Windows.Forms.DateTimePicker
-        Me.Label51 = New System.Windows.Forms.Label
-        Me.Label52 = New System.Windows.Forms.Label
-        Me.Text_SamQuantity = New System.Windows.Forms.TextBox
-        Me.Text_PRODUCT = New System.Windows.Forms.TextBox
-        Me.Label14 = New System.Windows.Forms.Label
-        Me.Label63 = New System.Windows.Forms.Label
-        Me.TextR_LCL = New System.Windows.Forms.TextBox
-        Me.Label64 = New System.Windows.Forms.Label
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.ComboBox_Tree10 = New System.Windows.Forms.ComboBox()
+        Me.Label53 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree9 = New System.Windows.Forms.ComboBox()
+        Me.Label54 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree8 = New System.Windows.Forms.ComboBox()
+        Me.Label55 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree7 = New System.Windows.Forms.ComboBox()
+        Me.Label56 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree6 = New System.Windows.Forms.ComboBox()
+        Me.Label57 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree5 = New System.Windows.Forms.ComboBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree4 = New System.Windows.Forms.ComboBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree3 = New System.Windows.Forms.ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree2 = New System.Windows.Forms.ComboBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.ComboBox_Tree1 = New System.Windows.Forms.ComboBox()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.ComboBox_Filter10 = New System.Windows.Forms.ComboBox()
+        Me.Label45 = New System.Windows.Forms.Label()
+        Me.Label58 = New System.Windows.Forms.Label()
+        Me.ComboBox_Filter5 = New System.Windows.Forms.ComboBox()
+        Me.ComboBox_Filter9 = New System.Windows.Forms.ComboBox()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.Label59 = New System.Windows.Forms.Label()
+        Me.ComboBox_Filter4 = New System.Windows.Forms.ComboBox()
+        Me.ComboBox_Filter8 = New System.Windows.Forms.ComboBox()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.Label60 = New System.Windows.Forms.Label()
+        Me.ComboBox_Filter3 = New System.Windows.Forms.ComboBox()
+        Me.ComboBox_Filter7 = New System.Windows.Forms.ComboBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Label61 = New System.Windows.Forms.Label()
+        Me.ComboBox_Filter2 = New System.Windows.Forms.ComboBox()
+        Me.ComboBox_Filter6 = New System.Windows.Forms.ComboBox()
+        Me.Label62 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.ComboBox_Filter1 = New System.Windows.Forms.ComboBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.TextR_LCL = New System.Windows.Forms.TextBox()
+        Me.Label64 = New System.Windows.Forms.Label()
+        Me.Label49 = New System.Windows.Forms.Label()
+        Me.Label48 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.ComboBox_Format = New System.Windows.Forms.ComboBox()
+        Me.Label47 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.TextBox5 = New System.Windows.Forms.TextBox()
+        Me.Text_Lower = New System.Windows.Forms.TextBox()
+        Me.Text_Upper = New System.Windows.Forms.TextBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.TextR_S = New System.Windows.Forms.TextBox()
+        Me.TextR_UCL = New System.Windows.Forms.TextBox()
+        Me.TextR_CL = New System.Windows.Forms.TextBox()
+        Me.TextX_S = New System.Windows.Forms.TextBox()
+        Me.TextX_LCL = New System.Windows.Forms.TextBox()
+        Me.TextX_UCL = New System.Windows.Forms.TextBox()
+        Me.TextX_CL = New System.Windows.Forms.TextBox()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.LabR_CL = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.DTP_Rdate = New System.Windows.Forms.DateTimePicker()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.ListBox1 = New System.Windows.Forms.ListBox()
+        Me.CheckBox8 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox7 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox6 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox5 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.Label35 = New System.Windows.Forms.Label()
+        Me.Label36 = New System.Windows.Forms.Label()
+        Me.Label37 = New System.Windows.Forms.Label()
+        Me.Label38 = New System.Windows.Forms.Label()
+        Me.Label39 = New System.Windows.Forms.Label()
+        Me.Label40 = New System.Windows.Forms.Label()
+        Me.Label41 = New System.Windows.Forms.Label()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label50 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.Label32 = New System.Windows.Forms.Label()
+        Me.Label33 = New System.Windows.Forms.Label()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.CheckBox9 = New System.Windows.Forms.CheckBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.ComboBox_Process = New System.Windows.Forms.ComboBox()
+        Me.ComboBox_McNo = New System.Windows.Forms.ComboBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.ComboBox_Item = New System.Windows.Forms.ComboBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.ComboBox_Device = New System.Windows.Forms.ComboBox()
+        Me.Label46 = New System.Windows.Forms.Label()
+        Me.DTP_Astartdate = New System.Windows.Forms.DateTimePicker()
+        Me.DTP_Dstartdate = New System.Windows.Forms.DateTimePicker()
+        Me.Label51 = New System.Windows.Forms.Label()
+        Me.Label52 = New System.Windows.Forms.Label()
+        Me.Text_SamQuantity = New System.Windows.Forms.TextBox()
+        Me.Text_PRODUCT = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.Label63 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -680,6 +680,27 @@ Partial Class FormControl
         Me.Panel3.Size = New System.Drawing.Size(534, 253)
         Me.Panel3.TabIndex = 16
         '
+        'TextR_LCL
+        '
+        Me.TextR_LCL.Font = New System.Drawing.Font("Meiryo UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.TextR_LCL.Location = New System.Drawing.Point(369, 209)
+        Me.TextR_LCL.Name = "TextR_LCL"
+        Me.TextR_LCL.ReadOnly = True
+        Me.TextR_LCL.Size = New System.Drawing.Size(130, 23)
+        Me.TextR_LCL.TabIndex = 92
+        Me.TextR_LCL.Text = "0"
+        '
+        'Label64
+        '
+        Me.Label64.AutoSize = True
+        Me.Label64.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.Label64.ForeColor = System.Drawing.Color.Black
+        Me.Label64.Location = New System.Drawing.Point(306, 211)
+        Me.Label64.Name = "Label64"
+        Me.Label64.Size = New System.Drawing.Size(54, 19)
+        Me.Label64.TabIndex = 91
+        Me.Label64.Text = "R_LCL"
+        '
         'Label49
         '
         Me.Label49.AutoSize = True
@@ -928,7 +949,7 @@ Partial Class FormControl
         '
         Me.DTP_Rdate.Location = New System.Drawing.Point(766, 654)
         Me.DTP_Rdate.Name = "DTP_Rdate"
-        Me.DTP_Rdate.Size = New System.Drawing.Size(126, 19)
+        Me.DTP_Rdate.Size = New System.Drawing.Size(126, 20)
         Me.DTP_Rdate.TabIndex = 89
         '
         'Label25
@@ -955,10 +976,9 @@ Partial Class FormControl
         'ListBox1
         '
         Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.ItemHeight = 12
         Me.ListBox1.Location = New System.Drawing.Point(588, 721)
         Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(50, 16)
+        Me.ListBox1.Size = New System.Drawing.Size(50, 4)
         Me.ListBox1.TabIndex = 18
         '
         'CheckBox8
@@ -1355,14 +1375,14 @@ Partial Class FormControl
         '
         Me.DTP_Astartdate.Location = New System.Drawing.Point(766, 627)
         Me.DTP_Astartdate.Name = "DTP_Astartdate"
-        Me.DTP_Astartdate.Size = New System.Drawing.Size(126, 19)
+        Me.DTP_Astartdate.Size = New System.Drawing.Size(126, 20)
         Me.DTP_Astartdate.TabIndex = 90
         '
         'DTP_Dstartdate
         '
         Me.DTP_Dstartdate.Location = New System.Drawing.Point(766, 600)
         Me.DTP_Dstartdate.Name = "DTP_Dstartdate"
-        Me.DTP_Dstartdate.Size = New System.Drawing.Size(126, 19)
+        Me.DTP_Dstartdate.Size = New System.Drawing.Size(126, 20)
         Me.DTP_Dstartdate.TabIndex = 91
         '
         'Label51
@@ -1425,30 +1445,10 @@ Partial Class FormControl
         Me.Label63.TabIndex = 93
         Me.Label63.Text = "PRODUCT"
         '
-        'TextR_LCL
-        '
-        Me.TextR_LCL.Font = New System.Drawing.Font("Meiryo UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.TextR_LCL.Location = New System.Drawing.Point(369, 209)
-        Me.TextR_LCL.Name = "TextR_LCL"
-        Me.TextR_LCL.ReadOnly = True
-        Me.TextR_LCL.Size = New System.Drawing.Size(130, 23)
-        Me.TextR_LCL.TabIndex = 92
-        Me.TextR_LCL.Text = "0"
-        '
-        'Label64
-        '
-        Me.Label64.AutoSize = True
-        Me.Label64.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label64.ForeColor = System.Drawing.Color.Black
-        Me.Label64.Location = New System.Drawing.Point(306, 211)
-        Me.Label64.Name = "Label64"
-        Me.Label64.Size = New System.Drawing.Size(54, 19)
-        Me.Label64.TabIndex = 91
-        Me.Label64.Text = "R_LCL"
-        '
         'FormControl
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
+        Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(1015, 683)
         Me.Controls.Add(Me.Text_SamQuantity)
         Me.Controls.Add(Me.Label52)

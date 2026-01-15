@@ -183,17 +183,28 @@
     Private Sub UCLLCU(ByVal Mode As String)
         If Mode = "X" Then
             If IsNumeric(TextX_S_After.Text) = True And IsNumeric(TextX_CL_After.Text) = True Then
-                TextX_UCL_After.Text = TextX_CL_After.Text + 3 * TextX_S_After.Text
-                TextX_LCL_After.Text = TextX_CL_After.Text - 3 * TextX_S_After.Text
+                Dim n_Size As Double = 5
+                If CheckBox9.Checked = True Then
+                    n_Size = 1
+                End If
+
+                Dim Sigma As Double = Val(TextX_S_After.Text)
+                Dim Mean As Double = Val(TextX_CL_After.Text)
+                Dim Delta As Double = (3 * Sigma) / Math.Sqrt(n_Size)
+
+                TextX_UCL_After.Text = Math.Round(Mean + Delta, 3)
+                TextX_LCL_After.Text = Math.Round(Mean - Delta, 3)
             Else
                 TextX_UCL_After.Text = ""
                 TextX_LCL_After.Text = ""
             End If
         ElseIf Mode = "R" Then
-            If IsNumeric(TextR_S_After.Text) = True And IsNumeric(TextR_CL_After.Text) = True Then
-                TextR_UCL_After.Text = TextR_CL_After.Text + 3 * TextR_S_After.Text
-            Else
-                TextR_UCL_After.Text = ""
+            If IsNumeric(TextR_CL_After.Text) = True Then
+                Dim R_Bar As Double = Val(TextR_CL_After.Text)
+                Dim D4 As Double = 2.114
+                If CheckBox9.Checked = True Then D4 = 3.267
+                TextR_UCL_After.Text = Math.Round(R_Bar * D4, 3)
+                TextR_LCL_After.Text = 0
             End If
         End If
     End Sub

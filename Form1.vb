@@ -1,6 +1,6 @@
 ﻿Imports System
 Imports Microsoft.VisualBasic
-Imports System.IO ' <--- [1] เพิ่ม Library สำหรับอ่านไฟล์
+Imports System.IO
 Imports System.Text
 Imports System.Runtime.InteropServices
 Imports System.Net
@@ -9,14 +9,12 @@ Imports System.Data.SqlClient
 Public Class Form1
     Dim myHostName As String
     Dim FROMHOST_SPC_Yukuhashi As String
-    '受信用のイベント 
 
     Private WithEvents objEv As New ClassLibrary1.RemoteHttp
-    'COPYDATASTRUCT構造体
     Public Structure COPYDATASTRUCT
-        Public dwData As Int32      '送信するビット値
-        Public cbData As Int32      'lpDataのバイト数
-        Public lpData As String     '送信するデータへのポインタ(0も可能)
+        Public dwData As Int32
+        Public cbData As Int32
+        Public lpData As String
     End Structure
 
 
@@ -51,7 +49,6 @@ Public Class Form1
         '相手のウィンドウハンドルを取得します
         Dim hWnd As Int32 = FindWindow(Nothing, "YPCS Client")
         If hWnd = 0 Then
-            'ハンドルが取得できなかった
             If MessageBoxShowFlag = False Then
                 MessageBoxShowFlag = True
                 MessageBox.Show("YPCS Clientアプリが動作していません。")
@@ -61,20 +58,16 @@ Public Class Form1
         End If
 
         MessageBoxShowFlag = False
-        '文字列メッセージを送信します
         If strMes <> String.Empty Then
-            '送信データをByte配列に格納
             Dim bytearry() As Byte =
                          System.Text.Encoding.Default.GetBytes(strMes)
             Dim len As Int32 = bytearry.Length
             Dim cds As COPYDATASTRUCT
-            cds.dwData = 0        '使用しない
-            cds.lpData = strMes 'テキストのポインターをセット
-            cds.cbData = len + 1   '長さをセット
-            '文字列を送る
+            cds.dwData = 0
+            cds.lpData = strMes
+            cds.cbData = len + 1
             result = SendMessage(hWnd, WM_COPYDATA, 0, cds)
         End If
-
     End Sub
 
     Public Sub WSSendToSelcom(ByVal HEADER As String, ByVal FROMHOST As String, ByVal TOHOST As String, ByVal CONTENT1 As String, ByVal CONTENT2 As String, ByVal CONTENT3 As String, ByVal CONTENT4 As String)
@@ -85,18 +78,12 @@ Public Class Form1
         wsSendData = HEADER & "|" & FROMHOST & "|" & TOHOST & "|" & CONTENT1 & "|" & CONTENT2 & "|" & CONTENT3 & "|" & CONTENT4
 
         SendCommand(wsSendData)
-        'Timer6.Enabled = True
     End Sub
 
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
-
         Select Case m.Msg
-
             Case WM_USER
-                '数値が送信されて来た
-
             Case WM_COPYDATA
-                '文字が送信されて来た
                 Dim mystr As COPYDATASTRUCT = New COPYDATASTRUCT()
                 Dim mytype As Type = mystr.GetType()
                 mystr = CType(m.GetLParam(mytype), COPYDATASTRUCT)
@@ -106,27 +93,18 @@ Public Class Form1
         MyBase.WndProc(m)
     End Sub
 
-    'ラベルコントロール配列のフィールドを作成
     Public LabXBar() As System.Windows.Forms.Label
     Public LabR() As System.Windows.Forms.Label
-
-    'Public Declare Sub Sleep Lib "kernel32.dll" (ByVal dwMilliseconds As Integer)
-    'unicodeのEcodingクラスに作成
     Dim encUni As Encoding = Encoding.GetEncoding("utf-16")
-    's-jisのEncodingクラスの作成
     Dim encSjis As Encoding = Encoding.GetEncoding("shift-jis")
 
-
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
         If CInt(DateTime.Now.Year) > 2500 Then
             MsgBox("Change the date format to A.D. in control panel." & Environment.NewLine & "( DateTime.Now.Year = " & DateTime.Now.Year & " )")
             End
         End If
         StrCDir = System.IO.Directory.GetCurrentDirectory
-        'コンフィグデータを取得する
         ReadConfigData()
-
         If StrServerConnection = "" Then
             Dim dr As DialogResult
             Dim frm As New Form3
@@ -136,28 +114,18 @@ Public Class Form1
             ElseIf dr = System.Windows.Forms.DialogResult.Cancel Then
                 Me.Close()
             End If
-
         Else
             LoadLoad()
         End If
-
+        LoadFolderTree("C:\MachineData")
     End Sub
 
     Public Sub LoadLoad()
-        'If IO.Directory.Exists(StrRootFolder) = False Then
-        '    IO.Directory.CreateDirectory(StrRootFolder)
-        'Else
         GetStandardNo()
         GetTreeList_Server()
-        'End If
-        'SPCリストを取得する
-
-        '日本語・英語表記の切り替えを行う
         FormAlarmInput.Translation_AlarmInput()
         FormAlarmDisp.Translation_AlarmDisp()
         FormControl.Translation_FormControl()
-
-        'X側の軸ラベルを配列化する
         Me.LabXBar = New System.Windows.Forms.Label(10) {}
         Me.LabXBar(0) = Me.Label13
         Me.LabXBar(1) = Me.Label12
@@ -170,8 +138,6 @@ Public Class Form1
         Me.LabXBar(8) = Me.Label9
         Me.LabXBar(9) = Me.Label10
         Me.LabXBar(10) = Me.Label11
-
-        'R側の軸ラベルを配列化する
         Me.LabR = New System.Windows.Forms.Label(9) {}
         Me.LabR(0) = Me.Label36
         Me.LabR(1) = Me.Label30
@@ -183,11 +149,8 @@ Public Class Form1
         Me.LabR(7) = Me.Label16
         Me.LabR(8) = Me.Label17
         Me.LabR(9) = Me.Label18
-
         Me.Top = 0
         Me.Left = 0
-
-
         If StrLanguage = "Japanese" Then
             gType(0) = "上下限"
             gType(1) = "上限のみ"
@@ -198,13 +161,8 @@ Public Class Form1
             gType(2) = "Lower only"
         End If
 
-
-        'ディスプレイの大きさに合わせてフォームサイズの設定
-        'ディスプレイの高さ
         Dim h As Integer = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height
-        'ディスプレイの幅
         Dim w As Integer = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width
-
         If w >= 1920 Then
             StrResolution = "MAX"
         ElseIf w >= 1280 And w < 1920 Then
@@ -216,60 +174,43 @@ Public Class Form1
         ElseIf w <= 1024 Then
             StrResolution = "MIN"
         End If
-
         SaveConfigData()
-
-        Timer3.Enabled = True 'フォームサイズを画面サイズで変更
+        Timer3.Enabled = True
     End Sub
 #Region "コンフィグデータを取得"
-    'コンフィグデータを取得する
     Private Sub ReadConfigData()
         Dim strFileName As String = StrCDir & "\Config.csv"
         Dim temp() As String
         Dim sr As New System.IO.StreamReader(strFileName, System.Text.Encoding.Default)
-
-        'ファイルの最後までループ
         Do Until sr.Peek() = -1
             temp = Split(sr.ReadLine(), ",")
-            If temp(0).Trim(Chr(34)) <> "" Then  '
-                'SPCデータの保存先フォルダを取得
+            If temp(0).Trim(Chr(34)) <> "" Then
                 If temp(0) = "RootFolder" Then
                     StrRootFolder = temp(1)
-                    'SPCデータのネットワーク上の保存先フォルダを取得
                 ElseIf temp(0) = "NetworkFolder" Then
                     StrNetworkFolder = temp(1)
-                    'SPCの表示開始日時を取得
                 ElseIf temp(0).Trim(Chr(34)) = "StartDay" Then
                     strStartDate = temp(1)
-                    'SPCのアラーム監視開始日時を取得
                 ElseIf temp(0).Trim(Chr(34)) = "AlarmStartDay" Then
                     strAlarmStartDate = temp(1)
-                    'Host名を取得
                 ElseIf temp(0).Trim(Chr(34)) = "FromHost" Then
                     myHostName = temp(1)
-                    'サーバー名を取得
                 ElseIf temp(0).Trim(Chr(34)) = "ToHost" Then
                     ServerName = temp(1)
-                    '大項目名を取得
                 ElseIf temp(0).Trim(Chr(34)) = "MajorItem" Then
                     MajorItem = temp(1)
-                    'Host or Subを取得
                 ElseIf temp(0).Trim(Chr(34)) = "HostSub" Then
                     HostSub = temp(1)
-                    '翻訳言語を取得
                 ElseIf temp(0).Trim(Chr(34)) = "Language" Then
                     StrLanguage = temp(1)
-                    '解像度を取得
                 ElseIf temp(0).Trim(Chr(34)) = "Resolution" Then
                     StrResolution = temp(1)
-                    '接続文字列を取得
                 ElseIf temp(0).Trim(Chr(34)) = "Connectionstring" Then
                     StrServerConnection = temp(1)
                 End If
             End If
         Loop
-        sr.Close()     'ファイルを閉じる
-
+        sr.Close()     '
     End Sub
 #End Region
 
@@ -449,8 +390,6 @@ Public Class Form1
 
 #End Region
 
-
-    'サーバーよりユーザーリストを取得する
     Public Function GetUserList() As Boolean
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -459,7 +398,6 @@ Public Class Form1
         Dim n As Integer
         Try
             GetUserList = False
-
             Cn.ConnectionString = StrServerConnection
             table.Clear()
 
@@ -484,7 +422,6 @@ Public Class Form1
                     If Not table.Rows(i)("cUserID") = "Stan_No" Then
                         Form_User.ComboBox1.Items.Add(table.Rows(i)("cUserID"))
                     End If
-
                 Next
             End If
 
@@ -499,7 +436,6 @@ Public Class Form1
         End Try
     End Function
 
-    'パスワードの照合を実施する
     Public Function Check_UserPass(ByVal _User As String, ByVal _Password As String, ByVal QC As Integer, ByVal DisOK As Integer) As String
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -509,25 +445,20 @@ Public Class Form1
         Dim msg As String = ""
         Try
             Check_UserPass = ""
-
             Cn.ConnectionString = StrServerConnection
             table.Clear()
-
             strSQL = "SELECT *"
             strSQL &= " FROM SPC_User"
             strSQL &= " WHERE cUserID = '" & _User & "' and  cPassword = '" & _Password & "'"
-
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
             Adapter.SelectCommand.CommandType = CommandType.Text
             Adapter.Fill(table)
             n = table.Rows.Count
-
             Adapter.Dispose()
             Cn.Dispose()
             table.Dispose()
-            'MsgBox(table.Rows(0)("bApprover"))
-            If n = 1 Then '該当するのは一人のはず
+            If n = 1 Then
                 If QC = 1 Then
                     If table.Rows(0)("bApprover") = True Then
                         Check_UserPass = table.Rows(0)("cUserID")
@@ -540,13 +471,10 @@ Public Class Form1
             Else
                 msg = "IDまたはPasswordが間違っています。" & Environment.NewLine & "Password verification NG"
             End If
-
-
             If _User = "Stan_No" Then
                 msg = "IDまたはPasswordが間違っています。" & Environment.NewLine & "Password verification NG"
                 Check_UserPass = ""
             End If
-
             If Not msg = "" Then
                 MsgBox(msg)
             Else
@@ -569,40 +497,23 @@ Public Class Form1
             Exit Function
         End Try
     End Function
-    Private Sub TreeView1_AfterSelect(ByVal sender As System.Object, ByVal e As System.Windows.Forms.TreeViewEventArgs) Handles TreeView1.AfterSelect
-
-        TreeView_AfterSelect(TreeView1)
-    End Sub
-
 
     Public Sub TreeView_AfterSelect(ByVal _TreeView As TreeView)
-
-        'ツリーデータセット
         TreeName = treeInfo(_TreeView)
-
-        'ツリーデータからプロパティデータセット(QC承認も確認)
         PropertyTable = getProperty()
 
         If PropertyTable Is Nothing Then
             Exit Sub
         End If
-
-        'データ取得とグラフ用データ準備
         M_Data = getSPCMaster()
         If M_Data Is Nothing Then
             Exit Sub
         End If
-
-
-        'SPCアラーム判定を行う
         GetAlarmData_kai()
-
         M_Alarm = getAlarmMaster()
-
         If M_Alarm Is Nothing Then
             Exit Sub
         End If
-
         MRFlag = False
         If StrResolution = "MAX" Then
             Me.Label1.Text = "R"
@@ -614,11 +525,8 @@ Public Class Form1
             FormSmall.Label1.Text = "R"
             FormSmall.GroupBox2.Text = "R"
         End If
-
-
-        If QCNotCheckFlag = False Then 'QC未承認の場合
+        If QCNotCheckFlag = False Then
             If HostSub = "Sub" Then
-                'If AllPropertyNo <> 0 Then
                 If PropertyTable.Rows.Count <> 0 Then
 
                     If StrResolution = "MAX" Then
@@ -637,7 +545,6 @@ Public Class Form1
                         ElseIf StrResolution = "Middle" Then
                             FormSmall.LabelQC.Text = "QC未承認"
                         End If
-
                         MsgBox("QC承認待ちです。")
                     ElseIf StrLanguage = "English" Then
 
@@ -648,14 +555,12 @@ Public Class Form1
                         ElseIf StrResolution = "Middle" Then
                             FormSmall.LabelQC.Text = "QC not approved"
                         End If
-
                         MsgBox("Waiting for QC approval")
                     End If
 
                 End If
             End If
         Else
-
             If StrResolution = "MAX" Then
                 Me.LabelQC.Visible = False
             ElseIf StrResolution = "MIN" Then
@@ -665,127 +570,69 @@ Public Class Form1
             End If
 
         End If
-
-        'GraphDisp_Server() 'グラフを表示する
-        GraphDisp() 'グラフを表示する
+        GraphDisp()
     End Sub
-
 
     Private Sub Button2_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Button2.MouseDown
-        'グラフ左移動START
         Timer1.Enabled = True
     End Sub
-
     Private Sub Button3_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Button3.MouseDown
-        'グラフ右移動START
         Timer2.Enabled = True
     End Sub
-    'グラフ左移動
     Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
         Dim dt As Date
-
         dt = Now()
         If DispStartPosition > 0 Then
             DispStartPosition -= 1
-
             GraphDisp()
-
-
         End If
-
     End Sub
-    'グラフ右移動
     Private Sub Timer2_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer2.Tick
         Dim dt As Date
         dt = Now()
 
         If SPCDataNum - 30 > DispStartPosition Then
             DispStartPosition += 1
-
             GraphDisp()
-
         End If
-
     End Sub
-
-    Private Sub Button2_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Button2.MouseUp
-        'グラフ左移動STOP
-        Timer1.Enabled = False
-    End Sub
-
-    Private Sub Button3_MouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Button3.MouseUp
-        'グラフ右移動STOP
-        Timer2.Enabled = False
-    End Sub
-
-    'PopUpを表示する
-    Private Sub _MouseMove(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles PictureBox1.MouseMove, PictureBox2.MouseMove
-        popUp(e.X, e.Y, sender.name)
-    End Sub
-    Private Sub _MouseLeave(ByVal sender As Object, ByVal e As System.EventArgs) Handles PictureBox1.MouseLeave, PictureBox2.MouseLeave
-        i_old = 1000
-        FormPopupNew.Close()
-    End Sub
-    'アラームコメントを表示・入力する
-    Private Sub _MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles PictureBox1.MouseDown, PictureBox2.MouseDown
-        alarmInfo(e.X, e.Y, sender.name, e.Button.ToString)
-    End Sub
-
-
-
-
-
     Public Sub UPDATE_d_a_StartDate(ByVal dDay As Date, ByVal aDay As Date, ByVal ALL As Integer)
 
         Dim Cn As New SqlConnection
         Dim strSQL As String
         Dim SQLCm As SqlCommand = Cn.CreateCommand
-        Dim trans As SqlTransaction 'トランザクション定義
+        Dim trans As SqlTransaction
         Dim temp() As String
         Dim Updateflag As Boolean = False
 
         Try
-
             Cn.ConnectionString = StrServerConnection
-
             Cn.Open()
             trans = Cn.BeginTransaction
             SQLCm.Transaction = trans
-
-
             strSQL = ""
             strSQL = "UPDATE SPC_Property SET "
-
             strSQL &= " dStartDate= '" & Format(dDay, "yyyy-MM-dd 00:00:00.000") & "'"
             strSQL &= ","
             strSQL &= " aStartDate= '" & Format(aDay, "yyyy-MM-dd 00:00:00.000") & "'"
 
-
-
             If ALL = 0 Then
-
                 For i As Integer = 0 To UBound(TreeName, 1)
                     If i = 0 Then
                         strSQL &= " WHERE"
                     Else
                         strSQL &= " AND"
                     End If
-
                     strSQL &= " cTreeName" & i + 1 & " = '" & TreeName(i) & "'"
                 Next
             End If
-
             SQLCm.CommandText = strSQL
             SQLCm.ExecuteNonQuery()
-
             trans.Commit()
             Cn.Close()
-
             GetTreeList_Server()
-
             FormProperty.Close()
             MsgBox("Change OK")
-
         Catch ex As Exception
             If IsNothing(trans) = False Then
                 trans.Rollback()
@@ -795,17 +642,11 @@ Public Class Form1
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
-
     End Sub
 
-
-
     Public Function Check_Textdata() As Boolean
-
         Check_Textdata = True
-
         Dim eMas As String = ""
-
         If IsNumeric(FormSPCRule.TextX_CL_After.Text) = False Then
             eMas &= " ・No value entered for XBar_CL." & Environment.NewLine
         End If
@@ -818,7 +659,6 @@ Public Class Form1
         If IsNumeric(FormSPCRule.TextX_S_After.Text) = False Then
             eMas &= " ・No value entered for XBar_σ." & Environment.NewLine
         End If
-
         If IsNumeric(FormSPCRule.TextR_CL_After.Text) = False Then
             eMas &= " ・No value entered for R_CL." & Environment.NewLine
         End If
@@ -831,7 +671,6 @@ Public Class Form1
         If IsNumeric(FormSPCRule.TextR_S_After.Text) = False Then
             eMas &= " ・No value entered for R_σ." & Environment.NewLine
         End If
-
         If IsNumeric(FormSPCRule.TextMR_CL_After.Text) = False Then
             eMas &= " ・No value entered for MR_CL." & Environment.NewLine
         End If
@@ -844,41 +683,30 @@ Public Class Form1
         If IsNumeric(FormSPCRule.TextMR_S_After.Text) = False Then
             eMas &= " ・No value entered for MR_σ." & Environment.NewLine
         End If
-
         If Not eMas = "" Then
             Check_Textdata = False
             MsgBox("<Error>" & Environment.NewLine & eMas)
         End If
-
-
     End Function
-    '管理値を変更する
     Public Sub UpdateControlLine()
-
         Dim strReason As String = ""
         Dim Buf(0) As String
-
-        If StrLanguage = "Japanese" Then '行橋のみ
+        If StrLanguage = "Japanese" Then
             If StrNetworkFolder = "L:\" Then
                 MsgBox("この設定ではSPCルールを変更することは出来ません。")
                 Exit Sub
             End If
         End If
-
-
         UserName = ""
         JP_Message = "SPCルールを変更します。管理者パスワードを入力して下さい。"
         EN_Message = "Change SPC rules. Enter administrator password."
-        UserName = FormAlarmInput.Input_Pass_to_Get_UserName(JP_Message, EN_Message, 0, 0) '0:IDPass合ってれば名前取得　1:QC承認者であるかも判定 
-
+        UserName = FormAlarmInput.Input_Pass_to_Get_UserName(JP_Message, EN_Message, 0, 0)
         If UserName <> "" Then
-
             If StrLanguage = "Japanese" Then
                 strReason = InputBox("パスワード照合OK。変更理由を記入してください。")
             ElseIf StrLanguage = "English" Then
                 strReason = InputBox("Password verification OK. Please enter the reason for the change")
             End If
-
             If strReason = "" Then
                 If StrLanguage = "Japanese" Then
                     MsgBox("変更理由が記入されていません。もう一度やり直してください。")
@@ -887,18 +715,12 @@ Public Class Form1
                 End If
                 Exit Sub
             End If
-
             Input_Chenged_Property(Buf, strReason, "Control limit change", PropertyTable.Rows.Count - 1)
             PropertyTable = getProperty()
         End If
-
-
-
     End Sub
     Public Sub Input_Chenged_Property(ByRef _Buf() As String, ByRef Reason As String, ByVal _Mode As String, ByVal _p As String)
         ReDim _Buf(PropertyTable.Columns.Count - 1)
-
-        '最新のPropertyのデータ取得
         For i As Integer = 0 To UBound(_Buf, 1)
             If IsDBNull(PropertyTable.Rows(_p)(i)) Then
                 _Buf(i) = "Null"
@@ -906,12 +728,8 @@ Public Class Form1
                 _Buf(i) = PropertyTable.Rows(_p)(i)
             End If
         Next
-
-
         If _Mode = "Control limit change" Then
-
-
-            _Buf(0) = FormControl.Get_PropertyNo() 'iGraphNo
+            _Buf(0) = FormControl.Get_PropertyNo()
             'Buf(1) = "" 'cProcessName
             'Buf(2) = "" 'cMachineNo
             'Buf(3) = "" 'cControlItem
@@ -1002,8 +820,6 @@ Public Class Form1
                 _Buf(51) = "0" 'cSpcrule8
             End If
 
-
-
             _Buf(52) = DateTime.Now.ToString 'cUpdateDate
             _Buf(53) = "Control limit change" 'cUpdateContent
             _Buf(54) = Reason 'cUpdateReason
@@ -1017,15 +833,10 @@ Public Class Form1
             To_Server(_Buf, _Mode)
 
         ElseIf _Mode = "Control limit approval" Then
-
-
             _Buf(56) = DateTime.Now.ToString 'cApprovalDate
-            _Buf(57) = UserName  'cApproverName
-
+            _Buf(57) = UserName  'cApproverName       
             To_Server(_Buf, _Mode)
-
         End If
-
     End Sub
 
     Private Sub Button8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button8.Click
@@ -1038,7 +849,6 @@ Public Class Form1
             ElseIf dr = System.Windows.Forms.DialogResult.Cancel Then
                 Me.Close()
             End If
-
         Else
             LoadLoad()
         End If
@@ -1054,41 +864,26 @@ Public Class Form1
         'GetHostItemList() 'ツリービュー再描画
     End Sub
 
-
-
     Private Sub UpdateTimerHost_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles UpdateTimerHost.Tick
         'UpdateTimerHost.Enabled = False
         'If System.IO.File.Exists("R:\" & UpdateFileName) Then
         '    System.IO.File.Copy("R:\" & UpdateFileName, "C:\" & UpdateFileName, True) 'Rドライブからrootフォルダへコピー
         '    System.IO.File.Copy("R:\" & UpdatePropertyName, "C:\" & UpdatePropertyName, True) 'Rドライブからrootフォルダへコピー
-
         'End If
-
         'System.IO.File.Copy("R:\SPCData\Alarm.csv", "C:\SPCData\Alarm.csv", True) 'Rドライブからrootフォルダへコピー
     End Sub
-
-
     Private Sub Button7_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button7.Click
-
         MRFlag = True
         GraphDisp()
-
         Label1.Text = "MR"
         GroupBox2.Text = "MR"
-
-
-
     End Sub
-
     Private Sub Button9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button9.Click
-
         MRFlag = False
         GraphDisp()
         Label1.Text = "R"
         GroupBox2.Text = "R"
-
     End Sub
-
 
     Private Sub PictureBox6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBox6.Click
 
@@ -1099,19 +894,19 @@ Public Class Form1
     End Sub
 
     Private Sub ExToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ExToolStripMenuItem.Click
-        'Me.SPCData_Export() '表示中のSPCデータを出力する
+
     End Sub
 
     Private Sub DToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DToolStripMenuItem.Click
-        FormProperty.Show() 'プロパティ画面を表示する
+        FormProperty.Show()
     End Sub
 
     Private Sub CreateNewToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CreateNewToolStripMenuItem.Click
-        FormControl.Show() 'グラフ初期設定画面を表示する
+        FormControl.Show()
     End Sub
 
     Private Sub SPCRuleToolStripMenuItem1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles SPCRuleToolStripMenuItem1.Click
-        FormSPCRule.Show() 'SPC詳細設定画面を表示する
+        FormSPCRule.Show()
         FormSPCRule.Button2_Click(Nothing, Nothing)
     End Sub
 
@@ -1134,7 +929,7 @@ Public Class Form1
     End Sub
 
     Private Sub HowToUseToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles HowToUseToolStripMenuItem.Click
-        FormHowto.Show() '使用マニュアルを表示する
+        FormHowto.Show()
     End Sub
 
     Private Sub MenuStrip1_ItemClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.ToolStripItemClickedEventArgs) Handles MenuStrip1.ItemClicked
@@ -1204,40 +999,27 @@ Public Class Form1
     End Sub
 
     Public Sub New()
-
-        ' この呼び出しは、Windows フォーム デザイナで必要です。
         InitializeComponent()
-
         ' InitializeComponent() 呼び出しの後で初期化を追加します。
-
     End Sub
 
     Public Sub To_Server(ByVal Array() As String, ByVal Mode As String)
         Dim Cn As New SqlConnection
         Dim strSQL As String
         Dim SQLCm As SqlCommand = Cn.CreateCommand
-        Dim trans As SqlTransaction 'トランザクション定義
+        Dim trans As SqlTransaction
 
         Try
-
             Cn.ConnectionString = StrServerConnection
-
             Cn.Open()
             trans = Cn.BeginTransaction
             SQLCm.Transaction = trans
-
-
-            '規格変更は1行増える。変更後の承認は、既存の行に承認者の名前が記入される。
             If Mode = "Control limit approval" Then
                 SQLCm.CommandText = "DELETE FROM SPC_Property WHERE iGraphNo = '" & Array(0) & "'"
                 SQLCm.ExecuteNonQuery()
             End If
-
-
-
             strSQL = ""
             strSQL = "INSERT INTO SPC_Property VALUES ("
-
             For i As Integer = 0 To UBound(Array, 1)
                 If Array(i) = "Null" Then
                     strSQL &= "Null"
@@ -1250,14 +1032,10 @@ Public Class Form1
                     strSQL &= ","
                 End If
             Next
-
             SQLCm.CommandText = strSQL
             SQLCm.ExecuteNonQuery()
-
-
             trans.Commit()
             Cn.Close()
-
         Catch ex As Exception
             If IsNothing(trans) = False Then
                 trans.Rollback()
@@ -1266,7 +1044,6 @@ Public Class Form1
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
-
     End Sub
 
     Private Sub ServerToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ServerToolStripMenuItem.Click
@@ -1294,9 +1071,7 @@ Public Class Form1
         End If
     End Sub
     Public Function Input_CSV_to_Server(ByVal CsvName As String, ByVal Del As Integer) As String
-
         Input_CSV_to_Server = ""
-
         Dim CSVData(0, 0) As String
         Dim CSVData_Header(0, 0) As String
         Dim TableName As String = ""
@@ -1354,7 +1129,7 @@ Public Class Form1
             sr0.Close()     'ファイルを閉じる
             '-------------------------------------------------------------------------その大きさ分定義してBufに格納-------------------------------------------------------------------------
             eCode = "c"
-            ReDim Array_Header(3 - 1, UBound(Buf, 2) - 1) '列名、データ型、
+            ReDim Array_Header(3 - 1, UBound(Buf, 2) - 1)
             ReDim Array(UBound(Buf, 1) - (UBound(Array_Header, 1) + 1) - 1, UBound(Buf, 2) - 1)
             TName = Buf(0, 1)
             For i As Integer = 1 To 1 + UBound(Array_Header, 1)
@@ -1372,33 +1147,22 @@ Public Class Form1
         Catch ex As Exception
             Input_CSV = "Input_CSV " & eCode & Environment.NewLine & ex.Message & Environment.NewLine & ex.StackTrace
         End Try
-
-
-
     End Function
     Public Function To_Server0(ByVal Array(,) As String, ByVal Array_Header(,) As String, ByVal TName As String, ByVal Del As Integer) As String
-
         To_Server0 = ""
         Dim eCode As String = ""
         Dim Cn As New SqlConnection
         Dim strSQL As String = ""
         Dim SQLCm As SqlCommand = Cn.CreateCommand
         Dim trans As SqlTransaction = Nothing  'トランザクション定義
-
         Try
-
             eCode = "a"
-
             Cn.ConnectionString = StrServerConnection
-
             Cn.Open()
             trans = Cn.BeginTransaction
             SQLCm.Transaction = trans
-
             If 1 Then
-
                 eCode = "b"
-
                 If Del = 0 Then '0:消さずにスルー、1:消して新規作成
                     MsgBox("Table:" & TName & " already exists.")
                     Cn.Close()
@@ -1424,7 +1188,6 @@ Public Class Form1
                 eCode = "e"
                 SQLCm.CommandText = strSQL
                 SQLCm.ExecuteNonQuery()
-
                 eCode = "f"
                 SQLCm.CommandText = "DELETE FROM " & TName
                 SQLCm.ExecuteNonQuery()
@@ -1447,24 +1210,19 @@ Public Class Form1
                         End If
                         eCode = "h " & i & " " & j
                     Next
-
                     SQLCm.CommandText = strSQL
                     SQLCm.ExecuteNonQuery()
-
                 Next
 
             End If
-
             trans.Commit()
             Cn.Close()
-
         Catch ex As Exception
             If IsNothing(trans) = False Then
                 trans.Rollback()
             End If
             To_Server0 = "To_Server0 " & eCode & Environment.NewLine & strSQL & Environment.NewLine & ex.Message & Environment.NewLine & ex.StackTrace
         End Try
-
     End Function
     Private Sub Write_Error(ByVal strE As String)
         Dim TextFile As IO.StreamWriter = New IO.StreamWriter(StrCDir & "\Emsg.txt", True, System.Text.Encoding.Default)
@@ -1485,7 +1243,6 @@ Public Class Form1
         Form_User.Show()
     End Sub
     Public Sub GetStandardNo()
-
         txtStan_No.Text = "No Data"
         FormMiddle.txtStan_No.Text = "No Data"
         FormSmall.txtStan_No.Text = "No Data"
@@ -1496,38 +1253,27 @@ Public Class Form1
         Dim table As New DataTable
         Dim n As Integer
         Try
-
             Cn.ConnectionString = StrServerConnection
-
             strSQL = "SELECT *"
             strSQL &= " FROM SPC_User"
             strSQL &= " WHERE cUserID = '" & "Stan_No" & "'"
-
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
             Adapter.SelectCommand.CommandType = CommandType.Text
             Adapter.Fill(table)
             n = table.Rows.Count
             Adapter.Dispose()
-
             If Not n = 0 Then
                 txtStan_No.Text = table.Rows(0)("cPassword")
                 FormMiddle.txtStan_No.Text = table.Rows(0)("cPassword")
                 FormSmall.txtStan_No.Text = table.Rows(0)("cPassword")
             End If
-
-
-
-
-
         Catch ex As Exception
             StrErrMes = "ユーザー情報更新エラー" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
-
     End Sub
-
 
     ' [3] ส่วนที่เพิ่มใหม่: ฟังก์ชันอ่านข้อมูลจากไฟล์ testdata.txt
     ' [Form1.vb] แทนที่ Sub LoadDataFromTextFile ของเดิมด้วยอันนี้
@@ -1540,39 +1286,30 @@ Public Class Form1
         End If
 
         Dim lines() As String = File.ReadAllLines(filePath)
-
-
         ' 2. รีเซ็ตค่าเริ่มต้น (สำคัญมาก! ห้ามลบ)
         SPCDataNum = 0
         Graphsmallcount = 1  ' <--- [แก้จุดที่ 1] ต้องตั้งเป็น 1 เสมอ ไม่งั้นกราฟเด้ง
         ReDim M_Data(-1)
         ReDim M_Alarm(lines.Length) ' สร้าง Alarm รอไว้กันเด้ง
-
         Dim xValues As New System.Collections.Generic.List(Of Double)
         Dim rValues As New System.Collections.Generic.List(Of Double)
-
         ' 3. อ่านข้อมูลจากไฟล์ (โครงสร้างไฟล์ของคุณถูกต้องแล้ว)
         For i As Integer = 1 To lines.Length - 1
             Dim line As String = lines(i)
             If line.Trim() = "" Then Continue For
-
             Dim cols() As String = line.Split(vbTab)
             If cols.Length > 7 Then
                 If cols(6).Trim() = "Date" OrElse cols(7).Trim() = "Time" OrElse cols(0).Trim = "Lot Number" Then
                     Continue For
                 End If
             End If
-
             ' เช็คว่ามีคอลัมน์ครบตามไฟล์ testdata หรือไม่
             If cols.Length > 21 Then
                 ReDim Preserve M_Data(SPCDataNum)
-
                 Dim valX As Double = Val(cols(5))
                 Dim valR As Double = Val(cols(20))
                 xValues.Add(valX)
                 rValues.Add(valR)
-
-
                 If cols.Length > 13 Then
                     Dim fileUSL As Double = Val(cols(12))
                     Dim fileLSL As Double = Val(cols(13))
@@ -1581,7 +1318,6 @@ Public Class Form1
                         X_LSL = fileLSL
                     End If
                 End If
-
                 ' จัด Format ข้อมูล: ID, Date Time, Mean, Range, MR, Operator, Lot, Status
                 Dim rawRow As String = ""
                 rawRow &= i & ","
@@ -1592,45 +1328,35 @@ Public Class Form1
                 rawRow &= cols(21) & ","
                 rawRow &= cols(0) & ","
                 rawRow &= "Pass"
-
-
                 M_Data(SPCDataNum) = rawRow
-
                 ' สร้าง Alarm หลอกๆ กัน Error
                 ReDim Preserve M_Alarm(SPCDataNum)
                 ReDim M_Alarm(SPCDataNum)(2)
                 M_Alarm(SPCDataNum)(0) = "0,00000000"
                 M_Alarm(SPCDataNum)(1) = "0,00000000"
                 M_Alarm(SPCDataNum)(2) = "0,00000000"
-
                 If SPCDataNum < MesureValueBuf.Length Then
                     MesureValueBuf(SPCDataNum) = cols(5)
                 End If
                 SPCDataNum += 1
             End If
         Next
-
-
         If xValues.Count > 0 Then
             X_CL = Math.Round(xValues.Average(), 3)
-            Dim sumSq As Double = 0
-            For Each v As Double In xValues
-                sumSq += Math.Pow(v - X_CL, 2)
-            Next
-            Dim stdDev As Double = 0
-            If xValues.Count > 1 Then stdDev = Math.Sqrt(sumSq / (xValues.Count - 1))
-            If stdDev = 0 Then stdDev = 1
-            X_UCL = Math.Round(X_CL + (3 * stdDev), 3)
-            X_LCL = Math.Round(X_CL - (3 * stdDev), 3)
 
             If rValues.Count > 0 Then
                 R_CL = Math.Round(rValues.Average(), 3)
-                R_UCL = Math.Round(R_CL * 2.11, 3)
+                R_UCL = Math.Round(R_CL * 2.114, 3)
                 R_LCL = 0
             End If
+            Dim A2 As Double = 0.577
+            X_UCL = Math.Round(X_CL + (A2 * R_CL), 3)
+            X_LCL = Math.Round(X_CL - (A2 * R_CL), 3)
 
-            'X_USL = X_UCL
-            'X_LSL = X_LCL
+            'Dim d2 As Double = 2.326
+            'Dim EstimatedSigma As Double = 0
+            'If R_CL > 0 Then EstimatedSigma = R_CL / d2
+
         End If
         ' ==================================================================
         ' 4. [แก้จุดที่ 2] สร้างตาราง PropertyTable จำลอง (เพราะไม่ได้โหลดจาก DB)
@@ -1679,7 +1405,6 @@ Public Class Form1
 
             If max_Dist = 0 Then max_Dist = 1
             dr("cTolerance") = Math.Round(max_Dist * 1.2, 3)
-
             dr("cUnit") = "Unit"
             dr("cLimitType") = "Fixed"
             dr("cUsl") = X_USL
@@ -1688,11 +1413,9 @@ Public Class Form1
             dr("cXucl") = X_UCL
             dr("cXlcl") = X_LCL
             dr("cXdev") = Math.Round(Math.Abs(X_UCL - X_LCL) / 6, 3)
-
             dr("cRucl") = R_UCL
             dr("cRcl") = R_CL
             dr("cRdev") = Math.Round(R_CL / 2, 3)
-
             dr("cMRucl") = 0
             dr("cMRcl") = 0
             dr("cMRdev") = 0
@@ -1700,11 +1423,9 @@ Public Class Form1
             dr("cApprovalDate") = DateTime.Now.AddYears(-10)
             dr("cMachineNo") = "TextFile"
             dr("cControlItem") = "Data"
-
             For k As Integer = 1 To 8
                 dr("cSpcRule" & k) = False
             Next
-
             dt.Rows.Add(dr)
             PropertyTable = dt ' ส่งตารางที่สร้างเสร็จแล้วไปให้ตัวแปรจริง
         Catch ex As Exception
@@ -1731,5 +1452,176 @@ Public Class Form1
     ' หมายเหตุ: ต้องสร้างปุ่มชื่อ ButtonLoad ใน Form Designer ก่อน
     Private Sub ButtonLoad_Click_1(sender As Object, e As EventArgs) Handles ButtonLoad.Click
         LoadDataFromTextFile()
+    End Sub
+    Public Sub LoadFolderTree(ByVal RootPath As String)
+        TreeView1.Nodes.Clear()
+        If System.IO.Directory.Exists(RootPath) Then
+            Dim RootDir As New System.IO.DirectoryInfo(RootPath)
+            Dim MainNode As New TreeNode(RootDir.Name)
+            MainNode.Tag = RootDir.FullName
+            TreeView1.Nodes.Add(MainNode)
+            GetSubDirectories(RootDir, MainNode)
+            MainNode.Expand()
+        Else
+            MessageBox.Show("ไม่พบโฟลเดอร์: " & RootPath)
+        End If
+    End Sub
+    Private Sub GetSubDirectories(ByVal DirInfo As System.IO.DirectoryInfo, ByVal ParentNode As TreeNode)
+        Try
+            For Each SubDir As System.IO.DirectoryInfo In DirInfo.GetDirectories()
+                Dim FolderNode As New TreeNode(SubDir.Name)
+                FolderNode.Tag = SubDir.FullName
+                ParentNode.Nodes.Add(FolderNode)
+                GetSubDirectories(SubDir, FolderNode)
+            Next
+            For Each FileItem As System.IO.FileInfo In DirInfo.GetFiles("*.txt")
+                Dim FileNode As New TreeNode(FileItem.Name)
+                FileNode.ForeColor = Color.Blue
+                ParentNode.Nodes.Add(FileNode)
+            Next
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub TreeView1_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterSelect
+        If e.Node.Tag Is Nothing OrElse e.Node.Tag Is Nothing Then Exit Sub
+        Dim selectedPath As String = e.Node.Tag.ToString()
+        If System.IO.File.Exists(selectedPath) Then
+            Dim ext As String = System.IO.Path.GetExtension(selectedPath).ToLower()
+            If ext = ".txt" Or ext = ".csv" Or ext = ".log" Or ext = ".dat" Then
+                LoadSPCFile(selectedPath)
+
+                DispStartPosition = 0
+
+                If PictureBox9.Image IsNot Nothing Then PictureBox9.Image.Dispose()
+                If PictureBox1.Image IsNot Nothing Then PictureBox1.Image.Dispose()
+                If PictureBox2.Image IsNot Nothing Then PictureBox2.Image.Dispose()
+                GraphDisp1("MAX")
+                GraphDisp2("MAX", False)
+                GraphDisp7("MAX")
+                Me.Text = "SPC System - " & System.IO.Path.GetFileName(selectedPath)
+            End If
+        End If
+    End Sub
+    Private Sub LoadSPCFile(ByVal filePath As String)
+        If Not System.IO.File.Exists(filePath) Then Exit Sub
+        Try
+            Dim lines() As String = System.IO.File.ReadAllLines(filePath)
+            SPCDataNum = 0
+            Graphsmallcount = 1
+            ReDim M_Data(-1)
+            ReDim M_Alarm(lines.Length)
+            Dim xValues As New System.Collections.Generic.List(Of Double)
+            Dim rValues As New System.Collections.Generic.List(Of Double)
+            Dim temp_X_USL As Double = 0
+            Dim temp_X_LSL As Double = 0
+            Dim stdDev As Double = 0
+            For i As Integer = 1 To lines.Length - 1
+                Dim line As String = lines(i)
+                If line.Trim() = "" Then Continue For
+                Dim cols() As String = line.Split(vbTab)
+                If cols.Length > 20 Then
+                    ReDim Preserve M_Data(SPCDataNum)
+                    Dim valX As Double = Val(cols(5))
+                    Dim valR As Double = Val(cols(20))
+                    xValues.Add(valX)
+                    rValues.Add(valR)
+                    If cols.Length > 13 Then
+                        temp_X_LSL = Val(cols(12))
+                        temp_X_USL = Val(cols(13))
+                    End If
+                    Dim rawRow As String = ""
+                    rawRow &= i & ","
+                    rawRow &= cols(6) & " " & cols(7) & ","
+                    rawRow &= cols(5) & ","
+                    rawRow &= cols(20) & ","
+                    rawRow &= "0."
+                    rawRow &= cols(21) & ","
+                    rawRow &= cols(0) & ","
+                    rawRow &= "Pass"
+                    M_Data(SPCDataNum) = rawRow
+                    ReDim Preserve M_Alarm(SPCDataNum)
+                    ReDim M_Alarm(SPCDataNum)(2)
+                    M_Alarm(SPCDataNum)(0) = "0,00000000"
+                    M_Alarm(SPCDataNum)(1) = "0,00000000"
+                    M_Alarm(SPCDataNum)(2) = "0,00000000"
+                    SPCDataNum += 1
+                End If
+            Next
+            If xValues.Count > 0 Then
+                X_CL = Math.Round(xValues.Average(), 3)
+                Dim sumSq As Double = 0
+                For Each v As Double In xValues
+                    sumSq += Math.Pow(v - X_CL, 2)
+                Next
+
+                If xValues.Count > 1 Then stdDev = Math.Sqrt(sumSq / (xValues.Count - 1))
+                If stdDev = 0 Then stdDev = 1
+                X_UCL = Math.Round(X_CL + (3 * stdDev), 3)
+                X_LCL = Math.Round(X_CL - (3 * stdDev), 3)
+                If temp_X_USL <> 0 Or temp_X_LSL <> 0 Then
+                    X_USL = temp_X_USL
+                    X_LSL = temp_X_LSL
+                Else
+                    X_USL = X_UCL
+                    X_LSL = X_LCL
+                End If
+                If rValues.Count > 0 Then
+                    R_CL = Math.Round(rValues.Average(), 3)
+                    R_UCL = Math.Round(R_CL + 2.11, 3)
+                    R_LCL = 0
+                End If
+            End If
+            Dim dt As New DataTable()
+            dt.Columns.Add("cScl", GetType(Double))
+            dt.Columns.Add("cTolerance", GetType(Double))
+            dt.Columns.Add("cUnit", GetType(String))
+            dt.Columns.Add("cLimitType", GetType(String))
+            dt.Columns.Add("cUsl", GetType(Double))
+            dt.Columns.Add("cLsl", GetType(Double))
+            dt.Columns.Add("cXcl", GetType(Double))
+            dt.Columns.Add("cXucl", GetType(Double))
+            dt.Columns.Add("cXlcl", GetType(Double))
+            dt.Columns.Add("cXdev", GetType(Double))
+            dt.Columns.Add("cRucl", GetType(Double))
+            dt.Columns.Add("cRcl", GetType(Double))
+            dt.Columns.Add("cRdev", GetType(Double))
+            dt.Columns.Add("cMRucl", GetType(Double))
+            dt.Columns.Add("cMRcl", GetType(Double))
+            dt.Columns.Add("cMRdev", GetType(Double))
+            dt.Columns.Add("cMR", GetType(String))
+            dt.Columns.Add("cApprovalDate", GetType(DateTime))
+            dt.Columns.Add("cMachineNo", GetType(String))
+            dt.Columns.Add("cControlItem", GetType(String))
+            For k As Integer = 1 To 8
+                dt.Columns.Add("cSpcRule", GetType(Boolean))
+            Next
+            Dim dr As DataRow = dt.NewRow()
+            dr("cScl") = X_CL
+            Dim maxDist As Double = Math.Max(Math.Abs(X_UCL - X_CL), Math.Abs(X_USL - X_CL))
+            If maxDist = 0 Then maxDist = 1
+            dr("cTolerance") = Math.Round(maxDist * 1.5, 3)
+            dr("cUnit") = "Unit"
+            dr("cLimitType") = "UpperLower"
+            dr("cUsl") = X_USL
+            dr("cLsl") = X_LSL
+            dr("cXcl") = X_CL
+            dr("cXucl") = X_UCL
+            dr("cXlcl") = X_LCL
+            dr("cXdev") = stdDev
+            dr("cRucl") = R_UCL
+            dr("cRcl") = R_CL
+            dr("cRdev") = Math.Round(R_CL / 2, 3)
+            dr("cMRucl") = 0 : dr("cMRcl") = 0 : dr("cMRdev") = 0 : dr("cMR") = "0"
+            dr("cApprovalDate") = DateTime.MinValue
+            dr("cMachineNo") = "File"
+            dr("cControlItem") = System.IO.Path.GetFileName(filePath)
+            dt.Rows.Add(dr)
+            PropertyTable = dt
+            ReDim TreeName(0)
+            TreeName(0) = System.IO.Path.GetFileNameWithoutExtension(filePath)
+        Catch ex As Exception
+            MsgBox("Error reading file: " & ex.Message)
+        End Try
     End Sub
 End Class
