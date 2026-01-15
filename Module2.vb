@@ -603,8 +603,16 @@ Module Module2
             p = 0
             For k = 0 To PropertyTable.Rows.Count - 1
                 If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
-                    If readMaster(M_Data(j), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then '1?????????????Propaty?????????????????
-                        p = k
+                    Dim strDate1 As String = readMaster(M_Data(j), _wDate)
+                    Dim date1 As Date
+                    Dim date2 As Date
+                    Dim isDate1Valid As Boolean = DateTime.TryParse(strDate1, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, date1)
+                    If Not isDate1Valid Then isDate1Valid = DateTime.TryParse(strDate1, date1)
+                    Dim isDate2Valid As Boolean = DateTime.TryParse(PropertyTable.Rows(k)("cApprovalDate").ToString(), date2)
+                    If isDate1Valid AndAlso isDate2Valid Then
+                        If date1 > date2 Then
+                            p = k
+                        End If
                     End If
                 End If
             Next
@@ -1134,8 +1142,6 @@ Module Module2
     End Sub
 
     Public Sub GraphDisp1(ByVal Size As String)
-
-
         Dim xpn, ypn, xp, n, yp, yh, i, j, pno, jk, yps, ypf, ypa, k, p As Integer
         Dim Bairitu, yp0 As Double
         Dim f As New Font("MS P????", 10)
@@ -1213,8 +1219,6 @@ Module Module2
         B1Pen.DashStyle = Drawing2D.DashStyle.Solid
 
         '================================================================
-
-
         If Size = "MAX" Then
 
             Form1.LabUpCpk.Text = ""
@@ -1261,11 +1265,45 @@ Module Module2
 
 
         jk = DispStartPosition  '?????????????????
-        PropertyNo = PropertyTable.Rows.Count - 1
+        'PropertyNo = PropertyTable.Rows.Count - 1
 
         '???????????========================
+        If PropertyTable Is Nothing OrElse PropertyTable.Rows.Count = 0 Then
+            Exit Sub
+        End If
+        PropertyNo = PropertyTable.Rows.Count - 1
         dbl1 = PropertyTable.Rows(PropertyNo)("cScl")
         dbl2 = PropertyTable.Rows(PropertyNo)("cTolerance") / 5
+        Dim localMax As Double = -999999999
+        Dim localMin As Double = 999999999
+        Dim tempJK As Integer = DispStartPosition
+        Dim valDbl As Double
+        Dim valStr As String
+        For checkLoop As Integer = 0 To 29 * Graphsmallcount
+            If tempJK > UBound(M_Data) Then Exit For
+            If M_Data(tempJK) Is Nothing Then
+                tempJK += 1
+                Continue For
+            End If
+            valStr = readMaster(M_Data(tempJK), _X)
+            If Double.TryParse(valStr, valDbl) Then
+                If valDbl > localMax Then localMax = valDbl
+                If valDbl < localMin Then localMin = valDbl
+            End If
+            tempJK += 1
+        Next
+        Dim propUSl As Double = PropertyTable.Rows(PropertyNo)("cUsl")
+        Dim propLSL As Double = PropertyTable.Rows(PropertyNo)("cLsl")
+        If localMax <> -999999999 And localMin <> 999999999 Then
+            Dim dataRange As Double = localMax - localMin
+            If dataRange = 0 Then
+                dataRange = PropertyTable.Rows(PropertyNo)("cTolerance")
+            End If
+            If dataRange = 0 Then dataRange = 1
+            dbl2 = dataRange / 8
+            dbl1 = (localMax + localMin) / 2
+        End If
+        dblLow = dbl1 - dbl2 * 5
         If IsDBNull(PropertyTable.Rows(PropertyNo)("cUnit")) = False Then
             strUnit = PropertyTable.Rows(PropertyNo)("cUnit")
         End If
@@ -1336,8 +1374,16 @@ Module Module2
 
                 For k = 0 To PropertyNo
                     If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
-                        If readMaster(M_Data(jk), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then
-                            p = k
+                        Dim strDate1 As String = readMaster(M_Data(j), _wDate)
+                        Dim date1 As Date
+                        Dim date2 As Date
+                        Dim isDate1Valid As Boolean = DateTime.TryParse(strDate1, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, date1)
+                        If Not isDate1Valid Then isDate1Valid = DateTime.TryParse(strDate1, date1)
+                        Dim isDate2Valid As Boolean = DateTime.TryParse(PropertyTable.Rows(k)("cApprovalDate").ToString(), date2)
+                        If isDate1Valid AndAlso isDate2Valid Then
+                            If date1 > date2 Then
+                                p = k
+                            End If
                         End If
                     End If
                     'jk += 1
@@ -1434,8 +1480,10 @@ Module Module2
                 '??????????0
                 colbuf(j) = 0
                 '???????1
-                Dim ala As Integer = readMaster(M_Alarm(jk)(0), 0)
-
+                Dim ala As Integer = 0
+                If M_Alarm IsNot Nothing AndAlso jk < M_Alarm.Length AndAlso M_Alarm(jk) IsNot Nothing Then
+                    ala = readMaster(M_Alarm(jk)(0), 0)
+                End If
 
                 If ala = 1 Then
                     colbuf(j) = 1
@@ -1588,6 +1636,7 @@ Module Module2
         n = j '????????????
         jk = DispStartPosition
         For j = 0 To n - 1
+            If jk > UBound(M_Data) Then Exit For
             xpn = xpnbuf_X(j)
             ypn = ypnbuf_X(j)
             If xpn <> "0" Then
@@ -1691,18 +1740,26 @@ Module Module2
             str &= TreeName(l)
         Next
 
+        If PropertyTable IsNot Nothing AndAlso PropertyTable.Rows.Count > 0 Then
+            PropertyNo = PropertyTable.Rows.Count - 1
 
-        If Size = "MAX" Then
-            Form1.TextItem.Text = str
-            Form1.labTitle.Text = PropertyTable.Rows(PropertyNo)("cMachineNo") & "  " & PropertyTable.Rows(PropertyNo)("cControlItem") & " " & "Control chart"
-        ElseIf Size = "Middle" Then
-            FormMiddle.TextItem.Text = str
-            FormMiddle.labTitle.Text = PropertyTable.Rows(PropertyNo)("cMachineNo") & "  " & PropertyTable.Rows(PropertyNo)("cControlItem") & " " & "Control chart"
-        ElseIf Size = "MIN" Then
-            FormSmall.TextItem.Text = str
-            FormSmall.labTitle.Text = PropertyTable.Rows(PropertyNo)("cMachineNo") & "  " & PropertyTable.Rows(PropertyNo)("cControlItem") & " " & "Control chart"
+            If Size = "MAX" Then
+                Form1.TextItem.Text = str
+                If PropertyTable.Columns.Contains("cMachineNo") And PropertyTable.Columns.Contains("cControlItem") Then
+                    Form1.labTitle.Text = PropertyTable.Rows(PropertyNo)("cMachineNo") & "  " & PropertyTable.Rows(PropertyNo)("cControlItem") & " " & "Control chart"
+                End If
+            ElseIf Size = "Middle" Then
+                FormMiddle.TextItem.Text = str
+                If PropertyTable.Columns.Contains("cMachineNo") And PropertyTable.Columns.Contains("cControlItem") Then
+                    FormMiddle.labTitle.Text = PropertyTable.Rows(PropertyNo)("cMachineNo") & "  " & PropertyTable.Rows(PropertyNo)("cControlItem") & " " & "Control chart"
+                End If
+            ElseIf Size = "MIN" Then
+                FormSmall.TextItem.Text = str
+                If PropertyTable.Columns.Contains("cMachineNo") And PropertyTable.Columns.Contains("cControlItem") Then
+                    FormSmall.labTitle.Text = PropertyTable.Rows(PropertyNo)("cMachineNo") & "  " & PropertyTable.Rows(PropertyNo)("cControlItem") & " " & "Control chart"
+                End If
+            End If
         End If
-
     End Sub
     'R??????
     Public Sub GraphDisp2(ByVal Size As String, ByVal MR As Boolean)
@@ -1917,8 +1974,16 @@ Module Module2
 
                 For k = 0 To PropertyNo
                     If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
-                        If readMaster(M_Data(i), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then
-                            p = k
+                        Dim strDate1 As String = readMaster(M_Data(j), _wDate)
+                        Dim date1 As Date
+                        Dim date2 As Date
+                        Dim isDate1Valid As Boolean = DateTime.TryParse(strDate1, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, date1)
+                        If Not isDate1Valid Then isDate1Valid = DateTime.TryParse(strDate1, date1)
+                        Dim isDate2Valid As Boolean = DateTime.TryParse(PropertyTable.Rows(k)("cApprovalDate").ToString(), date2)
+                        If isDate1Valid AndAlso isDate2Valid Then
+                            If date1 > date2 Then
+                                p = k
+                            End If
                         End If
                     End If
                 Next
@@ -2795,8 +2860,6 @@ Module Module2
 
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
-            Adapter.SelectCommand.CommandType = CommandType.Text
-            Adapter.Fill(P_Table)
             P_Table.Dispose()
 
             If P_Table.Rows.Count = 0 Then

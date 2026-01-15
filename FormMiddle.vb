@@ -43,113 +43,15 @@ Public Class FormMiddle
     End Sub
 
     Private Sub TreeView1_AfterSelect(ByVal sender As System.Object, ByVal e As System.Windows.Forms.TreeViewEventArgs) Handles TreeView1.AfterSelect
-        Form1.TreeView_AfterSelect(TreeView1)
-        'StrSerch1 = ""
-        'StrSerch2 = ""
-        'StrSerch3 = ""
+        If e.Node.Tag IsNot Nothing AndAlso System.IO.File.Exists(e.Node.Tag.ToString()) Then
+            Dim selectedPath As String = e.Node.Tag.ToString()
+            Form1.LoadSPCFile(selectedPath)
+            GraphDisp()
+            Me.Text = "SPC System - " & System.IO.Path.GetFileName(selectedPath)
+        Else
+            Form1.TreeView_AfterSelect(TreeView1)
+        End If
 
-        ''親ノードがない場合(ノードを開いていない場合)この関数を終了する
-        'If TreeView1.SelectedNode.Parent Is Nothing Then Exit Sub
-        'If TreeView1.SelectedNode.Parent.Parent Is Nothing Then Exit Sub
-        'If TreeView1.SelectedNode.Parent.Parent.Parent Is Nothing Then Exit Sub
-        'If TreeView1.SelectedNode.Parent.Parent.Parent.Parent Is Nothing Then Exit Sub
-
-        'If TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent Is Nothing Then
-        '    '子ノード名を取得する
-        '    Dim SelectNode As TreeNode = TreeView1.SelectedNode
-        '    SPCMcNo = SelectNode.Text
-        '    '子ノードの親ノード名を取得する
-        '    Dim SelectNodeparent As TreeNode = TreeView1.SelectedNode.Parent
-        '    SPCkoumoku = SelectNodeparent.Text
-        '    '親ノードの親ノードの親ノード名を取得する
-        '    Dim SelectNodeparent1 As TreeNode = TreeView1.SelectedNode.Parent.Parent
-        '    StrSelectMc = SelectNodeparent1.Text
-        '    '親ノードの親ノードの親ノードの親ノード名を取得する
-        '    Dim SelectNodeparent2 As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent
-        '    StrSerchMonitor = SelectNodeparent2.Text
-        '    '親ノードの親ノードの親ノードの親ノードの親ノード名を取得する
-        '    Dim SelectNodehost As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent
-        '    StrSerchHostItem = SelectNodehost.Text
-        'Else
-        '    If TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent.Parent Is Nothing Then
-        '        '絞込み条件が一つの場合
-        '        Dim Serch1Node As TreeNode = TreeView1.SelectedNode
-        '        StrSerch1 = Serch1Node.Text
-        '        '子ノード名を取得する
-        '        Dim SelectNode As TreeNode = TreeView1.SelectedNode.Parent
-        '        SPCMcNo = SelectNode.Text
-        '        '子ノードの親ノード名を取得する
-        '        Dim SelectNodeparent As TreeNode = TreeView1.SelectedNode.Parent.Parent
-        '        SPCkoumoku = SelectNodeparent.Text
-        '        '親ノードの親ノードの親ノード名を取得する
-        '        Dim SelectNodeparent1 As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent
-        '        StrSelectMc = SelectNodeparent1.Text
-        '        '親ノードの親ノードの親ノードの親ノード名を取得する
-        '        Dim SelectNodeparent2 As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent
-        '        StrSerchMonitor = SelectNodeparent2.Text
-        '        '親ノードの親ノードの親ノードの親ノードの親ノード名を取得する
-        '        Dim SelectNodehost As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent
-        '        StrSerchHostItem = SelectNodehost.Text
-        '    Else
-        '        If TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent.Parent.Parent Is Nothing Then
-        '            '絞込み条件が二つの場合
-        '            Dim Serch1Node As TreeNode = TreeView1.SelectedNode.Parent
-        '            StrSerch1 = Serch1Node.Text
-        '            Dim Serch2Node As TreeNode = TreeView1.SelectedNode
-        '            StrSerch2 = Serch2Node.Text
-        '            '子ノード名を取得する
-        '            Dim SelectNode As TreeNode = TreeView1.SelectedNode.Parent.Parent
-        '            SPCMcNo = SelectNode.Text
-        '            '子ノードの親ノードの親ノード名を取得する
-        '            Dim SelectNodeparent As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent
-        '            SPCkoumoku = SelectNodeparent.Text
-        '            '親ノードの親ノードの親ノードの親ノード名を取得する
-        '            Dim SelectNodeparent2 As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent
-        '            StrSelectMc = SelectNodeparent2.Text
-        '            '親ノードの親ノードの親ノードの親ノードの親ノード名を取得する
-        '            Dim SelectNodeparent3 As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent
-        '            StrSerchMonitor = SelectNodeparent3.Text
-        '            '親ノードの親ノードの親ノードの親ノードの親ノードの親ノード名を取得する
-        '            Dim SelectNodehost As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent.Parent
-        '            StrSerchHostItem = SelectNodehost.Text
-        '        Else
-        '            '絞込み条件が三つの場合
-        '            Dim Serch1Node As TreeNode = TreeView1.SelectedNode.Parent.Parent
-        '            StrSerch1 = Serch1Node.Text
-        '            Dim Serch2Node As TreeNode = TreeView1.SelectedNode.Parent
-        '            StrSerch2 = Serch2Node.Text
-        '            Dim Serch3Node As TreeNode = TreeView1.SelectedNode
-        '            StrSerch3 = Serch3Node.Text
-        '            '子ノード名を取得する
-        '            Dim SelectNode As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent
-        '            SPCMcNo = SelectNode.Text
-        '            '子ノードの親ノード名を取得する
-        '            Dim SelectNodeparent1 As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent
-        '            SPCkoumoku = SelectNodeparent1.Text
-        '            '親ノードの親ノードの親ノード名を取得する
-        '            Dim SelectNodeparent2 As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent
-        '            StrSelectMc = SelectNodeparent2.Text
-        '            '親ノードの親ノードの親ノードの親ノード名を取得する
-        '            Dim SelectNodeparent3 As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent.Parent
-        '            StrSerchMonitor = SelectNodeparent3.Text
-        '            '親ノードの親ノードの親ノードの親ノードの親ノード名を取得する
-        '            Dim SelectNodehost As TreeNode = TreeView1.SelectedNode.Parent.Parent.Parent.Parent.Parent.Parent.Parent
-        '            StrSerchHostItem = SelectNodehost.Text
-        '        End If
-
-        '    End If
-        'End If
-
-        'Me.ComboDevice.Text = SPCMcNo
-        'Me.ComboItem1.Text = StrSerch1
-        'Me.TextItem2.Text = StrSerch2
-        'Me.TextItem3.Text = StrSerch3
-        'Graphsmallcount = 1
-        ''上記の条件でSPCデータを取得する
-        'MRFlag = False
-        'Label1.Text = "R"
-        'GroupBox2.Text = "R"
-        'Form1.GraphDisp()
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
