@@ -1476,7 +1476,6 @@ Public Class Form1
             Next
             For Each FileItem As System.IO.FileInfo In DirInfo.GetFiles("*.txt")
                 Dim FileNode As New TreeNode(FileItem.Name)
-                FileNode.Tag = FileItem.FullName
                 FileNode.ForeColor = Color.Blue
                 ParentNode.Nodes.Add(FileNode)
             Next
@@ -1485,10 +1484,7 @@ Public Class Form1
     End Sub
 
     Private Sub TreeView1_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterSelect
-        If e.Node.Tag Is Nothing Then
-            TreeView_AfterSelect(TreeView1)
-            Exit Sub
-        End If
+        If e.Node.Tag Is Nothing OrElse e.Node.Tag Is Nothing Then Exit Sub
         Dim selectedPath As String = e.Node.Tag.ToString()
         If System.IO.File.Exists(selectedPath) Then
             Dim ext As String = System.IO.Path.GetExtension(selectedPath).ToLower()
@@ -1505,8 +1501,6 @@ Public Class Form1
                 GraphDisp7("MAX")
                 Me.Text = "SPC System - " & System.IO.Path.GetFileName(selectedPath)
             End If
-        Else
-            TreeView_AfterSelect(TreeView1)
         End If
     End Sub
     Public Sub LoadSPCFile(ByVal filePath As String)
@@ -1600,7 +1594,7 @@ Public Class Form1
             dt.Columns.Add("cMachineNo", GetType(String))
             dt.Columns.Add("cControlItem", GetType(String))
             For k As Integer = 1 To 8
-                dt.Columns.Add("cSpcRule" & k, GetType(Boolean))
+                dt.Columns.Add("cSpcRule", GetType(Boolean))
             Next
             Dim dr As DataRow = dt.NewRow()
             dr("cScl") = X_CL
