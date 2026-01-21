@@ -23,7 +23,8 @@ Module Module2
     Dim p_cSpcRule6 As Integer = 18
     Dim p_cSpcRule7 As Integer = 19
 
-
+    Public HistoRects As New List(Of Rectangle)
+    Public HistoCounts As New List(Of Integer)
 
 
     Public Function readMaster(ByVal _data As String, ByVal _p As Integer) As String
@@ -1331,17 +1332,13 @@ Module Module2
                     jk += 1
                     Continue For
                 End If
-
                 p = 0
-
                 For k = 0 To PropertyNo
                     If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
                         If readMaster(M_Data(jk), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then
                             p = k
                         End If
                     End If
-                    'jk += 1
-
                 Next
 
                 X_USL = PropertyTable.Rows(p)("cUsl")
@@ -1354,7 +1351,6 @@ Module Module2
                 X_kousa = PropertyTable.Rows(p)("cTolerance")
                 X_gType = PropertyTable.Rows(p)("cLimitType")
                 If Size = "MAX" Then
-                    'xpn = xp + j * (30 / Graphsmallcount) + 15 + 120
                     xpn = xp + j * (30 / Graphsmallcount) + 15
                     x00 = 15
                 ElseIf Size = "Middle" Then
@@ -1370,30 +1366,11 @@ Module Module2
                     yp = yp0 * Bairitu
                 End If
 
-                'Upper:?????Lower:????
-                '??????????
                 If X_gType <> "Lower" Then
-
-                    'If Size = "MAX" Then
-                    '    ypn = 28
-                    'ElseIf Size = "Middle" Then
-                    '    ypn = 12
-                    'ElseIf Size = "MIN" Then
-                    '    ypn = 10
-                    'End If
                     ypn = yp + yh - (X_USL - dblLow) * Bairitu
                     g.DrawLine(HPen, xpn - x00, ypn, xpn + x00, ypn)
                 End If
                 If X_gType <> "Upper" Then
-                    '??????????
-
-                    'If Size = "MAX" Then
-                    '    ypn = 428
-                    'ElseIf Size = "Middle" Then
-                    '    ypn = 362
-                    'ElseIf Size = "MIN" Then
-                    '    ypn = 42
-                    'End If
                     ypn = yp + yh - (X_LSL - dblLow) * Bairitu
                     g.DrawLine(HPen, xpn - x00, ypn, xpn + x00, ypn)
                 End If
@@ -1420,13 +1397,11 @@ Module Module2
                 '??????????Data1
                 Data1 = (CDbl(strData) - dblLow) * Bairitu
 
-
                 'Cpk?????????????????
                 sum += CDbl(strData)
                 Jsum += CDbl(strData) * CDbl(strData)
 
                 c += 1
-
 
                 ypn = yp + yh - Data1
 
@@ -1435,7 +1410,6 @@ Module Module2
                 colbuf(j) = 0
                 '???????1
                 Dim ala As Integer = readMaster(M_Alarm(jk)(0), 0)
-
 
                 If ala = 1 Then
                     colbuf(j) = 1
@@ -1478,9 +1452,6 @@ Module Module2
                     Next
                 End If
 
-
-
-
                 xpnbuf_X(j) = xpn
                 ypnbuf_X(j) = ypn
                 If j > 0 And null_bit = 0 Then
@@ -1488,7 +1459,6 @@ Module Module2
                     g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) '?????
 
                 End If
-
                 null_bit = 0
                 xp_old = xpn
                 yp_old = ypn
@@ -1500,14 +1470,12 @@ Module Module2
                 jk += 1
                 Continue For
             End Try
-
         Next
 
         Hsum = Jsum - (sum * sum) / c
         Bnum = Hsum / (c - 1)
         Siguma = Math.Sqrt(Bnum)
         ave = sum / c
-
 
         If X_gType = "Lower" Then
             UpperCpk = 0
@@ -1530,7 +1498,6 @@ Module Module2
             FormSmall.LabUpCpk.Text = Mid(UpperCpk, 1, 4)
             FormSmall.LabLoCpk.Text = Mid(LowerCpk, 1, 4)
         End If
-
 
         '???????????===============================
         If Size = "MAX" Then
@@ -1604,8 +1571,6 @@ Module Module2
                     g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
                 End If
             End If
-
-
             jk += 1
         Next
         '====================================================================
@@ -1638,9 +1603,7 @@ Module Module2
                 Else
                     FormSmall.LabXBar_Small(i).Text = Format(dbl1, "0.00")
                 End If
-
             End If
-
             dbl1 -= dbl2
         Next
         '====================================================
@@ -1691,7 +1654,6 @@ Module Module2
             str &= TreeName(l)
         Next
 
-
         If Size = "MAX" Then
             Form1.TextItem.Text = str
             Form1.labTitle.Text = PropertyTable.Rows(PropertyNo)("cMachineNo") & "  " & PropertyTable.Rows(PropertyNo)("cControlItem") & " " & "Control chart"
@@ -1706,7 +1668,6 @@ Module Module2
     End Sub
     'R??????
     Public Sub GraphDisp2(ByVal Size As String, ByVal MR As Boolean)
-
         Dim xpn, ypn, ypf, ypa, xp, yp, yh, i, p As Integer
         Dim Bairitu As Double
         Dim f As New Font("MS P????", 10)
@@ -1737,9 +1698,6 @@ Module Module2
                 g = Graphics.FromImage(.Image)
             End With
         End If
-
-
-
         Dim APen As New Pen(Color.Green, 2)
         APen.DashStyle = Drawing2D.DashStyle.Dot
         Dim BPen As New Pen(Color.Black, 1)
@@ -1769,10 +1727,6 @@ Module Module2
         B1Pen.DashStyle = Drawing2D.DashStyle.Solid
         '===============================================================            
         If Size = "MAX" Then
-
-
-
-
             If readMaster(M_Data(DispStartPosition), _R) = "" Then
                 Form1.PictureBox2.BackColor = Color.Gray
                 Exit Sub
@@ -1802,7 +1756,6 @@ Module Module2
         UclChangeFlag = False
         UclChangeFlag2 = False
 
-
         If Size = "MAX" Then
             Form1.TextRUCL.Text = ""
             Form1.TextRCL.Text = ""
@@ -1820,13 +1773,8 @@ Module Module2
             yh = 145
         End If
 
-
-
         xp = 0
         yp = 0
-
-
-
 
         Dim x00 As Integer
         Dim x01 As Integer
@@ -1877,7 +1825,6 @@ Module Module2
         Bairitu = x03 / dbl2       '?40Pix
 
         null_bit = 1
-
 
         i = DispStartPosition '????????????
 
@@ -1941,8 +1888,6 @@ Module Module2
                     dblCl = R_CL
                 End If
 
-
-
                 'CL?????
                 Data1 = (CDbl(dblCl)) * Bairitu
                 ypn = yp + yh - Data1                '
@@ -1959,7 +1904,6 @@ Module Module2
 
                 Data1 = (CDbl(strData) - dblLow) * Bairitu
                 ypn = yp + yh - Data1                '
-
 
                 Dim ala As Integer = readMaster(M_Alarm(i)(0), 0)
 
@@ -2018,7 +1962,6 @@ Module Module2
             End If
         Next
 
-
         If Size = "MAX" Then
             Form1.labRUCL.Top = yuclR - 5 + Form1.PictureBox2.Top
             Form1.TextRUCL.Text = dblSiguma
@@ -2038,7 +1981,6 @@ Module Module2
             FormSmall.TextRCL.Text = dblCl
             FormSmall.TextRSiguma.Text = R_Shiguma
         End If
-
 
         '???????????==========================
         For j = 0 To 30 * Graphsmallcount
@@ -2086,25 +2028,18 @@ Module Module2
                     FormSmall.LabR_Small(i).Text = Format(dbl1, "0.00")
                 End If
             End If
-
-
             dbl1 -= dbl2
         Next
         '==============================================
-
         c1.Dispose()
         c2.Dispose()
         c3.Dispose()
         f.Dispose()
         g.Dispose()
-
-
-
     End Sub
 
     '?????????????????
     Public Sub GraphDisp4(ByVal Size As String)
-
         Dim j, k, xp, yp As Integer
         Dim f As New Font("Segoe UI", 8, FontStyle.Regular)
         Dim f2 As New Font("Segoe UI", 7, FontStyle.Regular)
@@ -2113,7 +2048,6 @@ Module Module2
         Dim sf As New StringFormat() '???????
         sf.Alignment = StringAlignment.Center
         sf.LineAlignment = StringAlignment.Center
-
 
         If Size = "MAX" Then
             With Form1.PictureBox4
@@ -2155,7 +2089,6 @@ Module Module2
             x02 = 26
             x03 = 26
             x04 = 6
-            'x05 = 0
             x05 = 4
         ElseIf Size = "Middle" Then
             x00 = 25
@@ -2178,47 +2111,54 @@ Module Module2
         g.DrawLine(APen, xp, yp + x01, xp + 37 * x00, yp + x01)
         g.DrawLine(APen, xp, yp + x01 + x02, xp + 37 * x00, yp + x01 + x02)
         g.DrawLine(APen, xp, yp + x01 + x02 + x03, xp + 37 * x00, yp + x01 + x02 + x03)
-        'g.DrawLine(APen, xp, yp + x01 + x02 + x03 + x04, xp + 37 * x00, yp + x01 + x02 + x03 + x04)
 
         k = DispStartPosition
 
         For j = 0 To 36
-            If k < 0 OrElse k > UBound(M_Data) Then
-                k += (1 * Graphsmallcount)
-                Continue For
+            If j <> 1 Then
+                g.DrawLine(APen, xp + j * x00, yp, xp + j * x00, yp + 450)
             End If
-            If M_Data(k) Is Nothing OrElse M_Data(k) = "" Then
-                k += (1 * Graphsmallcount)
-                Continue For
-            End If
-            Dim wdate As String = readMaster(M_Data(k), _wDate)
+            If j < x04 Or j = 36 Then Continue For
+            Dim strX As String = ""
+            Dim strR As String = ""
+            Dim strDateShow As String = ""
+            Dim HasData As Boolean = False
 
-            If j >= x04 And k < SPCDataNum And wdate <> "" And j <> 36 Then
-                Dim strX As String = readMaster(M_Data(k), _X)
-                Dim strR As String = readMaster(M_Data(k), _R)
-                dt1 = CDate(wdate)
-                str1 = dt1.Month.ToString.PadLeft(2, "0") & Environment.NewLine & dt1.Day.ToString.PadLeft(2, "0")
-                '??????
+            If k < SPCDataNum AndAlso k >= 0 AndAlso k <= UBound(M_Data) Then
+                If M_Data(k) IsNot Nothing AndAlso M_Data(k) <> "" Then
+                    Try
+                        Dim rawDate As String = readMaster(M_Data(k), _wDate)
+                        strX = readMaster(M_Data(k), _X)
+                        strR = readMaster(M_Data(k), _R)
+                        If rawDate <> "" Then
+                            Try
+                                dt1 = CDate(rawDate)
+                                strDateShow = dt1.Month.ToString.PadLeft(2, "0") & Environment.NewLine & dt1.Day.ToString.PadLeft(2, "0")
+                            Catch
+                                strDateShow = rawDate
+                            End Try
+                        End If
+                        HasData = True
+                    Catch ex As Exception
+                        HasData = False
+                    End Try
+                End If
+            End If
+            If HasData Then
                 rect = New RectangleF(xp + (j - x05) * x00, yp + 2, x00, x01)
-                g.DrawString(str1, f, Brushes.Black, rect, sf)
+                g.DrawString(strDateShow, f, Brushes.Black, rect, sf)
                 rect = New RectangleF(xp, yp + 2, 2 * x00, x01)
                 g.DrawString("Date", f, Brushes.Black, rect, sf)
-                '???X???
                 rect = New RectangleF(xp + (j - x05) * x00 + 1, yp + x01 + 2, x00, x02)
                 g.DrawString(strX, f, Brushes.Black, rect, sf)
                 rect = New RectangleF(xp, yp + x01 + 2, 2 * x00, x02)
                 g.DrawString("XBar", f, Brushes.Black, rect, sf)
-                '???R???
-                rect = New RectangleF(xp + (j - x05) * x00 + 1, yp + x01 + x02 + 2, x00, x03)
+                rect = New RectangleF(xp + (j - x05) * x00 + 1, yp + x01 + +x02 + 2, x00, x03)
                 g.DrawString(strR, f, Brushes.Black, rect, sf)
                 rect = New RectangleF(xp, yp + x01 + x02 + 2, 2 * x00, x02)
                 g.DrawString("R", f, Brushes.Black, rect, sf)
-
-                k += (1 * Graphsmallcount)
             End If
-            If j <> 1 Then
-                g.DrawLine(APen, xp + j * x00, yp, xp + j * x00, yp + 450)
-            End If
+            k += (1 * Graphsmallcount)
         Next
         If Size = "MAX" Then
             Form1.LabUnit.Text = strUnit
@@ -2231,8 +2171,6 @@ Module Module2
         c1.Dispose()
         f.Dispose()
         g.Dispose()
-
-
     End Sub
     '???????????
     Public Sub GraphDisp7(ByVal Size As String)
@@ -2245,11 +2183,10 @@ Module Module2
         Dim Cl_s1, s1_s2, s2_s3, s3_s4, s4_s5, s5_s6, s6_s7, s7_s8, s8_s9, s9_s10 As Integer 'UCL??
         Dim Cl_ms1, ms1_ms2, ms2_ms3, ms3_ms4, ms4_ms5, ms5_ms6, ms6_ms7, ms7_ms8, ms8_ms9, ms9_ms10 As Integer 'LCL??
         Dim local_yucl, local_ylcl, local_ycl As Integer
-
-
         Dim g As Graphics
         Try
-
+            HistoRects.Clear()
+            HistoCounts.Clear()
             Dim pb As PictureBox
             If Size = "MAX" Then
                 pb = Form1.PictureBox9
@@ -2463,8 +2400,8 @@ Module Module2
                 For Each c As Integer In allCounts
                     If c > maxCount Then maxCount = c
                 Next
-                Dim ScaleUnit As Integer = CInt(Math.Ceiling(maxCount / 4.0))
-                If ScaleUnit < 4 Then ScaleUnit = 4
+                Dim ScaleUnit As Integer = CInt(Math.Ceiling(maxCount / 5.0))
+                If ScaleUnit < 5 Then ScaleUnit = 5
                 Dim gridPixelWidth As Double = CDbl(x01)
                 Dim dynamicBarWidth As Double = gridPixelWidth / ScaleUnit
                 For j = 1 To 100
@@ -2499,6 +2436,9 @@ Module Module2
 
                 '-0.5?~-1.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma / 2)) - dblLow) * Bairitu
+                Dim barH As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), Cl_ms1, barH))
+                HistoCounts.Add(n_Cl_ms1)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
 
                     If j = 0 Then
@@ -2513,6 +2453,9 @@ Module Module2
 
                 '-1.5?~-2.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - X_Shiguma * 1.5) - dblLow) * Bairitu
+                Dim barH1 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms1_ms2, barH1))
+                HistoCounts.Add(n_ms1_ms2)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms1_ms2, j + yps)
@@ -2526,6 +2469,9 @@ Module Module2
 
                 '-2.5?~-3.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 2.5)) - dblLow) * Bairitu
+                Dim barH2 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms2_ms3, barH2))
+                HistoCounts.Add(n_ms2_ms3)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms2_ms3, j + yps)
@@ -2539,6 +2485,9 @@ Module Module2
 
                 '-3.5?~-4.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 3.5)) - dblLow) * Bairitu
+                Dim barH3 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms3_ms4, barH3))
+                HistoCounts.Add(n_ms3_ms4)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms3_ms4, j + yps)
@@ -2552,6 +2501,9 @@ Module Module2
 
                 '-4.5?~-5.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 4.5)) - dblLow) * Bairitu
+                Dim barH4 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms4_ms5, barH4))
+                HistoCounts.Add(n_ms4_ms5)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms4_ms5, j + yps)
@@ -2565,6 +2517,9 @@ Module Module2
 
                 '-5.5?~-6.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 5.5)) - dblLow) * Bairitu
+                Dim barH5 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms5_ms6, barH5))
+                HistoCounts.Add(n_ms5_ms6)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms5_ms6, j + yps)
@@ -2578,6 +2533,9 @@ Module Module2
 
                 '-6.5?~-7.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 6.5)) - dblLow) * Bairitu
+                Dim barH6 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms6_ms7, barH6))
+                HistoCounts.Add(n_ms6_ms7)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms6_ms7, j + yps)
@@ -2591,6 +2549,9 @@ Module Module2
 
                 '-7.5?~-8.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 7.5)) - dblLow) * Bairitu
+                Dim barH7 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms7_ms8, barH7))
+                HistoCounts.Add(n_ms7_ms8)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms7_ms8, j + yps)
@@ -2604,6 +2565,9 @@ Module Module2
 
                 '-8.5?~-9.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 8.5)) - dblLow) * Bairitu
+                Dim barH8 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms8_ms9, barH8))
+                HistoCounts.Add(n_ms8_ms9)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms8_ms9, j + yps)
@@ -2617,6 +2581,9 @@ Module Module2
 
                 '-9.5?~-10.5???????????==================================
                 yps = yp + yh - (CDbl(X_CL - (X_Shiguma * 9.5)) - dblLow) * Bairitu
+                Dim barH9 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), ms9_ms10, barH9))
+                HistoCounts.Add(n_ms9_ms10)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, ms9_ms10, j + yps)
@@ -2630,6 +2597,9 @@ Module Module2
 
                 '-0.5?~0.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + (CDbl(X_Shiguma) / 2)) - dblLow) * Bairitu
+                Dim barH10 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), Cl_s1, barH10))
+                HistoCounts.Add(n_Cl_s1)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, Cl_s1, j + yps)
@@ -2643,6 +2613,9 @@ Module Module2
 
                 '0.5?~1.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 1.5)) - dblLow) * Bairitu
+                Dim barH11 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s1_s2, barH11))
+                HistoCounts.Add(n_s1_s2)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s1_s2, j + yps)
@@ -2656,6 +2629,9 @@ Module Module2
 
                 '1.5?~2.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 2.5)) - dblLow) * Bairitu
+                Dim barH12 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s2_s3, barH12))
+                HistoCounts.Add(n_s2_s3)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s2_s3, j + yps)
@@ -2669,6 +2645,9 @@ Module Module2
 
                 '2.5?~3.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 3.5)) - dblLow) * Bairitu
+                Dim barH13 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s3_s4, barH13))
+                HistoCounts.Add(n_s3_s4)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s3_s4, j + yps)
@@ -2682,6 +2661,9 @@ Module Module2
 
                 '3.5?~4.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 4.5)) - dblLow) * Bairitu
+                Dim barH14 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s4_s5, barH14))
+                HistoCounts.Add(n_s4_s5)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s4_s5, j + yps)
@@ -2695,6 +2677,9 @@ Module Module2
 
                 '4.5?~5.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 5.5)) - dblLow) * Bairitu
+                Dim barH15 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s5_s6, barH15))
+                HistoCounts.Add(n_s5_s6)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s5_s6, j + yps)
@@ -2708,6 +2693,9 @@ Module Module2
 
                 '5.5?~6.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 6.5)) - dblLow) * Bairitu
+                Dim barH16 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s6_s7, barH16))
+                HistoCounts.Add(n_s6_s7)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s6_s7, j + yps)
@@ -2721,6 +2709,9 @@ Module Module2
 
                 '6.5?~7.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 7.5)) - dblLow) * Bairitu
+                Dim barH17 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s7_s8, barH17))
+                HistoCounts.Add(n_s7_s8)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s7_s8, j + yps)
@@ -2734,6 +2725,9 @@ Module Module2
 
                 '7.5?~8.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 8.5)) - dblLow) * Bairitu
+                Dim barH18 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s8_s9, barH18))
+                HistoCounts.Add(n_s8_s9)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s8_s9, j + yps)
@@ -2747,6 +2741,9 @@ Module Module2
 
                 '8.5?~9.5???????????==================================
                 yps = yp + yh - ((CDbl(X_CL) + CDbl(X_Shiguma * 9.5)) - dblLow) * Bairitu
+                Dim barH19 As Integer = CInt(X_Shiguma / strStep * x00)
+                HistoRects.Add(New Rectangle(0, CInt(yps), s9_s10, barH19))
+                HistoCounts.Add(n_s9_s10)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, s9_s10, j + yps)

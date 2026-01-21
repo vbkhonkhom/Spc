@@ -104,25 +104,22 @@ Public Class Form1
             End
         End If
         StrCDir = System.IO.Directory.GetCurrentDirectory
-        ReadConfigData()
-        If StrServerConnection = "" Then
-            Dim dr As DialogResult
-            Dim frm As New Form3
-            dr = frm.ShowDialog
-            If dr = System.Windows.Forms.DialogResult.OK Then
-                LoadLoad()
-            ElseIf dr = System.Windows.Forms.DialogResult.Cancel Then
-                Me.Close()
-            End If
-        Else
-            LoadLoad()
+        UpdateTimer.Enabled = False
+        UpdateTimerHost.Enabled = False
+        LoadLoad()
+        Dim targetPath As String = "C:\MachineData"
+        If Not System.IO.Directory.Exists(targetPath) Then
+            Try
+                System.IO.Directory.CreateDirectory(targetPath)
+            Catch ex As Exception
+            End Try
         End If
-        LoadFolderTree("C:\MachineData")
+        LoadFolderTree(targetPath)
     End Sub
 
     Public Sub LoadLoad()
-        GetStandardNo()
-        GetTreeList_Server()
+        'GetStandardNo()
+        'GetTreeList_Server()
         FormAlarmInput.Translation_AlarmInput()
         FormAlarmDisp.Translation_AlarmDisp()
         FormControl.Translation_FormControl()
@@ -174,7 +171,7 @@ Public Class Form1
         ElseIf w <= 1024 Then
             StrResolution = "MIN"
         End If
-        SaveConfigData()
+        'SaveConfigData()
         Timer3.Enabled = True
     End Sub
 #Region "コンフィグデータを取得"
@@ -573,29 +570,22 @@ Public Class Form1
         GraphDisp()
     End Sub
 
-    Private Sub Button2_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Button2.MouseDown
-        Timer1.Enabled = True
-    End Sub
-    Private Sub Button3_MouseDown(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Button3.MouseDown
-        Timer2.Enabled = True
-    End Sub
-    Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
-        Dim dt As Date
-        dt = Now()
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         If DispStartPosition > 0 Then
             DispStartPosition -= 1
             GraphDisp()
+            UpdateButtonState()
         End If
     End Sub
-    Private Sub Timer2_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer2.Tick
-        Dim dt As Date
-        dt = Now()
 
-        If SPCDataNum - 30 > DispStartPosition Then
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        If DispStartPosition < SPCDataNum - 30 Then
             DispStartPosition += 1
             GraphDisp()
+            UpdateButtonState()
         End If
     End Sub
+
     Public Sub UPDATE_d_a_StartDate(ByVal dDay As Date, ByVal aDay As Date, ByVal ALL As Integer)
 
         Dim Cn As New SqlConnection
@@ -966,14 +956,6 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
-
-    End Sub
-
-    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
-
-    End Sub
-
     Private Sub ToolStripMenuItem4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ToolStripMenuItem4.Click
         StrResolution = "Middle"
         SaveConfigData()
@@ -1275,186 +1257,20 @@ Public Class Form1
         End Try
     End Sub
 
-    ' [3] ส่วนที่เพิ่มใหม่: ฟังก์ชันอ่านข้อมูลจากไฟล์ testdata.txt
-    ' [Form1.vb] แทนที่ Sub LoadDataFromTextFile ของเดิมด้วยอันนี้
-    Private Sub LoadDataFromTextFile()
-        ' 1. ตรวจสอบไฟล์
-        Dim filePath As String = "C:\testdata.txt"
-        If Not File.Exists(filePath) Then
-            MsgBox("File not found: " & filePath)
-            Exit Sub
-        End If
-
-        Dim lines() As String = File.ReadAllLines(filePath)
-        ' 2. รีเซ็ตค่าเริ่มต้น (สำคัญมาก! ห้ามลบ)
-        SPCDataNum = 0
-        Graphsmallcount = 1  ' <--- [แก้จุดที่ 1] ต้องตั้งเป็น 1 เสมอ ไม่งั้นกราฟเด้ง
-        ReDim M_Data(-1)
-        ReDim M_Alarm(lines.Length) ' สร้าง Alarm รอไว้กันเด้ง
-        Dim xValues As New System.Collections.Generic.List(Of Double)
-        Dim rValues As New System.Collections.Generic.List(Of Double)
-        ' 3. อ่านข้อมูลจากไฟล์ (โครงสร้างไฟล์ของคุณถูกต้องแล้ว)
-        For i As Integer = 1 To lines.Length - 1
-            Dim line As String = lines(i)
-            If line.Trim() = "" Then Continue For
-            Dim cols() As String = line.Split(vbTab)
-            If cols.Length > 7 Then
-                If cols(6).Trim() = "Date" OrElse cols(7).Trim() = "Time" OrElse cols(0).Trim = "Lot Number" Then
-                    Continue For
-                End If
-            End If
-            ' เช็คว่ามีคอลัมน์ครบตามไฟล์ testdata หรือไม่
-            If cols.Length > 21 Then
-                ReDim Preserve M_Data(SPCDataNum)
-                Dim valX As Double = Val(cols(5))
-                Dim valR As Double = Val(cols(20))
-                xValues.Add(valX)
-                rValues.Add(valR)
-                If cols.Length > 13 Then
-                    Dim fileUSL As Double = Val(cols(12))
-                    Dim fileLSL As Double = Val(cols(13))
-                    If fileUSL <> 0 Or fileLSL <> 0 Then
-                        X_USL = fileUSL
-                        X_LSL = fileLSL
-                    End If
-                End If
-                ' จัด Format ข้อมูล: ID, Date Time, Mean, Range, MR, Operator, Lot, Status
-                Dim rawRow As String = ""
-                rawRow &= i & ","
-                rawRow &= cols(6) & " " & cols(7) & ","
-                rawRow &= cols(5) & ","
-                rawRow &= cols(20) & ","
-                rawRow &= "0,"
-                rawRow &= cols(21) & ","
-                rawRow &= cols(0) & ","
-                rawRow &= "Pass"
-                M_Data(SPCDataNum) = rawRow
-                ' สร้าง Alarm หลอกๆ กัน Error
-                ReDim Preserve M_Alarm(SPCDataNum)
-                ReDim M_Alarm(SPCDataNum)(2)
-                M_Alarm(SPCDataNum)(0) = "0,00000000"
-                M_Alarm(SPCDataNum)(1) = "0,00000000"
-                M_Alarm(SPCDataNum)(2) = "0,00000000"
-                If SPCDataNum < MesureValueBuf.Length Then
-                    MesureValueBuf(SPCDataNum) = cols(5)
-                End If
-                SPCDataNum += 1
-            End If
-        Next
-        If xValues.Count > 0 Then
-            X_CL = Math.Round(xValues.Average(), 3)
-
-            If rValues.Count > 0 Then
-                R_CL = Math.Round(rValues.Average(), 3)
-                R_UCL = Math.Round(R_CL * 2.114, 3)
-                R_LCL = 0
-            End If
-            Dim A2 As Double = 0.577
-            X_UCL = Math.Round(X_CL + (A2 * R_CL), 3)
-            X_LCL = Math.Round(X_CL - (A2 * R_CL), 3)
-
-            'Dim d2 As Double = 2.326
-            'Dim EstimatedSigma As Double = 0
-            'If R_CL > 0 Then EstimatedSigma = R_CL / d2
-
-        End If
-        ' ==================================================================
-        ' 4. [แก้จุดที่ 2] สร้างตาราง PropertyTable จำลอง (เพราะไม่ได้โหลดจาก DB)
-        ' ==================================================================
-        Dim dt As New DataTable()
-        ' สร้างคอลัมน์ให้ครบทุกตัวที่กราฟต้องใช้
-        dt.Columns.Add("cScl", GetType(Double))
-        dt.Columns.Add("cTolerance", GetType(Double))
-        dt.Columns.Add("cUnit", GetType(String))
-        dt.Columns.Add("cLimitType", GetType(String))
-        dt.Columns.Add("cUsl", GetType(Double))
-        dt.Columns.Add("cLsl", GetType(Double))
-        dt.Columns.Add("cXcl", GetType(Double))
-        dt.Columns.Add("cXucl", GetType(Double))
-        dt.Columns.Add("cXlcl", GetType(Double))
-        dt.Columns.Add("cXdev", GetType(Double))
-        dt.Columns.Add("cRucl", GetType(Double))
-        dt.Columns.Add("cRcl", GetType(Double))
-        dt.Columns.Add("cRdev", GetType(Double))
-        dt.Columns.Add("cMRucl", GetType(Double))
-        dt.Columns.Add("cMRcl", GetType(Double))
-        dt.Columns.Add("cMRdev", GetType(Double))
-        dt.Columns.Add("cMR", GetType(String))
-        dt.Columns.Add("cApprovalDate", GetType(DateTime))
-        dt.Columns.Add("cMachineNo", GetType(String))
-        dt.Columns.Add("cControlItem", GetType(String))
-
-        For k As Integer = 1 To 8
-            dt.Columns.Add("cSpcRule" & k, GetType(Boolean))
-        Next
-
-        ' ใส่ข้อมูลจำลอง 1 แถว เพื่อให้กราฟมีค่าไปวาดเส้น Limit
-        Try
-            Dim dr As DataRow = dt.NewRow()
-            dr("cScl") = X_CL
-            Dim dist_Control As Double = Math.Abs(X_UCL - X_CL)
-            If Math.Abs(X_LSL - X_CL) > dist_Control Then dist_Control = Math.Abs(X_LCL - X_CL)
-            Dim dist_Spec As Double = 0
-            If X_USL <> 0 Or X_LSL <> 0 Then
-                dist_Spec = Math.Abs(X_USL - X_CL)
-                If Math.Abs(X_LSL - X_CL) > dist_Spec Then dist_Spec = Math.Abs(X_LSL - X_CL)
-            End If
-
-            Dim max_Dist As Double = dist_Control
-            If dist_Spec > max_Dist Then max_Dist = dist_Spec
-
-            If max_Dist = 0 Then max_Dist = 1
-            dr("cTolerance") = Math.Round(max_Dist * 1.2, 3)
-            dr("cUnit") = "Unit"
-            dr("cLimitType") = "Fixed"
-            dr("cUsl") = X_USL
-            dr("cLsl") = X_LSL
-            dr("cXcl") = X_CL
-            dr("cXucl") = X_UCL
-            dr("cXlcl") = X_LCL
-            dr("cXdev") = Math.Round(Math.Abs(X_UCL - X_LCL) / 6, 3)
-            dr("cRucl") = R_UCL
-            dr("cRcl") = R_CL
-            dr("cRdev") = Math.Round(R_CL / 2, 3)
-            dr("cMRucl") = 0
-            dr("cMRcl") = 0
-            dr("cMRdev") = 0
-            dr("cMR") = "0"
-            dr("cApprovalDate") = DateTime.Now.AddYears(-10)
-            dr("cMachineNo") = "TextFile"
-            dr("cControlItem") = "Data"
-            For k As Integer = 1 To 8
-                dr("cSpcRule" & k) = False
-            Next
-            dt.Rows.Add(dr)
-            PropertyTable = dt ' ส่งตารางที่สร้างเสร็จแล้วไปให้ตัวแปรจริง
-        Catch ex As Exception
-            MsgBox("Error building table: " & ex.Message)
-            Exit Sub
-        End Try
-
-        ' ========================================================
-        ' [แก้จุดที่ 3] สร้างชื่อกราฟจำลอง (กัน Error Value cannot be null)
-        ' ========================================================
-        ReDim TreeName(0)
-        TreeName(0) = "TextFile Data"
-
-        ' 5. สั่งวาดกราฟ
-        DispStartPosition = 0
-        If SPCDataNum > 30 Then DispStartPosition = SPCDataNum - 30
-
-        GraphDisp()
-
-        MsgBox("Loaded " & SPCDataNum & " points from file.")
-    End Sub
-
     ' [2] ส่วนที่เพิ่มใหม่: Event Handler สำหรับปุ่ม ButtonLoad
     ' หมายเหตุ: ต้องสร้างปุ่มชื่อ ButtonLoad ใน Form Designer ก่อน
-    Private Sub ButtonLoad_Click_1(sender As Object, e As EventArgs) Handles ButtonLoad.Click
+    Private Sub ButtonLoad_Click_1(sender As Object, e As EventArgs)
         LoadDataFromTextFile()
     End Sub
     Public Sub LoadFolderTree(ByVal RootPath As String)
         TreeView1.Nodes.Clear()
+        TreeView1.BeginUpdate()
+        TreeView1.ImageIndex = 1
+        TreeView1.SelectedImageIndex = 1
+        For Each n As TreeNode In TreeView1.Nodes
+            SetIconRecursive(n)
+        Next
+        TreeView1.EndUpdate()
         If System.IO.Directory.Exists(RootPath) Then
             Dim RootDir As New System.IO.DirectoryInfo(RootPath)
             Dim MainNode As New TreeNode(RootDir.Name)
@@ -1463,7 +1279,8 @@ Public Class Form1
             GetSubDirectories(RootDir, MainNode)
             MainNode.Expand()
         Else
-            MessageBox.Show("ไม่พบโฟลเดอร์: " & RootPath)
+            Dim ErrNode As New TreeNode("Folder not found: " & RootPath)
+            TreeView1.Nodes.Add(ErrNode)
         End If
     End Sub
     Private Sub GetSubDirectories(ByVal DirInfo As System.IO.DirectoryInfo, ByVal ParentNode As TreeNode)
@@ -1476,29 +1293,49 @@ Public Class Form1
             Next
             For Each FileItem As System.IO.FileInfo In DirInfo.GetFiles("*.txt")
                 Dim FileNode As New TreeNode(FileItem.Name)
-                FileNode.ForeColor = Color.Blue
+                FileNode.ForeColor = Color.Black
+                FileNode.NodeFont = New Font(TreeView1.Font, FontStyle.Underline)
+                SetNodeIcons()
+                FileNode.Tag = FileItem.FullName
                 ParentNode.Nodes.Add(FileNode)
             Next
         Catch ex As Exception
         End Try
     End Sub
+    Private Sub SetNodeIcons()
+        For Each node As TreeNode In TreeView1.Nodes
+            SetIconRecursive(node)
+        Next
+    End Sub
+    Private Sub SetIconRecursive(ByVal node As TreeNode)
+        Dim finalIcon As Integer = 1
+        If node.GetNodeCount(False) > 0 Then
+            finalIcon = 0
+        End If
+        node.ImageIndex = finalIcon
+        node.SelectedImageIndex = finalIcon
+        For Each child As TreeNode In node.Nodes
+            SetIconRecursive(child)
+        Next
+    End Sub
 
     Private Sub TreeView1_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterSelect
-        If e.Node.Tag Is Nothing OrElse e.Node.Tag Is Nothing Then Exit Sub
+        If e.Node.Tag Is Nothing Then Exit Sub
         Dim selectedPath As String = e.Node.Tag.ToString()
         If System.IO.File.Exists(selectedPath) Then
             Dim ext As String = System.IO.Path.GetExtension(selectedPath).ToLower()
             If ext = ".txt" Or ext = ".csv" Or ext = ".log" Or ext = ".dat" Then
-                LoadSPCFile(selectedPath)
+                LoadSPCFile_ForModule2(selectedPath)
+                If SPCDataNum > 30 Then
+                    DispStartPosition = SPCDataNum - 30
+                Else
+                    DispStartPosition = 0
+                End If
+                StrResolution = "MAX"
+                UpdateButtonState()
 
-                DispStartPosition = 0
+                GraphDisp()
 
-                If PictureBox9.Image IsNot Nothing Then PictureBox9.Image.Dispose()
-                If PictureBox1.Image IsNot Nothing Then PictureBox1.Image.Dispose()
-                If PictureBox2.Image IsNot Nothing Then PictureBox2.Image.Dispose()
-                GraphDisp1("MAX")
-                GraphDisp2("MAX", False)
-                GraphDisp7("MAX")
                 Me.Text = "SPC System - " & System.IO.Path.GetFileName(selectedPath)
             End If
         End If
@@ -1508,14 +1345,9 @@ Public Class Form1
         Try
             Dim lines() As String = System.IO.File.ReadAllLines(filePath)
             SPCDataNum = 0
-            Graphsmallcount = 1
             ReDim M_Data(-1)
-            ReDim M_Alarm(lines.Length)
             Dim xValues As New System.Collections.Generic.List(Of Double)
             Dim rValues As New System.Collections.Generic.List(Of Double)
-            Dim temp_X_USL As Double = 0
-            Dim temp_X_LSL As Double = 0
-            Dim stdDev As Double = 0
             For i As Integer = 1 To lines.Length - 1
                 Dim line As String = lines(i)
                 If line.Trim() = "" Then Continue For
@@ -1526,10 +1358,7 @@ Public Class Form1
                     Dim valR As Double = Val(cols(20))
                     xValues.Add(valX)
                     rValues.Add(valR)
-                    If cols.Length > 13 Then
-                        temp_X_LSL = Val(cols(12))
-                        temp_X_USL = Val(cols(13))
-                    End If
+
                     Dim rawRow As String = ""
                     rawRow &= i & ","
                     rawRow &= cols(6) & " " & cols(7) & ","
@@ -1540,37 +1369,24 @@ Public Class Form1
                     rawRow &= cols(0) & ","
                     rawRow &= "Pass"
                     M_Data(SPCDataNum) = rawRow
-                    ReDim Preserve M_Alarm(SPCDataNum)
-                    ReDim M_Alarm(SPCDataNum)(2)
-                    M_Alarm(SPCDataNum)(0) = "0,00000000"
-                    M_Alarm(SPCDataNum)(1) = "0,00000000"
-                    M_Alarm(SPCDataNum)(2) = "0,00000000"
+
                     SPCDataNum += 1
                 End If
             Next
             If xValues.Count > 0 Then
                 X_CL = Math.Round(xValues.Average(), 3)
-                Dim sumSq As Double = 0
-                For Each v As Double In xValues
-                    sumSq += Math.Pow(v - X_CL, 2)
-                Next
+                R_CL = If(rValues.Count > 0, rValues.Average(), 0)
 
-                If xValues.Count > 1 Then stdDev = Math.Sqrt(sumSq / (xValues.Count - 1))
-                If stdDev = 0 Then stdDev = 1
-                X_UCL = Math.Round(X_CL + (3 * stdDev), 3)
-                X_LCL = Math.Round(X_CL - (3 * stdDev), 3)
-                If temp_X_USL <> 0 Or temp_X_LSL <> 0 Then
-                    X_USL = temp_X_USL
-                    X_LSL = temp_X_LSL
-                Else
-                    X_USL = X_UCL
-                    X_LSL = X_LCL
-                End If
-                If rValues.Count > 0 Then
-                    R_CL = Math.Round(rValues.Average(), 3)
-                    R_UCL = Math.Round(R_CL + 2.11, 3)
-                    R_LCL = 0
-                End If
+                X_UCL = X_CL + (0.577 * R_CL)
+                X_LCL = X_CL - (0.577 * R_CL)
+                R_UCL = R_CL * 2.114
+                R_LCL = 0
+
+                If Not TextCL Is Nothing Then TextCL.Text = Math.Round(X_CL, 3).ToString()
+                If Not TextUCL Is Nothing Then TextUCL.Text = Math.Round(X_UCL, 3).ToString()
+                If Not TextLCL Is Nothing Then TextLCL.Text = Math.Round(X_LCL, 3).ToString()
+                If Not TextRCL Is Nothing Then TextRCL.Text = Math.Round(R_CL, 3).ToString()
+                If Not TextRUCL Is Nothing Then TextRUCL.Text = Math.Round(R_UCL, 3).ToString()
             End If
             Dim dt As New DataTable()
             dt.Columns.Add("cScl", GetType(Double))
@@ -1608,7 +1424,7 @@ Public Class Form1
             dr("cXcl") = X_CL
             dr("cXucl") = X_UCL
             dr("cXlcl") = X_LCL
-            dr("cXdev") = stdDev
+            'dr("cXdev") = stdDev
             dr("cRucl") = R_UCL
             dr("cRcl") = R_CL
             dr("cRdev") = Math.Round(R_CL / 2, 3)
@@ -1618,10 +1434,278 @@ Public Class Form1
             dr("cControlItem") = System.IO.Path.GetFileName(filePath)
             dt.Rows.Add(dr)
             PropertyTable = dt
-            ReDim TreeName(0)
-            TreeName(0) = System.IO.Path.GetFileNameWithoutExtension(filePath)
+
         Catch ex As Exception
             MsgBox("Error reading file: " & ex.Message)
         End Try
+    End Sub
+    Public Sub LoadSPCFile_ForModule2(ByVal filePath As String)
+        If Not System.IO.File.Exists(filePath) Then Exit Sub
+        Try
+            Dim lines() As String = System.IO.File.ReadAllLines(filePath)
+            Graphsmallcount = 1
+            SPCDataNum = 0
+            ReDim M_Data(-1)
+            ReDim MesureValueBuf(-1)
+
+            Dim xValues As New System.Collections.Generic.List(Of Double)
+            Dim rValues As New System.Collections.Generic.List(Of Double)
+            Dim colIndexLot As Integer = 0
+            Dim colIndexDate As Integer = 6
+            Dim colIndexTime As Integer = 7
+            Dim colIndexX As Integer = 5
+            Dim colIndexR As Integer = 20
+            Dim colIndexOp As Integer = 21
+
+            Dim splitChar As Char = vbTab
+            If filePath.ToLower().EndsWith(".csv") Then splitChar = ","c
+
+            Dim headerCols() As String = lines(0).Split(splitChar)
+
+            For h As Integer = 0 To headerCols.Length - 1
+                Dim header As String = headerCols(h).Trim().ToLower()
+                If header.Contains("lot") Then colIndexLot = h
+                If header.Contains("mean") Or header = "x" Then colIndexX = h
+                If header.Contains("range") Or header = "r" Then colIndexR = h
+                If header.Contains("date") Then colIndexDate = h
+                If header.Contains("time") And Not header.Contains("stamp") Then colIndexTime = h
+                If header.Contains("operator") Or header.Contains("op") Then colIndexOp = h
+            Next
+
+            Dim cultureUS As New System.Globalization.CultureInfo("en-US")
+            Dim dateFormats() As String = {"M/d/yyyy h:mm tt", "MM/dd/yyyy h:mm tt", "M/d/yyyy HH:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy", "MM/dd/yyyy"}
+
+            For i As Integer = 1 To lines.Length - 1
+                Dim line As String = lines(i)
+                If line.Trim() = "" Then Continue For
+                Dim cols() As String = line.Split(vbTab) 'ถ้าไฟล์เป็น  CSV แก้เป็น .Split(",")
+                Dim maxIndex As Integer = Math.Max(colIndexX, colIndexR)
+                If cols.Length > maxIndex Then
+                    If Not IsNumeric(cols(colIndexX)) Then Continue For
+                    ReDim Preserve M_Data(SPCDataNum)
+                    ReDim Preserve MesureValueBuf(SPCDataNum)
+                    Dim valX As Double = Val(cols(colIndexX))
+                    Dim valR As Double = Val(cols(colIndexR))
+                    Dim rawDateStr As String = cols(colIndexDate)
+                    If colIndexTime >= 0 AndAlso colIndexTime < cols.Length Then
+                        rawDateStr &= " " & cols(colIndexTime)
+                    End If
+                    Dim dtCheck As DateTime
+                    Dim finalDateStr As String
+                    If DateTime.TryParseExact(rawDateStr, dateFormats, cultureUS, System.Globalization.DateTimeStyles.None, dtCheck) Then
+                        finalDateStr = dtCheck.ToString()
+                    Else
+                        If DateTime.TryParse(rawDateStr, dtCheck) Then
+                            finalDateStr = DateTime.Now.ToString()
+                        End If
+                    End If
+                    Dim strLot As String = ""
+                    If cols.Length > colIndexOp Then strLot = cols(colIndexLot)
+
+                    Dim strOp As String = ""
+                    If cols.Length > colIndexOp Then strOp = cols(colIndexOp).Trim()
+                    If strOp = "" Then strOp = "-"
+                    xValues.Add(valX)
+                    rValues.Add(valR)
+                    Dim rawRow As String = ""
+                    rawRow &= i & ","
+                    rawRow &= finalDateStr & ","
+                    rawRow &= valX.ToString("F3") & ","
+                    rawRow &= valR.ToString("F3") & ","
+                    rawRow &= "0,"
+                    rawRow &= strOp & ","
+                    rawRow &= strLot & ","
+                    rawRow &= "Pass"
+
+                    M_Data(SPCDataNum) = rawRow
+                    MesureValueBuf(SPCDataNum) = valX.ToString("F3")
+                    SPCDataNum += 1
+                End If
+            Next
+            Dim meanX As Double = 0
+            Dim meanR As Double = 0
+            Dim sigma As Double = 0
+            Dim sigmaR As Double = 0
+
+            If xValues.Count > 0 Then meanX = xValues.Average()
+            If rValues.Count > 0 Then meanR = rValues.Average()
+
+            Dim sumSq As Double = 0
+            For Each v As Double In xValues
+                sumSq += Math.Pow(v - meanX, 2)
+            Next
+            If xValues.Count > 1 Then sigma = Math.Sqrt(sumSq / (xValues.Count - 1))
+            If sigma = 0 Then sigma = 1
+            sigma = Math.Round(sigma, 3)
+
+            Dim sumSqR As Double = 0
+            For Each v As Double In rValues
+                sumSqR += Math.Pow(v - meanR, 2)
+            Next
+            If rValues.Count > 1 Then sigmaR = Math.Sqrt(sumSqR / (rValues.Count - 1))
+            sigmaR = Math.Round(sigmaR, 3)
+
+            X_CL = Math.Round(meanX, 3)
+            X_UCL = Math.Round(meanX + (3 * sigma), 3)
+            X_LCL = Math.Round(meanX - (3 * sigma), 3)
+            R_CL = Math.Round(meanR, 3)
+            R_UCL = Math.Round(meanR * 2.114, 3)
+
+            Dim dt As New DataTable()
+            dt.Columns.Add("cScl", GetType(Double))
+            dt.Columns.Add("cTolerance", GetType(Double))
+            dt.Columns.Add("cUnit", GetType(String))
+            dt.Columns.Add("cLimitType", GetType(String))
+            dt.Columns.Add("cUsl", GetType(Double))
+            dt.Columns.Add("cLsl", GetType(Double))
+            dt.Columns.Add("cXcl", GetType(Double))
+            dt.Columns.Add("cXucl", GetType(Double))
+            dt.Columns.Add("cXlcl", GetType(Double))
+            dt.Columns.Add("cXdev", GetType(Double))
+            dt.Columns.Add("cRucl", GetType(Double))
+            dt.Columns.Add("cRcl", GetType(Double))
+            dt.Columns.Add("cRdev", GetType(Double))
+            dt.Columns.Add("cMRucl", GetType(Double))
+            dt.Columns.Add("cMRcl", GetType(Double))
+            dt.Columns.Add("cMRdev", GetType(Double))
+            dt.Columns.Add("cMR", GetType(String))
+            dt.Columns.Add("cApprovalDate", GetType(DateTime))
+            dt.Columns.Add("cMachineNo", GetType(String))
+            dt.Columns.Add("cControlItem", GetType(String))
+            For k As Integer = 1 To 8
+                dt.Columns.Add("cSpcRule" & k, GetType(Boolean))
+            Next
+            Dim dr As DataRow = dt.NewRow()
+            dr("cScl") = X_CL
+            dr("cTolerance") = (X_UCL - X_LCL) * 4
+            If dr("cTolerance") = 0 Then dr("cTolerance") = 1
+            dr("cUnit") = "mm"
+            dr("cLimitType") = "UpperLower"
+            dr("cUsl") = X_UCL + sigma
+            dr("cLsl") = X_LCL - sigma
+            dr("cXcl") = X_CL
+            dr("cXucl") = X_UCL
+            dr("cXlcl") = X_LCL
+            dr("cXdev") = sigma
+            dr("cRucl") = R_UCL
+            dr("cRcl") = R_CL
+            dr("cRdev") = sigmaR
+            dr("cMRucl") = 0 : dr("cMRcl") = 0 : dr("cMRdev") = 0 : dr("cMR") = "0"
+            dr("cApprovalDate") = DateTime.MinValue
+            dr("cMachineNo") = "File Mode"
+            dr("cControlItem") = System.IO.Path.GetFileName(filePath)
+            For k As Integer = 1 To 8
+                dr("cSpcRule" & k) = False
+            Next
+            dt.Rows.Add(dr)
+            PropertyTable = dt
+            ReDim M_Alarm(SPCDataNum)
+            For j As Integer = 0 To SPCDataNum
+                ReDim M_Alarm(j)(2)
+                M_Alarm(j)(0) = "0,00000000"
+                M_Alarm(j)(1) = "0,00000000"
+                M_Alarm(j)(2) = "0,00000000"
+            Next
+            ReDim TreeName(0)
+            TreeName(0) = System.IO.Path.GetFileNameWithoutExtension(filePath)
+        Catch ex As Exception
+            MsgBox("Error loading file: " & ex.Message)
+        End Try
+    End Sub
+    Private Sub PictureBox1_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox1.MouseMove
+        Try
+            Module2.popUp(e.X, e.Y, "PictureBox1")
+        Catch ex As Exception
+
+        End Try
+    End Sub
+    Private Sub PictureBox2_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox2.MouseMove
+        Try
+            Module2.popUp(e.X, e.Y, "PictureBox2")
+        Catch ex As Exception
+
+        End Try
+    End Sub
+    Private Sub PictureBox1_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox1.MouseDown
+        Try
+            If e.Button = MouseButtons.Left Then
+                Module2.alarmInfo(e.X, e.Y, "PictureBox1", "Left")
+            ElseIf e.Button = MouseButtons.Right Then
+                Module2.alarmInfo(e.X, e.Y, "PictureBox1", "Right")
+            End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
+    Private Sub PictureBox2_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox2.MouseDown
+        Try
+            If e.Button = MouseButtons.Left Then
+                Module2.alarmInfo(e.X, e.Y, "PictureBox2", "Left")
+            ElseIf e.Button = MouseButtons.Right Then
+                Module2.alarmInfo(e.X, e.Y, "PictureBox2", "Right")
+            End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
+    Private Sub UpdateButtonState()
+        If SPCDataNum <= 30 Then
+            Button2.Enabled = False
+            Button3.Enabled = False
+            Exit Sub
+        End If
+        Button2.Enabled = (DispStartPosition > 0)
+        Button3.Enabled = (DispStartPosition < SPCDataNum - 30)
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim filePath As String = TextItem.Text.Trim()
+        filePath = filePath.Replace("""", "")
+        If System.IO.File.Exists(filePath) Then
+            LoadSPCFile_ForModule2(filePath)
+            If SPCDataNum > 30 Then
+                DispStartPosition = SPCDataNum - 30
+            Else
+                DispStartPosition = 0
+            End If
+            StrResolution = "MAX"
+            UpdateButtonState()
+            GraphDisp()
+            Me.Text = "SPC System - " & System.IO.Path.GetFileName(filePath)
+        Else
+            MsgBox("ไม่พบไฟล์ตาม Path ที่ระบุ" & vbCrLf & "กรุณาตรวจสอบว่า Path ถูกต้องหรือไม่ (ต้องเป็นไฟล์ .txt, .csv)", MsgBoxStyle.Exclamation)
+        End If
+    End Sub
+    Private Sub textitem_Keydown(sender As Object, e As KeyEventArgs) Handles TextItem.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            Button1.PerformClick()
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+    Dim lastHistoIndex As Integer = -1
+    Private Sub PictureBox9_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox9.MouseMove
+        Me.Text = "is here: " & e.X & "," & e.Y
+        If Module2.HistoRects Is Nothing OrElse Module2.HistoRects.Count = 0 Then
+            Dim isFound As Boolean = False
+            For i As Integer = 0 To Module2.HistoRects.Count - 1
+                If Module2.HistoRects(i).Contains(e.Location) Then
+                    isFound = True
+                    If lastHistoIndex <> i Then
+                        Dim myCount As Integer = Module2.HistoCounts(i)
+                        Dim msg As String = "Count: " & myCount.ToString()
+                        ToolTip1.SetToolTip(PictureBox9, msg)
+                        lastHistoIndex = i
+                    End If
+                    Exit For
+                End If
+            Next
+            If Not isFound Then
+                If lastHistoIndex <> -1 Then
+                    ToolTip1.SetToolTip(PictureBox9, Nothing)
+                    lastHistoIndex = -1
+                End If
+            End If
+        End If
+
     End Sub
 End Class

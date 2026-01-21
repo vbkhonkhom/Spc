@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form1
     Inherits System.Windows.Forms.Form
 
     'フォームがコンポーネントの一覧をクリーンアップするために dispose をオーバーライドします。
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,12 +20,13 @@ Partial Class Form1
     'メモ: 以下のプロシージャは Windows フォーム デザイナで必要です。
     'Windows フォーム デザイナを使用して変更できます。  
     'コード エディタを使って変更しないでください。
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.PictureBox7 = New System.Windows.Forms.PictureBox()
@@ -134,7 +135,8 @@ Partial Class Form1
         Me.Timer3 = New System.Windows.Forms.Timer(Me.components)
         Me.TextItem = New System.Windows.Forms.TextBox()
         Me.txtStan_No = New System.Windows.Forms.Label()
-        Me.ButtonLoad = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -161,11 +163,22 @@ Partial Class Form1
         '
         'TreeView1
         '
+        Me.TreeView1.BackColor = System.Drawing.Color.LightGray
         Me.TreeView1.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.TreeView1.ImageIndex = 0
+        Me.TreeView1.ImageList = Me.ImageList1
         Me.TreeView1.Location = New System.Drawing.Point(8, 116)
         Me.TreeView1.Name = "TreeView1"
+        Me.TreeView1.SelectedImageIndex = 0
         Me.TreeView1.Size = New System.Drawing.Size(280, 807)
         Me.TreeView1.TabIndex = 2
+        '
+        'ImageList1
+        '
+        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        Me.ImageList1.Images.SetKeyName(0, "Screenshot (27).png")
+        Me.ImageList1.Images.SetKeyName(1, "Screenshot (26) - Copy.png")
         '
         'PictureBox1
         '
@@ -1156,7 +1169,7 @@ Partial Class Form1
         Me.TextItem.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.TextItem.Location = New System.Drawing.Point(393, 64)
         Me.TextItem.Name = "TextItem"
-        Me.TextItem.Size = New System.Drawing.Size(721, 28)
+        Me.TextItem.Size = New System.Drawing.Size(653, 28)
         Me.TextItem.TabIndex = 213
         '
         'txtStan_No
@@ -1169,22 +1182,22 @@ Partial Class Form1
         Me.txtStan_No.TabIndex = 214
         Me.txtStan_No.Text = "RISTS R02325.21.001"
         '
-        'ButtonLoad
+        'Button1
         '
-        Me.ButtonLoad.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.ButtonLoad.Location = New System.Drawing.Point(1267, 121)
-        Me.ButtonLoad.Name = "ButtonLoad"
-        Me.ButtonLoad.Size = New System.Drawing.Size(57, 20)
-        Me.ButtonLoad.TabIndex = 215
-        Me.ButtonLoad.Text = "Load Test Data"
-        Me.ButtonLoad.UseVisualStyleBackColor = True
+        Me.Button1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.Button1.Location = New System.Drawing.Point(1052, 64)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(60, 27)
+        Me.Button1.TabIndex = 215
+        Me.Button1.Text = "Load"
+        Me.Button1.UseVisualStyleBackColor = False
         '
         'Form1
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.LightSteelBlue
         Me.ClientSize = New System.Drawing.Size(1547, 978)
-        Me.Controls.Add(Me.ButtonLoad)
+        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.txtStan_No)
         Me.Controls.Add(Me.TextItem)
         Me.Controls.Add(Me.LabelQC)
@@ -1384,5 +1397,7 @@ Partial Class Form1
     Friend WithEvents SoftwareVersion206ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents StandardNoToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents txtStan_No As System.Windows.Forms.Label
-    Friend WithEvents ButtonLoad As Button
+    Friend WithEvents Button1 As Button
+    Private WithEvents ImageList1 As ImageList
+    Friend WithEvents ToolTip1 As ToolTip
 End Class
