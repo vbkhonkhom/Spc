@@ -1684,12 +1684,19 @@ Public Class Form1
     End Sub
     Dim lastHistoIndex As Integer = -1
     Private Sub PictureBox9_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox9.MouseMove
-        Me.Text = "is here: " & e.X & "," & e.Y
-        If Module2.HistoRects Is Nothing OrElse Module2.HistoRects.Count = 0 Then
+        Dim statusMsg As String = "Mouse: " & e.X & "," & e.Y & " | "
+        If Module2.HistoRects Is Nothing Then
+            statusMsg &= "Data: Nothing "
+        Else
+            statusMsg &= "Data Count: " & Module2.HistoRects.Count
+        End If
+        Me.Text = statusMsg
+        If Module2.HistoRects Is Nothing OrElse Module2.HistoRects.Count > 0 Then
             Dim isFound As Boolean = False
             For i As Integer = 0 To Module2.HistoRects.Count - 1
                 If Module2.HistoRects(i).Contains(e.Location) Then
                     isFound = True
+                    Me.Text &= "HIT " & i
                     If lastHistoIndex <> i Then
                         Dim myCount As Integer = Module2.HistoCounts(i)
                         Dim msg As String = "Count: " & myCount.ToString()
