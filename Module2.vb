@@ -1,7 +1,6 @@
 ﻿Imports System.Data.SqlClient
-Imports System.Draw
+Imports System.Drawing.Printing
 Module Module2
-    '??????????
     Dim p_iID As Integer = 0
     Dim p_dWorkDate As Integer = 1
     Dim p_cUsl As Integer = 2
@@ -26,7 +25,6 @@ Module Module2
     Public HistoRects As New List(Of Rectangle)
     Public HistoCounts As New List(Of Integer)
 
-
     Public Function readMaster(ByVal _data As String, ByVal _p As Integer) As String
         If String.IsNullOrEmpty(_data) Then Return ""
         Dim temp() As String = Split(_data, ",")
@@ -35,12 +33,10 @@ Module Module2
         Else
             Return ""
         End If
-
     End Function
 
     Public Function treeInfo(ByVal _TreeView As TreeView) As String()
-
-        Dim n As Integer '????????
+        Dim n As Integer
         Dim TreeNodeBuf As TreeNode = Nothing
         Dim TreeNameBuf(10 - 1) As String
         Dim TreeName(10 - 1) As String
@@ -48,7 +44,6 @@ Module Module2
             TreeNameBuf(i) = ""
             TreeName(i) = ""
         Next
-        '???????????????
         For i As Integer = 0 To UBound(TreeNameBuf, 1)
             If i = 0 Then
                 TreeNodeBuf = _TreeView.SelectedNode
@@ -63,26 +58,19 @@ Module Module2
                 n += 1
             End If
         Next
-        '??????????
         For i As Integer = 0 To n - 1
             TreeName(i) = TreeNameBuf(n - 1 - i)
         Next
-
         Return TreeName
     End Function
 
-    '???????????????????
     Public Function getProperty() As DataTable
-
         Dim _pTable As New DataTable
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
         Dim strSQL As String = ""
-
         getProperty = Nothing
-
         Try
-
             Cn.ConnectionString = StrServerConnection
             _pTable.Clear()
 
@@ -94,17 +82,13 @@ Module Module2
                 Else
                     strSQL &= " AND"
                 End If
-
                 strSQL &= " cTreeName" & i + 1 & " = '" & TreeName(i) & "'"
             Next
-
 
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
             Adapter.SelectCommand.CommandType = CommandType.Text
             Adapter.Fill(_pTable)
-
-
             Adapter.Dispose()
             Cn.Dispose()
             _pTable.Dispose()
@@ -113,8 +97,6 @@ Module Module2
                 Return Nothing
             End If
 
-
-
             QCNotCheckFlag = True
 
             For k = 0 To _pTable.Rows.Count - 1
@@ -122,43 +104,31 @@ Module Module2
                     QCNotCheckFlag = False
                 End If
             Next
-
-
             Return _pTable
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
-
             StrErrMes = "?????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
         End Try
     End Function
     Public Function setFilter(ByVal _col As String) As String
         Dim _str As String = ""
-
         If (Not IsDBNull(PropertyTable.Rows(PropertyTable.Rows.Count - 1)(_col))) Then
             If PropertyTable.Rows(PropertyTable.Rows.Count - 1)(_col) <> "" Then
                 _str = " AND " & _col & " = '" & PropertyTable.Rows(PropertyTable.Rows.Count - 1)(_col) & "'"
             End If
         End If
-
         Return _str
     End Function
     Public Function getData() As DataTable
-
         getData = Nothing
-
         Dim _sTable As New DataTable
-
-
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
         Dim strSQL As String = ""
         Dim n As Integer
-
         Try
-
             Cn.ConnectionString = StrServerConnection
             _sTable.Clear()
 
@@ -180,7 +150,6 @@ Module Module2
             strSQL &= setFilter("cFilter_10")
             strSQL &= setFilter("cDeviceName")
 
-            'strSQL &= "ORDER BY dWorkDate,iID"
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
             Adapter.SelectCommand.CommandType = CommandType.Text
@@ -193,25 +162,19 @@ Module Module2
                 _sTable.Dispose()
                 Return Nothing
             End If
-
-            'dWorkDate?????
             Dim dv = New DataView(_sTable)
             dv.Sort = "dWorkDate,iID"
             _sTable = dv.ToTable
             n = _sTable.Rows.Count
             Return _sTable
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
-
             StrErrMes = "?????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
         End Try
-
     End Function
     Public Sub txtclear()
-
         Dim str As String = "No Data"
         If Form1.Visible = True Then
             Form1.TextItem.Text = str
@@ -271,26 +234,18 @@ Module Module2
 
     End Sub
 
-
-    'SPC????????
     Public Function getSPCMaster() As String()
         Dim _Master(vv) As String
         Graphsmallcount = 1
         SPCDataNum = 0
-
-        '??????????
         Dim SpcTable As New DataTable
         SpcTable = getData()
-
         If SpcTable Is Nothing Then
             txtclear()
             Return Nothing
         End If
-
-
         Dim c As Integer
         Dim strvalue As String
-
         For i = 0 To 31
             xpnbuf_X(i) = 0
             ypnbuf_X(i) = 0
@@ -299,9 +254,7 @@ Module Module2
         Next
         For i = 0 To vv
             _Master(i) = ""
-
         Next
-
         c = 0
         Dim s As Integer = 0
         If SpcTable.Rows.Count > vv Then
@@ -309,29 +262,22 @@ Module Module2
         End If
         Dim syosu As Integer
         Dim temp() As String
-
         temp = Split(PropertyTable.Rows(PropertyTable.Rows.Count - 1)("cXcl"), ".")
         If temp.Length = 1 Then
             syosu = 1
         Else
             syosu = Len(temp(1)) + 1
         End If
-
         Dim mBuf(_cate) As String
-
-
         For i = s To SpcTable.Rows.Count - 1
             If Not PropertyTable.Rows(PropertyTable.Rows.Count - 1)("dStartDate") <= SpcTable.Rows(i)("dWorkDate") Then
                 Continue For
             End If
-
             For j As Integer = 0 To UBound(mBuf, 1)
                 mBuf(j) = ""
             Next
-
             mBuf(_id) = SpcTable.Rows(i)("iID")
             mBuf(_wDate) = SpcTable.Rows(i)("dWorkDate")
-
             If (Not IsDBNull(SpcTable.Rows(i)("cValue1"))) Then
                 If IsNumeric(SpcTable.Rows(i)("cValue1")) = True Then
                     temp = Split(SpcTable.Rows(i)("cValue1"), ".")
@@ -361,7 +307,6 @@ Module Module2
             ElseIf c = 0 Then
                 mBuf(_MR) = 0
             End If
-
             strvalue = ""
             For j = 1 To 100
                 If IsDBNull(SpcTable.Rows(i)("cValue" & j)) = True Then
@@ -370,13 +315,9 @@ Module Module2
                 If Not strvalue = "" Then
                     strvalue &= ","
                 End If
-
                 strvalue &= SpcTable.Rows(i)("cValue" & j)
-
-
             Next
             MesureValueBuf(c) = strvalue
-
             Dim str As String = ""
             For j As Integer = 0 To UBound(mBuf, 1)
                 If Not j = 0 Then
@@ -384,15 +325,13 @@ Module Module2
                 End If
                 str &= mBuf(j)
             Next
-
             _Master(c) = str
-
             c += 1
-
         Next
-
-        SPCDataNum = c '???????
-        If c >= 30 * Graphsmallcount Then
+        SPCDataNum = c
+        If SPCDataNum = 0 Then
+            DispStartPosition = 0
+        ElseIf SPCDataNum >= 30 * Graphsmallcount Then
             DispStartPosition = SPCDataNum - (30 * Graphsmallcount)
         Else
             DispStartPosition = 0
@@ -400,7 +339,6 @@ Module Module2
 
         SpcTable.Dispose()
         Return _Master
-
         'Catch ex As System.Exception
         '    Adapter.Dispose()
         '    Cn.Dispose()
@@ -410,39 +348,29 @@ Module Module2
         '    Call SaveLog(Now(), StrErrMes)
         '    Exit Sub
         'End Try
-
     End Function
 
-    'SPC????????
     Public Function getAlarmMaster() As String()()
-
-
         Dim _Master(vv)() As String
         For i As Integer = 0 To UBound(_Master, 1)
             ReDim _Master(i)(3 - 1)
             For j As Integer = 0 To UBound(_Master(i), 1)
-                _Master(i)(j) = "0,00000000" '??????,?????? j=0:X,1:R,2:MR
+                _Master(i)(j) = "0,00000000"
             Next
         Next
         getAlarmMaster = _Master
-
         Dim AlarmTable As New DataTable
         AlarmTable = getAlarm()
-
         If AlarmTable Is Nothing Then
             Return Nothing
         End If
         If AlarmTable.Rows.Count = 0 Then
             Return _Master
         End If
-
         For i As Integer = 0 To AlarmTable.Rows.Count - 1
-
             If IsDBNull(AlarmTable.Rows(i)("iID")) = True Then Continue For
             Dim a_id As String = AlarmTable.Rows(i)("iID")
-
             If IsDBNull(AlarmTable.Rows(i)("cGraphFormat")) = True Then Continue For
-
             Dim p As Integer = 0
             If AlarmTable.Rows(i)("cGraphFormat") = "X" Then
                 p = 0
@@ -453,51 +381,47 @@ Module Module2
             Else
                 Continue For
             End If
-
-            Dim come As Integer = 1 '??????????
+            Dim come As Integer = 1
             Dim CommentFlag As Boolean = False
-            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyIncharge"))) Then '??????????????
+            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyIncharge"))) Then
                 If AlarmTable.Rows(i)("cSurveyIncharge") <> "" Then
-                    come = 2 '???????
+                    come = 2
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyResult"))) Then '??????????????
+            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyResult"))) Then
                 If AlarmTable.Rows(i)("cSurveyResult") <> "" Then
-                    come = 2 '???????
+                    come = 2
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatIncharge"))) Then '??????????????
+            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatIncharge"))) Then
                 If AlarmTable.Rows(i)("cTreatIncharge") <> "" Then
-                    come = 2 '???????
+                    come = 2
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatResult"))) Then '??????????????
+            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatResult"))) Then
                 If AlarmTable.Rows(i)("cTreatResult") <> "" Then
-                    come = 2 '???????
+                    come = 2
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatEffect"))) Then '??????????????
+            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatEffect"))) Then
                 If AlarmTable.Rows(i)("cTreatEffect") <> "" Then
-                    come = 2 '???????
+                    come = 2
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cMaintenanceID"))) Then '??????????????
+            If (Not IsDBNull(AlarmTable.Rows(i)("cMaintenanceID"))) Then
                 If AlarmTable.Rows(i)("cMaintenanceID") <> "" Then
-                    come = 2 '???????
+                    come = 2
                 End If
             End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cApproverName"))) Then '??????????
+            If (Not IsDBNull(AlarmTable.Rows(i)("cApproverName"))) Then
                 If AlarmTable.Rows(i)("cApproverName") <> "" Then
-                    come = 3 'QC????
+                    come = 3
                 End If
             End If
-
             Dim naiyou As String = ""
             For j As Integer = 0 To UBound(M_Data, 1)
                 Dim strId As String = readMaster(M_Data(j), _id)
-
                 If Not a_id = strId Then Continue For
-
                 For k As Integer = 1 To 8
                     Dim _s As String = ""
                     If (Not IsDBNull(AlarmTable.Rows(i)("cSpcrule" & k))) Then
@@ -506,45 +430,25 @@ Module Module2
                         Else
                             _s = "0"
                         End If
-
                     End If
                     naiyou &= _s
                 Next
-
                 _Master(j)(p) = come & "," & naiyou
-
                 Exit For
             Next
-
         Next
-
         Return _Master
-
     End Function
 
-
-    'SPC??????????
     Public Sub GetAlarmData_kai()
-
-
         Dim aDataBuf(,) As String
-
-        '????????
         Dim AlarmResult(8 - 1) As Boolean
-
-
         aDataBuf = getAlarmbuf()
-
         For j = 0 To SPCDataNum - 1
-
             For i As Integer = 0 To UBound(AlarmResult, 1)
                 AlarmResult(i) = False
             Next
-
-
             'If PropertyTable.Rows(PropertyTable.Rows.Count - 1)("aStartDate") <= CDate(aDataBuf(j, p_dWorkDate)) Then 'strAlarmStartDate???????????
-
-
             If CBool(aDataBuf(j, p_cSpcRule0)) Then AlarmResult(0) = checkSpcRule0(aDataBuf, j, _X) '(SPC???1) 1??3???????
             If CBool(aDataBuf(j, p_cSpcRule1)) Then AlarmResult(1) = checkSpcRule1(aDataBuf, j, _X) '(SPC???2) 8?????????
             If CBool(aDataBuf(j, p_cSpcRule2)) Then AlarmResult(2) = checkSpcRule2(aDataBuf, j, _X) '(SPC???3) 3????2??2???????
@@ -554,8 +458,6 @@ Module Module2
             If CBool(aDataBuf(j, p_cSpcRule6)) Then AlarmResult(6) = checkSpcRule6(aDataBuf, j, _X) '(SPC???7) 7?????or??
             If CBool(aDataBuf(j, p_cSpcRule7)) Then AlarmResult(7) = checkSpcRule7(aDataBuf, j, _X) '(SPC???8) 14???????????
 
-
-
             For i As Integer = 0 To UBound(AlarmResult, 1)
                 If AlarmResult(i) = False Then Continue For
 
@@ -564,41 +466,27 @@ Module Module2
                 INSERT_AlarmInfo_kai(strId, "X", AlarmResult)
                 Exit For
             Next
-
             'SPCAlarmBuf(j) = CStr(AlarmResult1) & "," & CStr(AlarmResult2) & "," & CStr(AlarmResult3) & "," & CStr(AlarmResult4) & "," & CStr(AlarmResult5) & "," & CStr(AlarmResult6) & "," & CStr(AlarmResult7) & "," & CStr(AlarmResult8)
-
-
 
             'R?????3?????
             For i As Integer = 0 To UBound(AlarmResult, 1)
                 AlarmResult(i) = False
             Next
-
-            AlarmResult(0) = checkSpcRule0(aDataBuf, j, _R) '(SPC???1) 1??3???????
-
-
+            AlarmResult(0) = checkSpcRule0(aDataBuf, j, _R)
             For i As Integer = 0 To UBound(AlarmResult, 1)
                 If AlarmResult(i) = False Then Continue For
-
                 Dim strId As String = readMaster(M_Data(j), _id)
                 If GetAlarmInfo_Server_kai(strId, "R") = True Then Continue For
                 INSERT_AlarmInfo_kai(strId, "R", AlarmResult)
                 Exit For
             Next
-
-
             'SPCRAlarmBuf(j) = CStr(AlarmResult1) & "," & CStr(AlarmResult2) & "," & CStr(AlarmResult3) & "," & CStr(AlarmResult4) & "," & CStr(AlarmResult5) & "," & CStr(AlarmResult6) & "," & CStr(AlarmResult7) & "," & CStr(AlarmResult8)
-
-
         Next
-
-
     End Sub
+
     Private Function getAlarmbuf() As String(,)
         getAlarmbuf = Nothing
-
         Dim _aDataBuf(SPCDataNum - 1, 20 - 1) As String
-
         For j = 0 To SPCDataNum - 1
             Dim p As Integer
             p = 0
@@ -644,10 +532,9 @@ Module Module2
             _aDataBuf(j, p_cSpcRule6) = PropertyTable.Rows(p)("cSpcRule7")
             _aDataBuf(j, p_cSpcRule7) = PropertyTable.Rows(p)("cSpcRule8")
         Next
-
         Return _aDataBuf
-
     End Function
+
     Private Function checkSpcRule0(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule0 = False
         Dim atai As Single = CSng(readMaster(M_Data(j), mode))
@@ -665,44 +552,34 @@ Module Module2
         If atai < CSng(aDataBuf(j, _lcl)) Or CSng(aDataBuf(j, _ucl)) < atai Then
             Return True
         End If
-
     End Function
+
     Private Function checkData(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal p As Integer) As Boolean
-
         checkData = True
-
-        If j + 1 < p Then '????????(numP-1)??????
+        If j + 1 < p Then
             Return False
         End If
-
-        For k As Integer = 1 To p - 1 'numP???cl,ucl,lcl,dev????(???numP?????)
+        For k As Integer = 1 To p - 1
             If Not (aDataBuf(j, p_cXcl) = aDataBuf(j - k, p_cXcl) And aDataBuf(j, p_cXucl) = aDataBuf(j - k, p_cXucl) And aDataBuf(j, p_cXlcl) = aDataBuf(j - k, p_cXlcl) And aDataBuf(j, p_cXdev) = aDataBuf(j - k, p_cXdev)) Then
-                Return False '?????????
+                Return False
             End If
         Next
-
     End Function
 
     Private Function checkSpcRule1(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule1 = False
-
-        Dim numP As Integer = 8 '????
-
-        '???? ??????????
+        Dim numP As Integer = 8
         If checkData(aDataBuf, j, numP) = False Then Return False
-
-        '???????????????????????????8?
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim atai(numP - 1) As Single
         For i As Integer = 0 To UBound(atai, 1)
             atai(i) = CSng(readMaster(M_Data(j - i), mode)) - cl
             If atai(i) = 0 Then
-                Return False '?????????F
+                Return False
             End If
         Next
-
-        Dim c_m As Integer = 0 '??????
-        Dim c_p As Integer = 0 '?????
+        Dim c_m As Integer = 0
+        Dim c_p As Integer = 0
         For i As Integer = 0 To UBound(atai, 1)
             If atai(i) < 0 Then
                 c_m += 1
@@ -710,33 +587,26 @@ Module Module2
                 c_p += 1
             End If
         Next
-        If c_m = numP Or c_p = numP Then '?????????????
+        If c_m = numP Or c_p = numP Then
             Return True
         End If
-
     End Function
     Private Function checkSpcRule2(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule2 = False
-
-        Dim numP As Integer = 3 '????
-
-        '???? ??????????
+        Dim numP As Integer = 3
         If checkData(aDataBuf, j, numP) = False Then Return False
-
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim dev As Single = CSng(aDataBuf(j, p_cXdev))
-
-        Dim atai2siguma_p(numP - 1) As Single '?-(cl+2*siguma)
-        Dim atai2siguma_m(numP - 1) As Single '?-(cl-2*siguma)
+        Dim atai2siguma_p(numP - 1) As Single
+        Dim atai2siguma_m(numP - 1) As Single
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             atai2siguma_p(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl + 2 * dev)
             atai2siguma_m(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl - 2 * dev)
         Next
-
         Dim c As Integer = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If 0 < atai2siguma_p(i) Then
-                c += 1 'cl+2*siguma???????
+                c += 1
             End If
         Next
         If 2 <= c Then
@@ -745,39 +615,31 @@ Module Module2
         c = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If atai2siguma_m(i) < 0 Then
-                c += 1 'cl-2*siguma???????
+                c += 1
             End If
         Next
         If 2 <= c Then
             Return True
         End If
-
-
-
     End Function
+
     Private Function checkSpcRule3(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule3 = False
 
-        Dim numP As Integer = 5 '????
-
-        '???? ??????????
+        Dim numP As Integer = 5
         If checkData(aDataBuf, j, numP) = False Then Return False
-
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim dev As Single = CSng(aDataBuf(j, p_cXdev))
-
-
-        Dim atai2siguma_p(numP - 1) As Single '?-(cl+siguma)
-        Dim atai2siguma_m(numP - 1) As Single '?-(cl-siguma)
+        Dim atai2siguma_p(numP - 1) As Single
+        Dim atai2siguma_m(numP - 1) As Single
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             atai2siguma_p(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl + dev)
             atai2siguma_m(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl - dev)
         Next
-
         Dim c As Integer = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If 0 < atai2siguma_p(i) Then
-                c += 1 'cl+siguma???????
+                c += 1
             End If
         Next
         If 4 <= c Then
@@ -786,21 +648,16 @@ Module Module2
         c = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If atai2siguma_m(i) < 0 Then
-                c += 1 'cl-siguma???????
+                c += 1
             End If
         Next
         If 4 <= c Then
             Return True
         End If
-
-
     End Function
     Private Function checkSpcRule4(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule4 = False
-
-        Dim numP As Integer = 15 '????
-
-        '???? ??????????
+        Dim numP As Integer = 15
         If checkData(aDataBuf, j, numP) = False Then Return False
 
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
@@ -810,8 +667,6 @@ Module Module2
         For i As Integer = 0 To UBound(atai, 1)
             atai(i) = CSng(readMaster(M_Data(j - i), mode))
         Next
-
-
         'cl-?~cl+??????????????????????(False)
         For i As Integer = 0 To UBound(atai, 1)
             If atai(i) < cl - dev Then
@@ -823,143 +678,105 @@ Module Module2
         Next
         '?????????cl-?~cl+??????(???????)(True)
         Return True
-
-
     End Function
+
     Private Function checkSpcRule5(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule5 = False
-
-        Dim numP As Integer = 8 '????
-
-        '???? ??????????
+        Dim numP As Integer = 8
         If checkData(aDataBuf, j, numP) = False Then Return False
-
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim dev As Single = CSng(aDataBuf(j, p_cXdev))
-
-        Dim atai2siguma_p(numP - 1) As Single '?-(cl+siguma)
-        Dim atai2siguma_m(numP - 1) As Single '?-(cl-siguma)
+        Dim atai2siguma_p(numP - 1) As Single
+        Dim atai2siguma_m(numP - 1) As Single
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             atai2siguma_p(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl + dev)
             atai2siguma_m(i) = CSng(readMaster(M_Data(j - i), mode)) - (cl - dev)
         Next
-
         Dim c_p As Integer = 0
         Dim c_m As Integer = 0
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If 0 < atai2siguma_p(i) Then
-                c_p += 1 'cl+siguma???????
+                c_p += 1
             End If
         Next
-
         For i As Integer = 0 To UBound(atai2siguma_p, 1)
             If atai2siguma_m(i) < 0 Then
-                c_m += 1 'cl-siguma???????
+                c_m += 1
             End If
         Next
-
-        '??cl-?~cl+?????????????????(True)
         If c_p = 0 Then Return False
         If c_m = 0 Then Return False
-
         If c_p + c_m = numP Then
             Return True
         End If
-
-
     End Function
     Private Function checkSpcRule6(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule6 = False
-
-        Dim numP As Integer = 7 '????
-
-        '???? ??????????
+        Dim numP As Integer = 7
         If checkData(aDataBuf, j, numP) = False Then Return False
-
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim dev As Single = CSng(aDataBuf(j, p_cXdev))
-
         Dim atai(numP - 1) As Single
         For i As Integer = 0 To UBound(atai, 1)
             atai(i) = CSng(readMaster(M_Data(j - i), mode))
         Next
-
         Dim atai_sa(UBound(atai, 1) - 1) As Single
         For i As Integer = 0 To UBound(atai, 1) - 1
             atai_sa(i) = atai(i) - atai(i + 1)
             If atai_sa(i) = 0 Then
-                Return False '???????F
+                Return False
             End If
         Next
-
-
         Dim c As Integer = 0
         For i As Integer = 0 To UBound(atai_sa, 1)
             If 0 < atai_sa(i) Then
-                c += 1 '????
+                c += 1
             ElseIf atai_sa(i) < 0 Then
-                c -= 1 '????
+                c -= 1
             End If
         Next
-
-        If Math.Abs(c) = numP - 1 Then '??????????????????
+        If Math.Abs(c) = numP - 1 Then
             Return True
         End If
-
-
     End Function
     Private Function checkSpcRule7(ByVal aDataBuf(,) As String, ByVal j As Integer, ByVal mode As Integer) As Boolean
         checkSpcRule7 = False
-
-        Dim numP As Integer = 14 '????
-
-        '???? ??????????
+        Dim numP As Integer = 14
         If checkData(aDataBuf, j, numP) = False Then Return False
-
         Dim cl As Single = CSng(aDataBuf(j, p_cXcl))
         Dim dev As Single = CSng(aDataBuf(j, p_cXdev))
-
         Dim atai(numP - 1) As Single
         For i As Integer = 0 To UBound(atai, 1)
             atai(i) = CSng(readMaster(M_Data(j - i), mode))
         Next
-
         Dim atai_sa(UBound(atai, 1) - 1) As Single
         For i As Integer = 0 To UBound(atai, 1) - 1
             atai_sa(i) = atai(i) - atai(i + 1)
             If atai_sa(i) = 0 Then
-                Return False '???????F
+                Return False
             End If
         Next
-
-
         Dim c As Integer = 0
         Dim f_sa As Integer = 0
         For i As Integer = 0 To UBound(atai_sa, 1)
             If 0 < atai_sa(i) Then
-                c += 1 '????
+                c += 1
             ElseIf atai_sa(i) < 0 Then
-                c -= 1 '????
+                c -= 1
             End If
 
             If i = 0 Then
                 f_sa = c
             End If
-
-            '???????????c ? (1 0 1 0 1 0) ? (-1 0 -1 0 -1 0)   ??????????????????(false)
             If i Mod 2 = 0 Then
                 If Not c = f_sa Then Return False
             ElseIf i Mod 2 = 1 Then
                 If Not c = 0 Then Return False
             End If
-
         Next
-
         Return True
-
-
     End Function
-    '??????????????????
+
     Public Function GetAlarmInfo_Server_kai(ByVal _ID As String, ByVal _Mode As String) As Boolean
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -967,44 +784,36 @@ Module Module2
         Dim table As New DataTable
         Try
             GetAlarmInfo_Server_kai = False
-
             Cn.ConnectionString = StrServerConnection
             table.Clear()
-
             strSQL = "SELECT iID"
             strSQL &= " FROM SPC_Alarm"
             strSQL &= " WHERE iID = '" & _ID & "'"
-
             For i As Integer = 0 To UBound(TreeName, 1)
                 strSQL &= " AND"
                 strSQL &= " cTreeName" & i + 1 & " = '" & TreeName(i) & "'"
             Next
-
             strSQL &= " AND [cGraphFormat] = '" & _Mode & "'"
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
             Adapter.SelectCommand.CommandType = CommandType.Text
             Adapter.Fill(table)
-
             Adapter.Dispose()
             Cn.Dispose()
             table.Dispose()
-
             If table.Rows.Count > 0 Then
                 Return True
             End If
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
             table.Dispose()
-
             StrErrMes = "????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Function
         End Try
     End Function
-    '??????????????????
+
     Public Function getAlarm() As DataTable
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
@@ -1012,40 +821,30 @@ Module Module2
         Dim _atable As New DataTable
         getAlarm = Nothing
         Try
-
-
             Cn.ConnectionString = StrServerConnection
             _atable.Clear()
-
             strSQL = "SELECT *"
             strSQL &= " FROM SPC_Alarm"
-
             For i As Integer = 0 To UBound(TreeName, 1)
                 If i = 0 Then
                     strSQL &= " WHERE"
                 Else
                     strSQL &= " AND"
                 End If
-
                 strSQL &= " cTreeName" & i + 1 & " = '" & TreeName(i) & "'"
             Next
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
             Adapter.SelectCommand.CommandType = CommandType.Text
             Adapter.Fill(_atable)
-
             Adapter.Dispose()
             Cn.Dispose()
             _atable.Dispose()
-
             Return _atable
-
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
             _atable.Dispose()
-
             StrErrMes = "????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Function
@@ -1059,12 +858,9 @@ Module Module2
         Dim Cn As New SqlConnection
         Dim strSQL As String
         Dim SQLCm As SqlCommand = Cn.CreateCommand
-        Dim trans As SqlTransaction '??????????
-
+        Dim trans As SqlTransaction
         Try
-
             Cn.ConnectionString = StrServerConnection
-
             Cn.Open()
             trans = Cn.BeginTransaction
             SQLCm.Transaction = trans
@@ -1077,12 +873,9 @@ Module Module2
             For i As Integer = 0 To UBound(TreeName, 1)
                 strSQL &= "'" & TreeName(i) & "'," 'cTreeName1
             Next
-
             For i As Integer = 0 To UBound(_Alarm, 1)
                 strSQL &= "'" & CStr(_Alarm(i)) & "'," 'cSpcrule1-8
-
             Next
-
             'strSQL &= "'" & CStr(_Alarm1) & "'," 'cSpcrule1
             'strSQL &= "'" & CStr(_Alarm2) & "'," 'cSpcrule2
             'strSQL &= "'" & CStr(_Alarm3) & "'," 'cSpcrule3
@@ -1091,7 +884,6 @@ Module Module2
             'strSQL &= "'" & CStr(_Alarm6) & "'," 'cSpcrule6
             'strSQL &= "'" & CStr(_Alarm7) & "'," 'cSpcrule7
             'strSQL &= "'" & CStr(_Alarm8) & "'," 'cSpcrule8
-
             strSQL &= "''," 'cSurveyIncharge
             strSQL &= "''," 'cSurveyResult
             strSQL &= "''," 'cTreatIncharge
@@ -1100,14 +892,10 @@ Module Module2
             strSQL &= "''," 'cApprovalDate
             strSQL &= "''," 'cApproverName
             strSQL &= "'')" 'cMaintenanceID
-
-
             SQLCm.CommandText = strSQL
             SQLCm.ExecuteNonQuery()
-
             trans.Commit()
             Cn.Close()
-
         Catch ex As Exception
             If IsNothing(trans) = False Then
                 trans.Rollback()
@@ -1116,27 +904,20 @@ Module Module2
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
         End Try
-
     End Sub
     '????????
     Public Sub GraphDisp()
-
         'X????????????
         GraphDisp1(StrResolution)
-
         'R????????????
         GraphDisp2(StrResolution, MRFlag)
         '?????????????
         GraphDisp4(StrResolution)
         '???????????
         GraphDisp7(StrResolution)
-
-
     End Sub
 
     Public Sub GraphDisp1(ByVal Size As String)
-
-
         Dim xpn, ypn, xp, n, yp, yh, i, j, pno, jk, yps, ypf, ypa, k, p As Integer
         Dim Bairitu, yp0 As Double
         Dim f As New Font("MS P????", 10)
@@ -1148,15 +929,13 @@ Module Module2
         Dim strUcl, strStep As String
         Dim strLcl As String
         Dim strCl As String
-
-        Dim Hsum As Double '???
-        Dim Bnum As Double '??
-        Dim Siguma As Double '????
-        Dim sum, ave As Double '?
-        Dim Jsum As Double '????
+        Dim Hsum As Double
+        Dim Bnum As Double
+        Dim Siguma As Double
+        Dim sum, ave As Double
+        Dim Jsum As Double
         Dim c As Integer
         Dim UpperCpk, LowerCpk As Double
-
         '????????=============================================
         Dim g As Graphics
         If Size = "MAX" Then
@@ -1175,16 +954,12 @@ Module Module2
                 g = Graphics.FromImage(.Image)
             End With
         End If
-
-
         Dim APen As New Pen(Color.Green, 3)
         APen.DashStyle = Drawing2D.DashStyle.Dot
         Dim BPen As New Pen(Color.Black, 1)
         BPen.DashStyle = Drawing2D.DashStyle.Dot
         Dim CPen As New Pen(Color.Green, 2)
         CPen.DashStyle = Drawing2D.DashStyle.Solid
-
-        '????????
         Dim DPen As New Pen(Color.Blue, 2)
         DPen.DashStyle = Drawing2D.DashStyle.Solid
         Dim EPen As New Pen(Color.Green, 1)
@@ -1193,7 +968,7 @@ Module Module2
         FPen.DashStyle = Drawing2D.DashStyle.Dash
         Dim GPen As New Pen(Color.Red, 2)
         GPen.DashStyle = Drawing2D.DashStyle.Solid
-        Dim HPen As New Pen(Color.Red, 3)
+        Dim HPen As New Pen(Color.Empty, 3)
         HPen.DashStyle = Drawing2D.DashStyle.Solid
         Dim IPen As New Pen(Color.Blue, 1)
         IPen.DashStyle = Drawing2D.DashStyle.Solid
@@ -1201,10 +976,9 @@ Module Module2
         JPen.DashStyle = Drawing2D.DashStyle.Dot
         Dim KPen As New Pen(Color.Purple, 2)
         KPen.DashStyle = Drawing2D.DashStyle.Dash
-
-        Dim c1 As New SolidBrush(Color.FromArgb(255, 255, 38, 38))  'Red
-        Dim c2 As New SolidBrush(Color.FromArgb(255, 238, 228, 255))  '
-        Dim c3 As New SolidBrush(Color.FromArgb(255, 255, 250, 55))  '3
+        Dim c1 As New SolidBrush(Color.FromArgb(255, 255, 38, 38))
+        Dim c2 As New SolidBrush(Color.FromArgb(255, 238, 228, 255))
+        Dim c3 As New SolidBrush(Color.FromArgb(255, 255, 250, 55))
         Dim c4 As New SolidBrush(Color.Blue)
         Dim A1Pen As New Pen(Color.Red, 1)
         A1Pen.DashStyle = Drawing2D.DashStyle.Solid
@@ -1215,9 +989,7 @@ Module Module2
 
         '================================================================
 
-
         If Size = "MAX" Then
-
             Form1.LabUpCpk.Text = ""
             Form1.LabLoCpk.Text = ""
             Form1.TextUCL.Text = ""
@@ -1225,9 +997,7 @@ Module Module2
             Form1.TextLCL.Text = ""
             Form1.TextSiguma.Text = ""
             Form1.LabelBase.Text = ""
-
         ElseIf Size = "Middle" Then
-
             FormMiddle.LabUpCpk.Text = ""
             FormMiddle.LabLoCpk.Text = ""
             FormMiddle.TextUCL.Text = ""
@@ -1235,9 +1005,7 @@ Module Module2
             FormMiddle.TextLCL.Text = ""
             FormMiddle.TextSiguma.Text = ""
             FormMiddle.LabelBase.Text = ""
-
         ElseIf Size = "MIN" Then
-
             FormSmall.LabUpCpk.Text = ""
             FormSmall.LabLoCpk.Text = ""
             FormSmall.TextUCL.Text = ""
@@ -1245,81 +1013,64 @@ Module Module2
             FormSmall.TextLCL.Text = ""
             FormSmall.TextSiguma.Text = ""
             FormSmall.LabelBase.Text = ""
-
         End If
-
         xp = 0
         yp0 = 0
         yp = 0
-
         If Size = "MAX" Then
-            yh = 428 '???????????????
+            yh = 428
         ElseIf Size = "Middle" Then
-            yh = 362  '???????????????
+            yh = 362
         ElseIf Size = "MIN" Then
-            yh = 260 '???????????????
+            yh = 260
         End If
-
-
-        jk = DispStartPosition  '?????????????????
+        jk = DispStartPosition
         PropertyNo = PropertyTable.Rows.Count - 1
 
         '???????????========================
         dbl1 = PropertyTable.Rows(PropertyNo)("cScl")
         dbl2 = PropertyTable.Rows(PropertyNo)("cTolerance") / 5
+        If dbl2 <= 0 Then dbl2 = 1
         If IsDBNull(PropertyTable.Rows(PropertyNo)("cUnit")) = False Then
             strUnit = PropertyTable.Rows(PropertyNo)("cUnit")
         End If
-
         Dim strStanUR As String = ""
         Dim sLSL As String = Format(PropertyTable.Rows(PropertyNo)("cLsl"), "0.000")
         Dim sUSL As String = Format(PropertyTable.Rows(PropertyNo)("cUsl"), "0.000")
-
         If PropertyTable.Rows(PropertyNo)("cLimitType") = "UpperLower" Or PropertyTable.Rows(PropertyNo)("cLimitType") = "Fixed" Then
             strStanUR = sLSL & " - " & sUSL & " " & strUnit
         ElseIf PropertyTable.Rows(PropertyNo)("cLimitType") = "Upper" Then
             strStanUR = "<= " & sUSL & " " & strUnit
         ElseIf PropertyTable.Rows(PropertyNo)("cLimitType") = "Lower" Then
-            strStanUR = ">= " & sLSL & " " & strUnit 'Ver2.11 change cUsl cLsl
+            strStanUR = ">= " & sLSL & " " & strUnit
         End If
-
-
+        'If Size = "MAX" Then
+        'Form1.LabelBase.Text = strStanUR
+        'ElseIf Size = "Middle" Then
+        'FormMiddle.LabelBase.Text = strStanUR
+        'ElseIf Size = "MIN" Then
+        'FormSmall.LabelBase.Text = strStanUR
+        'End If
+        strStep = CStr(dbl2)
         If Size = "MAX" Then
-            '?????
-            Form1.LabelBase.Text = strStanUR
+            Bairitu = 40 / dbl2
         ElseIf Size = "Middle" Then
-            '?????
-            FormMiddle.LabelBase.Text = strStanUR
+            Bairitu = 35 / dbl2
         ElseIf Size = "MIN" Then
-            '?????
-            FormSmall.LabelBase.Text = strStanUR
+            Bairitu = 25 / dbl2
         End If
-
-        strStep = CStr(dbl2)      'STEP
-
-        If Size = "MAX" Then
-            Bairitu = 40 / dbl2       '?40Pix
-        ElseIf Size = "Middle" Then
-            Bairitu = 35 / dbl2       '?35Pix
-        ElseIf Size = "MIN" Then
-            Bairitu = 25 / dbl2       '?25Pix
-        End If
-
         dblLow = dbl1 - dbl2 * 5
-
         null_bit = 1
         sum = 0
         c = 0
         Jsum = 0
-
         Dim x00 As Integer
         Dim x01 As Integer
         Dim x02 As Integer
         Dim x03 As Integer
-
         For j = 0 To 29 * Graphsmallcount
             Try
-                If jk < 0 OrElse jk > UBound(M_Data) Then
+                If M_Data Is Nothing OrElse jk < 0 OrElse jk > M_Data.Length Then
                     jk += 1
                     Continue For
                 End If
@@ -1340,7 +1091,6 @@ Module Module2
                         End If
                     End If
                 Next
-
                 X_USL = PropertyTable.Rows(p)("cUsl")
                 X_LSL = PropertyTable.Rows(p)("cLsl")
                 X_CL = PropertyTable.Rows(p)("cXcl")
@@ -1404,8 +1154,6 @@ Module Module2
                 c += 1
 
                 ypn = yp + yh - Data1
-
-
                 '??????????0
                 colbuf(j) = 0
                 '???????1
@@ -1418,7 +1166,6 @@ Module Module2
                 If ala = 2 Or ala = 3 Then
                     colbuf(j) = 1
                     ypf = ypn
-
                     ypa = ypf - 50
                     If ypa < 0 Then
                         ypa = 50
@@ -1428,9 +1175,7 @@ Module Module2
                         ypa = 400
                         ypf = ypa + 50
                     End If
-
-                    g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23) '????
-
+                    g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23)
                     If Size = "MAX" Then
                         x01 = 15
                     ElseIf Size = "Middle" Then
@@ -1438,16 +1183,13 @@ Module Module2
                     ElseIf Size = "MIN" Then
                         x01 = 15
                     End If
-
                     k = 0
-                    For ii = 0 To 7 '?(??)
+                    For ii = 0 To 7
                         If ala = 3 Then
                             g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
                         ElseIf ala = 2 Then
                             g.DrawLine(A1Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
                         End If
-
-
                         k += 1
                     Next
                 End If
@@ -1455,37 +1197,35 @@ Module Module2
                 xpnbuf_X(j) = xpn
                 ypnbuf_X(j) = ypn
                 If j > 0 And null_bit = 0 Then
-
-                    g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) '?????
-
+                    g.DrawLine(DPen, xp_old, yp_old, xpn, ypn)
                 End If
                 null_bit = 0
                 xp_old = xpn
                 yp_old = ypn
                 end_bit = 1
-
                 jk += 1
-
             Catch ex As Exception
                 jk += 1
                 Continue For
             End Try
         Next
-
-        Hsum = Jsum - (sum * sum) / c
-        Bnum = Hsum / (c - 1)
-        Siguma = Math.Sqrt(Bnum)
-        ave = sum / c
-
-        If X_gType = "Lower" Then
-            UpperCpk = 0
-            LowerCpk = (ave - X_LSL) / (3 * Siguma)
-        ElseIf X_gType = "Upper" Then
-            UpperCpk = (X_USL - ave) / (3 * Siguma)
-            LowerCpk = 0
+        If c > 1 Then
+            Hsum = Jsum - (sum * sum) / c
+            Bnum = Hsum / (c - 1)
+            Siguma = Math.Sqrt(Bnum)
+            ave = sum / c
+            If X_gType = "Lower" Then
+                UpperCpk = 0
+                LowerCpk = (ave - X_LSL) / (3 * Siguma)
+            ElseIf X_gType = "Upper" Then
+                UpperCpk = (X_USL - ave) / (3 * Siguma)
+                LowerCpk = 0
+            Else
+                UpperCpk = (X_USL - ave) / (3 * Siguma)
+                LowerCpk = (ave - X_LSL) / (3 * Siguma)
+            End If
         Else
-            UpperCpk = (X_USL - ave) / (3 * Siguma)
-            LowerCpk = (ave - X_LSL) / (3 * Siguma)
+            UpperCpk = 0 : LowerCpk = 0
         End If
 
         If Size = "MAX" Then
@@ -1498,106 +1238,94 @@ Module Module2
             FormSmall.LabUpCpk.Text = Mid(UpperCpk, 1, 4)
             FormSmall.LabLoCpk.Text = Mid(LowerCpk, 1, 4)
         End If
-
         '???????????===============================
         If Size = "MAX" Then
-
             strUcl = CStr(X_UCL)
             Form1.labUCL.Top = yucl - 7 + Form1.PictureBox1.Top
             Form1.TextUCL.Text = strUcl
-
             strCl = CStr(X_CL)
             Form1.TextCL.Text = strCl
             Form1.labCL.Top = ycl - 7 + Form1.PictureBox1.Top
-
             strLcl = CStr(X_LCL)
             Form1.labLCL.Top = ylcl - 7 + Form1.PictureBox1.Top
             Form1.TextLCL.Text = strLcl
-
             Form1.TextSiguma.Text = CStr(X_Shiguma)
-
         ElseIf Size = "Middle" Then
-
             strUcl = CStr(X_UCL)
             FormMiddle.labUCL.Top = yucl - 7 + FormMiddle.PictureBox1.Top
             FormMiddle.TextUCL.Text = strUcl
-
             strCl = CStr(X_CL)
             FormMiddle.TextCL.Text = strCl
             FormMiddle.labCL.Top = ycl - 7 + FormMiddle.PictureBox1.Top
-
             strLcl = CStr(X_LCL)
             FormMiddle.labLCL.Top = ylcl - 7 + FormMiddle.PictureBox1.Top
             FormMiddle.TextLCL.Text = strLcl
-
             FormMiddle.TextSiguma.Text = CStr(X_Shiguma)
-
         ElseIf Size = "MIN" Then
-
             strUcl = CStr(X_UCL)
             FormSmall.labUCL.Top = yucl - 7 + FormSmall.PictureBox1.Top
             FormSmall.TextUCL.Text = strUcl
-
             strCl = CStr(X_CL)
             FormSmall.TextCL.Text = strCl
             FormSmall.labCL.Top = ycl - 7 + FormSmall.PictureBox1.Top
-
             strLcl = CStr(X_LCL)
             FormSmall.labLCL.Top = ylcl - 7 + FormSmall.PictureBox1.Top
             FormSmall.TextLCL.Text = strLcl
-
             FormSmall.TextSiguma.Text = CStr(X_Shiguma)
-
         End If
         '=====================================================
-
-        '??????????===============================================
         n = j '????????????
         jk = DispStartPosition
         For j = 0 To n - 1
+            If jk < 0 OrElse jk >= M_Data.Length OrElse j >= xpnbuf_X.Length Then Exit For
             xpn = xpnbuf_X(j)
             ypn = ypnbuf_X(j)
             If xpn <> "0" Then
-                If readMaster(M_Data(jk), _cate) <> "R" Then
-                    If colbuf(j) = 1 Then 'SPC?????????????????
-                        g.FillEllipse(c1, xpn - 4, ypn - 4, 7, 7)
-                        g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
-                    Else 'SPC?????????????????
-                        g.FillEllipse(c2, xpn - 4, ypn - 4, 7, 7)
-                        g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
-                    End If
-                Else '?????????????
-                    g.FillEllipse(c4, xpn - 4, ypn - 4, 7, 7)
+                Dim currentVal As Double = Val(readMaster(M_Data(jk), _X))
+                If currentVal > X_UCL Or currentVal < X_LCL Or colbuf(j) = 1 Then
+                    Using redBrush As New SolidBrush(Color.Red)
+                        Using blackPen As New Pen(Color.Black, 1)
+                            g.DrawLine(blackPen, xpn, ypn, xpn, ypn - 20)
+                            Dim flagPoints As Point() = {
+                                New Point(xpn, ypn - 20),
+                                New Point(xpn + 12, ypn - 15),
+                                New Point(xpn, ypn - 10)
+                            }
+                            g.FillPolygon(redBrush, flagPoints)
+                            g.DrawPolygon(blackPen, flagPoints)
+                        End Using
+                    End Using
+                    g.FillEllipse(c1, xpn - 4, ypn - 4, 7, 7)
                     g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
+                Else
+                    If readMaster(M_Data(jk), _cate) <> "R" Then
+                        g.FillEllipse(c2, xpn - 4, ypn - 4, 7, 7)
+                    Else
+                        g.FillEllipse(c4, xpn - 4, ypn - 4, 7, 7)
+                    End If
                 End If
+                g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
             End If
             jk += 1
         Next
-        '====================================================================
-
-        '????????????============================
+        '====================================================================    
         dbl1 = X_SCL       '?????
         dbl2 = X_kousa / 5       'STEP
         dbl1 = dbl1 + dbl2 * 5 + yp0
         For i = 0 To 10
             If Size = "MAX" Then
-
                 If dbl1 > 999 Then
                     Form1.LabXBar(i).Text = Format(dbl1, "0")
                 Else
                     Form1.LabXBar(i).Text = Format(dbl1, "0.00")
                 End If
-
             ElseIf Size = "Middle" Then
-
                 If dbl1 > 999 Then
                     FormMiddle.LabXBar_Middle(i).Text = Format(dbl1, "0")
                 Else
                     FormMiddle.LabXBar_Middle(i).Text = Format(dbl1, "0.00")
                 End If
-
             ElseIf Size = "MIN" Then
-
                 If dbl1 > 999 Then
                     FormSmall.LabXBar_Small(i).Text = Format(dbl1, "0")
                 Else
@@ -1620,31 +1348,26 @@ Module Module2
             x02 = 20
             x03 = 25
         End If
-
         For j = 1 To 35
-            g.DrawLine(BPen, xp + j * x02, 0, xp + j * x02, 500) '??
+            g.DrawLine(BPen, xp + j * x02, 0, xp + j * x02, 500)
         Next
-        '??
-        If X_Shiguma <> 0 Then '????????????1????
+        If X_Shiguma <> 0 Then
             yps = yp + yh - (CDbl(X_CL) - dblLow) * Bairitu
             For j = 0 To 200
                 g.DrawLine(BPen, xp, CInt(yps + j * X_Shiguma / strStep * x03), xp + 36 * 30, CInt(yps + j * X_Shiguma / strStep * x03))
                 g.DrawLine(BPen, xp, CInt(yps - j * X_Shiguma / strStep * x03), xp + 36 * 30, CInt(yps - j * X_Shiguma / strStep * x03))
             Next
-
-        Else '????????????40?????????
+        Else
             For j = 1 To 15
                 g.DrawLine(BPen, xp, yp + j * x03, xp + 36 * 30, yp + j * x03)
             Next
         End If
         '======================================================================
-
         c1.Dispose()
         c2.Dispose()
         c3.Dispose()
         f.Dispose()
         g.Dispose()
-
         Dim str As String = ""
         For l As Integer = 0 To UBound(TreeName, 1)
             If TreeName(l) = "" Then Exit For
@@ -1666,7 +1389,7 @@ Module Module2
         End If
 
     End Sub
-    'R??????
+
     Public Sub GraphDisp2(ByVal Size As String, ByVal MR As Boolean)
         Dim xpn, ypn, ypf, ypa, xp, yp, yh, i, p As Integer
         Dim Bairitu As Double
@@ -1679,9 +1402,8 @@ Module Module2
         Dim UclChangeFlag2 As Boolean
         Dim dblSiguma, dblCl As Double
         Dim yuclR, yclR, k As Integer
-        '????????=============================================
         Dim g As Graphics
-
+        If M_Data Is Nothing OrElse M_Data.Length = 0 OrElse PropertyTable Is Nothing Then Exit Sub
         If Size = "MAX" Then
             With Form1.PictureBox2
                 .Image = New Bitmap(1050, 275)
@@ -1716,16 +1438,19 @@ Module Module2
         FPen.DashStyle = Drawing2D.DashStyle.Dash
         Dim HPen As New Pen(Color.Red, 3)
         HPen.DashStyle = Drawing2D.DashStyle.Solid
-        Dim c1 As New SolidBrush(Color.FromArgb(255, 255, 38, 38))  'Red
-        Dim c2 As New SolidBrush(Color.FromArgb(255, 235, 253, 0))  'Green
-        Dim c3 As New SolidBrush(Color.FromArgb(255, 50, 200, 50))  '3
+        Dim c1 As New SolidBrush(Color.FromArgb(255, 255, 38, 38))
+        Dim c2 As New SolidBrush(Color.FromArgb(255, 235, 253, 0))
+        Dim c3 As New SolidBrush(Color.FromArgb(255, 50, 200, 50))
         Dim A1Pen As New Pen(Color.Red, 1)
         A1Pen.DashStyle = Drawing2D.DashStyle.Solid
         Dim A2Pen As New Pen(Color.Green, 1)
         A2Pen.DashStyle = Drawing2D.DashStyle.Solid
         Dim B1Pen As New Pen(Color.Black, 2)
         B1Pen.DashStyle = Drawing2D.DashStyle.Solid
-        '===============================================================            
+        '===============================================================  
+        Dim checkIdx As Integer = DispStartPosition
+        If checkIdx < 0 OrElse checkIdx >= M_Data.Length Then checkIdx = 0
+
         If Size = "MAX" Then
             If readMaster(M_Data(DispStartPosition), _R) = "" Then
                 Form1.PictureBox2.BackColor = Color.Gray
@@ -1733,29 +1458,23 @@ Module Module2
             Else
                 Form1.PictureBox2.BackColor = Color.White
             End If
-
         ElseIf Size = "Middle" Then
-
             If readMaster(M_Data(DispStartPosition), _R) = "" Then
                 FormMiddle.PictureBox2.BackColor = Color.Gray
                 Exit Sub
             Else
                 FormMiddle.PictureBox2.BackColor = Color.White
             End If
-
         ElseIf Size = "MIN" Then
-
             If readMaster(M_Data(DispStartPosition), _R) = "" Then
                 FormSmall.PictureBox2.BackColor = Color.Gray
                 Exit Sub
             Else
                 FormSmall.PictureBox2.BackColor = Color.White
             End If
-
         End If
         UclChangeFlag = False
         UclChangeFlag2 = False
-
         If Size = "MAX" Then
             Form1.TextRUCL.Text = ""
             Form1.TextRCL.Text = ""
@@ -1772,10 +1491,8 @@ Module Module2
             FormSmall.TextRSiguma.Text = ""
             yh = 145
         End If
-
         xp = 0
         yp = 0
-
         Dim x00 As Integer
         Dim x01 As Integer
         Dim x02 As Integer
@@ -1783,7 +1500,6 @@ Module Module2
         Dim x04 As Integer
         Dim x05 As Integer
         Dim x06 As Integer
-
         If Size = "MAX" Then
             x00 = 30
             x01 = 30
@@ -1806,30 +1522,23 @@ Module Module2
         For j = 1 To 35
             g.DrawLine(BPen, xp + j * x00, yp, xp + j * x00, yp + 270)
         Next
-
         For j = 1 To 10
             g.DrawLine(BPen, xp, yp + j * x01, xp + 35 * x00, yp + j * x01)
         Next
-
-        If MR Then 'MR???
-            If PropertyTable.Rows(PropertyNo)("cMRucl") = 0 Then 'MR????????????????R???????????
-                dbl2 = (PropertyTable.Rows(PropertyNo)("cRucl") * 30) / 100   'STEP
+        If MR Then
+            If PropertyTable.Rows(PropertyNo)("cMRucl") = 0 Then
+                dbl2 = (PropertyTable.Rows(PropertyNo)("cRucl") * 30) / 100
             Else
-                dbl2 = (PropertyTable.Rows(PropertyNo)("cMRucl") * 30) / 100   'STEP
+                dbl2 = (PropertyTable.Rows(PropertyNo)("cMRucl") * 30) / 100
             End If
-        Else 'R???
-            dbl2 = (PropertyTable.Rows(PropertyNo)("cRucl") * x02) / 100   'STEP
-
+        Else
+            dbl2 = (PropertyTable.Rows(PropertyNo)("cRucl") * x02) / 100
         End If
-
-        Bairitu = x03 / dbl2       '?40Pix
-
+        If dbl2 <= 0 Then dbl2 = 1
+        Bairitu = x03 / dbl2
         null_bit = 1
-
-        i = DispStartPosition '????????????
-
+        i = DispStartPosition
         If Size = "MAX" Then
-            'x04 = 15 + 120
             x04 = 15
             x05 = 15
         ElseIf Size = "Middle" Then
@@ -1839,129 +1548,112 @@ Module Module2
             x04 = 10
             x05 = 10
         End If
-
         For j = 0 To 29 * Graphsmallcount
-            If i < 0 OrElse i > UBound(M_Data) Then
-                Exit For
-            End If
-            If M_Data(i) Is Nothing OrElse M_Data(i) = "" Then
-                If i < UBound(M_Data) Then i += 1
-                Continue For
-            End If
-
-            If MR Then
-                strData = readMaster(M_Data(i), _MR)
-            Else
-                strData = readMaster(M_Data(i), _R)
-            End If
-
-            If strData <> "" Then
-
-                xpn = xp + j * (x00 / Graphsmallcount) + x04
-                '------------   CL,UCL,LCL????   -------------
-
-                p = 0
-
-                For k = 0 To PropertyNo
-                    If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
-                        If readMaster(M_Data(i), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then
-                            p = k
-                        End If
-                    End If
-                Next
-
-                R_UCL = PropertyTable.Rows(p)("cRucl")
-                R_CL = PropertyTable.Rows(p)("cRcl")
-                R_Shiguma = PropertyTable.Rows(p)("cRdev")
-
-                MR_UCL = PropertyTable.Rows(p)("cMRucl")
-                MR_CL = PropertyTable.Rows(p)("cMRcl")
-                MR_Shiguma = PropertyTable.Rows(p)("cMRdev")
-
-
+            Try
+                If i < 0 OrElse i > M_Data.Length OrElse M_Data(i) Is Nothing OrElse M_Data(i) = "" Then
+                    i += 1
+                    Continue For
+                End If
                 If MR Then
-                    dblSiguma = MR_UCL
-                    dblCl = MR_CL
-                    R_Shiguma = MR_Shiguma
+                    strData = readMaster(M_Data(i), _MR)
                 Else
-                    dblSiguma = R_UCL
-                    dblCl = R_CL
+                    strData = readMaster(M_Data(i), _R)
                 End If
 
-                'CL?????
-                Data1 = (CDbl(dblCl)) * Bairitu
-                ypn = yp + yh - Data1                '
-                If ypn > yp + yh Then ypn = yp + yh
-                g.DrawLine(APen, xpn - x05, ypn, xpn + x05, ypn)
-                yclR = ypn
-
-                'UCL?????
-                Data1 = (CDbl(dblSiguma)) * Bairitu
-                ypn = yp + yh - Data1                '
-                If ypn > yp + yh Then ypn = yp + yh
-                g.DrawLine(FPen, xpn - x05, ypn, xpn + x05, ypn)
-                yuclR = ypn
-
-                Data1 = (CDbl(strData) - dblLow) * Bairitu
-                ypn = yp + yh - Data1                '
-
-                Dim ala As Integer = readMaster(M_Alarm(i)(0), 0)
-
-                If MR Then
-                    ala = readMaster(M_Alarm(i)(2), 0)
-                Else
-                    ala = readMaster(M_Alarm(i)(1), 0)
-                End If
-
-                '??????????0
-                colbuf(j) = 0
-                '???????1
-                If ala = 1 Then
-                    colbuf(j) = 1
-                End If
-
-                '??????????????????
-                If ala = 2 Or ala = 3 Then
-                    colbuf(j) = 1
-                    ypf = ypn
-
-                    ypa = ypf - 50
-                    If ypa < 0 Then
-                        ypa = 50
-                        ypf = ypa + 50
-                    End If
-                    If ypa > 400 Then
-                        ypa = 400
-                        ypf = ypa + 50
-                    End If
-
-                    g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23)
-                    k = 0
-                    For ii = 0 To 7
-                        If ala = 3 Then 'QC?????????????
-                            g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + 15 - ii)
-                        ElseIf ala = 2 Then 'QC???????????????
-                            g.DrawLine(A1Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + 15 - ii)
+                If strData <> "" Then
+                    xpn = xp + j * (x00 / Graphsmallcount) + x04
+                    p = 0
+                    For k = 0 To PropertyNo
+                        If IsDBNull(PropertyTable.Rows(k)("cApprovalDate")) = False Then
+                            If readMaster(M_Data(i), _wDate) > PropertyTable.Rows(k)("cApprovalDate") Then
+                                p = k
+                            End If
                         End If
-
-                        k += 1
                     Next
-                End If
+                    R_UCL = PropertyTable.Rows(p)("cRucl")
+                    R_CL = PropertyTable.Rows(p)("cRcl")
+                    R_Shiguma = PropertyTable.Rows(p)("cRdev")
 
-                xpnbuf_R(j) = xpn
-                ypnbuf_R(j) = ypn
-                'BufNoR(j) = i
-                If j > 0 And null_bit = 0 Then
-                    g.DrawLine(DPen, xp_old, yp_old, xpn, ypn) '?????
+                    MR_UCL = PropertyTable.Rows(p)("cMRucl")
+                    MR_CL = PropertyTable.Rows(p)("cMRcl")
+                    MR_Shiguma = PropertyTable.Rows(p)("cMRdev")
+                    If MR Then
+                        dblSiguma = MR_UCL
+                        dblCl = MR_CL
+                        R_Shiguma = MR_Shiguma
+                    Else
+                        dblSiguma = R_UCL
+                        dblCl = R_CL
+                    End If
+
+                    'CL?????
+                    Data1 = (CDbl(dblCl)) * Bairitu
+                    ypn = yp + yh - Data1                '
+                    If ypn > yp + yh Then ypn = yp + yh
+                    g.DrawLine(APen, xpn - x05, ypn, xpn + x05, ypn)
+                    yclR = ypn
+
+                    'UCL?????
+                    Data1 = (CDbl(dblSiguma)) * Bairitu
+                    ypn = yp + yh - Data1                '
+                    If ypn > yp + yh Then ypn = yp + yh
+                    g.DrawLine(FPen, xpn - x05, ypn, xpn + x05, ypn)
+                    yuclR = ypn
+
+                    Data1 = (CDbl(strData) - dblLow) * Bairitu
+                    ypn = yp + yh - Data1                '
+
+                    Dim ala As Integer = readMaster(M_Alarm(i)(0), 0)
+                    If MR Then
+                        ala = readMaster(M_Alarm(i)(2), 0)
+                    Else
+                        ala = readMaster(M_Alarm(i)(1), 0)
+                    End If
+
+                    colbuf(j) = 0
+
+                    If ala = 1 Then
+                        colbuf(j) = 1
+                    End If
+
+                    If ala = 2 Or ala = 3 Then
+                        colbuf(j) = 1
+                        ypf = ypn
+                        ypa = ypf - 50
+                        If ypa < 0 Then
+                            ypa = 50
+                            ypf = ypa + 50
+                        End If
+                        If ypa > 400 Then
+                            ypa = 400
+                            ypf = ypa + 50
+                        End If
+                        g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23)
+                        k = 0
+                        For ii = 0 To 7
+                            If ala = 3 Then
+                                g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + 15 - ii)
+                            ElseIf ala = 2 Then
+                                g.DrawLine(A1Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + 15 - ii)
+                            End If
+                            k += 1
+                        Next
+                    End If
+                    xpnbuf_R(j) = xpn
+                    ypnbuf_R(j) = ypn
+                    If j > 0 And null_bit = 0 Then
+                        g.DrawLine(DPen, xp_old, yp_old, xpn, ypn)
+                    End If
+                    null_bit = 0
+                    xp_old = xpn
+                    yp_old = ypn
+                    end_bit = 1
+                    i += 1
                 End If
-                null_bit = 0
-                xp_old = xpn
-                yp_old = ypn
-                end_bit = 1
+            Catch ex As Exception
                 i += 1
-            End If
+            End Try
         Next
-
         If Size = "MAX" Then
             Form1.labRUCL.Top = yuclR - 5 + Form1.PictureBox2.Top
             Form1.TextRUCL.Text = dblSiguma
@@ -1981,24 +1673,36 @@ Module Module2
             FormSmall.TextRCL.Text = dblCl
             FormSmall.TextRSiguma.Text = R_Shiguma
         End If
-
-        '???????????==========================
+        i = DispStartPosition
         For j = 0 To 30 * Graphsmallcount
+            If j >= xpnbuf_R.Length OrElse i < 0 OrElse i >= M_Data.Length Then Exit For
             xpn = xpnbuf_R(j)
             ypn = ypnbuf_R(j)
             If xpn <> "0" Then
-                If colbuf(j) = 1 Then '????????????????
+                Dim currentR As Double = 0
+                If MR Then currentR = Val(readMaster(M_Data(i), _MR)) Else currentR = Val(readMaster(M_Data(i), _R))
+                If currentR > dblSiguma Or colbuf(j) = 1 Then
+                    Using redBrush As New SolidBrush(Color.Red)
+                        Using blackPen As New Pen(Color.Black, 1)
+                            g.DrawLine(blackPen, xpn, ypn, xpn, ypn - 20)
+                            Dim flagPoints As Point() = {
+                                New Point(xpn, ypn - 20),
+                                New Point(xpn + 12, ypn - 15),
+                                New Point(xpn, ypn - 10)
+                            }
+                            g.FillPolygon(redBrush, flagPoints)
+                            g.DrawPolygon(blackPen, flagPoints)
+                        End Using
+                    End Using
                     g.FillEllipse(c1, xpn - 4, ypn - 4, 7, 7)
-                    g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
-                Else '????????????????
+                Else
                     g.FillEllipse(c2, xpn - 4, ypn - 4, 7, 7)
-                    g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
                 End If
+                g.DrawEllipse(EPen, xpn - 4, ypn - 4, 7, 7)
             End If
+            i += 1
         Next
         '================================================
-
-        '??????????==========================
         If Size = "MAX" Then
             x06 = 9
         ElseIf Size = "Middle" Then
@@ -2008,7 +1712,6 @@ Module Module2
         End If
         dbl1 = dbl2 * x06
         For i = 0 To x06
-
             If Size = "MAX" Then
                 If dbl1 > 999 Then
                     Form1.LabR(i).Text = Format(dbl1, "0")
@@ -2038,17 +1741,15 @@ Module Module2
         g.Dispose()
     End Sub
 
-    '?????????????????
     Public Sub GraphDisp4(ByVal Size As String)
         Dim j, k, xp, yp As Integer
         Dim f As New Font("Segoe UI", 8, FontStyle.Regular)
         Dim f2 As New Font("Segoe UI", 7, FontStyle.Regular)
         Dim g As Graphics
-        Dim rect As New RectangleF '???????
-        Dim sf As New StringFormat() '???????
+        Dim rect As New RectangleF
+        Dim sf As New StringFormat()
         sf.Alignment = StringAlignment.Center
         sf.LineAlignment = StringAlignment.Center
-
         If Size = "MAX" Then
             With Form1.PictureBox4
                 .Image = New Bitmap(1355, 150)
@@ -2066,15 +1767,12 @@ Module Module2
             End With
         End If
         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias
-
         Dim Stf As New StringFormat(StringFormatFlags.DirectionVertical)
         Dim str1 As String
         Dim dt1 As Date
         Dim APen As New Pen(Color.Black, 1)
         APen.DashStyle = Drawing2D.DashStyle.Solid
-
-        Dim c1 As New SolidBrush(Color.FromArgb(255, 208, 241, 255))  '??
-
+        Dim c1 As New SolidBrush(Color.FromArgb(255, 208, 241, 255))
         xp = 0
         yp = 0
         Dim x00 As Integer
@@ -2111,9 +1809,7 @@ Module Module2
         g.DrawLine(APen, xp, yp + x01, xp + 37 * x00, yp + x01)
         g.DrawLine(APen, xp, yp + x01 + x02, xp + 37 * x00, yp + x01 + x02)
         g.DrawLine(APen, xp, yp + x01 + x02 + x03, xp + 37 * x00, yp + x01 + x02 + x03)
-
         k = DispStartPosition
-
         For j = 0 To 36
             If j <> 1 Then
                 g.DrawLine(APen, xp + j * x00, yp, xp + j * x00, yp + 450)
@@ -2160,19 +1856,18 @@ Module Module2
             End If
             k += (1 * Graphsmallcount)
         Next
-        If Size = "MAX" Then
-            Form1.LabUnit.Text = strUnit
-        ElseIf Size = "Middle" Then
-            FormMiddle.LabUnit.Text = strUnit
-        ElseIf Size = "MIN" Then
-            FormSmall.LabUnit.Text = strUnit
-        End If
-
+        'If Size = "MAX" Then
+        'Form1.LabUnit.Text = strUnit
+        'ElseIf Size = "Middle" Then
+        'FormMiddle.LabUnit.Text = strUnit
+        'ElseIf Size = "MIN" Then
+        'FormSmall.LabUnit.Text = strUnit
+        'End If
         c1.Dispose()
         f.Dispose()
         g.Dispose()
     End Sub
-    '???????????
+
     Public Sub GraphDisp7(ByVal Size As String)
         Dim xp, yp, yh, i, j, jk, yps, ul, ll As Integer
         Dim Bairitu, yp0 As Double
@@ -2180,8 +1875,8 @@ Module Module2
         Dim HistogramBuf(3000) As String
         Dim HistogramCount As Integer = 0
         Dim strData, strStep As String
-        Dim Cl_s1, s1_s2, s2_s3, s3_s4, s4_s5, s5_s6, s6_s7, s7_s8, s8_s9, s9_s10 As Integer 'UCL??
-        Dim Cl_ms1, ms1_ms2, ms2_ms3, ms3_ms4, ms4_ms5, ms5_ms6, ms6_ms7, ms7_ms8, ms8_ms9, ms9_ms10 As Integer 'LCL??
+        Dim Cl_s1, s1_s2, s2_s3, s3_s4, s4_s5, s5_s6, s6_s7, s7_s8, s8_s9, s9_s10 As Integer
+        Dim Cl_ms1, ms1_ms2, ms2_ms3, ms3_ms4, ms4_ms5, ms5_ms6, ms6_ms7, ms7_ms8, ms8_ms9, ms9_ms10 As Integer
         Dim local_yucl, local_ylcl, local_ycl As Integer
         Dim g As Graphics
         Try
@@ -2202,22 +1897,18 @@ Module Module2
                 yh = 428
                 Size = "MAX"
             End If
-
             pb.Image = New Bitmap(pb.Width, pb.Height)
             g = Graphics.FromImage(pb.Image)
             g.Clear(Color.White)
             g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-
             Using APen As New Pen(Color.Green, 2) With {.DashStyle = Drawing2D.DashStyle.Dot},
                     BPen As New Pen(Color.Black, 1) With {.DashStyle = Drawing2D.DashStyle.Dot},
-                    CPen As New Pen(Color.Orange, 1) With {.DashStyle = Drawing2D.DashStyle.Solid},
+                    CPen As New Pen(Color.FromArgb(147, 112, 219), 1) With {.DashStyle = Drawing2D.DashStyle.Solid},
                     FPen As New Pen(Color.Red, 2) With {.DashStyle = Drawing2D.DashStyle.Dash},
-                    HPen As New Pen(Color.Red, 3) With {.DashStyle = Drawing2D.DashStyle.Solid},
+                    HPen As New Pen(Color.Empty, 3) With {.DashStyle = Drawing2D.DashStyle.Solid},
                     B1Pen As New Pen(Color.Black, 1) With {.DashStyle = Drawing2D.DashStyle.Solid},
                     OrangeBrush As New SolidBrush(Color.Orange)
-
                 '===============================================================
-
                 Dim x00 As Integer
                 Dim x01 As Integer
 
@@ -2232,7 +1923,6 @@ Module Module2
                     x01 = 40
                 End If
                 xp = 0 : yp = 0 : yp0 = 0
-
                 Dim p As Integer = 0
                 If PropertyTable IsNot Nothing AndAlso PropertyTable.Rows.Count > 0 Then
                     If DispStartPosition < M_Data.Length AndAlso M_Data(DispStartPosition) IsNot Nothing Then
@@ -2258,7 +1948,6 @@ Module Module2
                     g.Dispose()
                     Exit Sub
                 End If
-
                 dbl1 = X_SCL
                 dbl2 = X_kousa / 5
                 If dbl2 = 0 Then dbl2 = 1
@@ -2270,14 +1959,11 @@ Module Module2
                     yp0 = ((X_USL + X_LSL) / 2 - X_SCL)
                     yp = yp0 * Bairitu
                 End If
-
                 ul = yp + yh - (X_USL - dblLow) * Bairitu
                 g.DrawLine(HPen, 0, ul, 1500, ul)
                 ll = yp + yh - (X_LSL - dblLow) * Bairitu
                 g.DrawLine(HPen, 0, ll, 1500, ll)
-
                 yps = yp + yh - (X_CL - dblLow) * Bairitu
-
                 If X_Shiguma <> 0 Then
                     For j = 0 To 100
                         Dim y_plus As Integer = CInt(yps + j * X_Shiguma / strStep * x00)
@@ -2290,15 +1976,12 @@ Module Module2
                         g.DrawLine(BPen, xp, yp + j * x00, xp + 36 * 30, yp + j * x00)
                     Next
                 End If
-
                 HistogramCount = 0
                 Dim EndIndex As Integer = DispStartPosition + 29
-
                 For i = DispStartPosition To EndIndex
                     If i > UBound(M_Data) Then Exit For
                     If M_Data(i) Is Nothing Then Continue For
                     strData = readMaster(M_Data(i), _X)
-
                     If strData <> "" AndAlso IsNumeric(strData) Then
                         If HistogramCount < UBound(HistogramBuf) Then
                             HistogramBuf(HistogramCount) = strData
@@ -2306,7 +1989,6 @@ Module Module2
                         End If
                     End If
                 Next
-
                 If X_Shiguma = 0 And HistogramCount > 1 Then
                     Dim h_sum As Double = 0
                     Dim h_sumSq As Double = 0
@@ -2320,7 +2002,6 @@ Module Module2
                     If h_var > 0 Then X_Shiguma = Math.Sqrt(h_var)
                     If X_CL = 0 Then X_CL = h_mean
                 End If
-
                 If X_Shiguma <= 0.000001 Then X_Shiguma = dbl2
                 yps = yp + yh - (X_CL - dblLow) * Bairitu
 
@@ -2343,10 +2024,8 @@ Module Module2
                 If X_Shiguma <> 0 Then
                     For i = 0 To HistogramCount - 1
                         dblData = Val(HistogramBuf(i))
-
                         If dblData > (X_CL - (X_Shiguma / 2)) And dblData <= (X_CL + (X_Shiguma / 2)) Then
                             n_Cl_s1 += 1
-
                         ElseIf dblData > (X_CL - (X_Shiguma / 2)) Then
                             If dblData <= (X_CL + X_Shiguma * 1.5) Then
                                 n_s1_s2 += 1
@@ -2367,7 +2046,6 @@ Module Module2
                             Else
                                 n_s9_s10 += 1
                             End If
-
                         ElseIf dblData <= (X_CL - (X_Shiguma / 2)) Then
                             If dblData > (X_CL - X_Shiguma * 1.5) Then
                                 n_Cl_ms1 += 1
@@ -2393,7 +2071,6 @@ Module Module2
                         End If
                     Next
                 End If
-
                 Dim maxCount As Integer = 0
                 Dim allCounts() As Integer = {n_Cl_s1, n_s1_s2, n_s2_s3, n_s3_s4, n_s4_s5, n_s5_s6, n_s6_s7, n_s7_s8, n_s8_s9, n_s9_s10,
                                               n_Cl_ms1, n_ms1_ms2, n_ms2_ms3, n_ms3_ms4, n_ms4_ms5, n_ms5_ms6, n_ms6_ms7, n_ms7_ms8, n_ms8_ms9, n_ms9_ms10}
@@ -2408,7 +2085,6 @@ Module Module2
                     Dim gridx As Integer = CInt(xp + j * dynamicBarWidth)
                     g.DrawLine(BPen, gridx, 0, gridx, 1000)
                 Next
-
                 Dim lbl24, lbl25, lbl26, lbl27, lbl28 As System.Windows.Forms.Label
                 If Size = "MAX" Then
                     lbl24 = Form1.Label24 : lbl25 = Form1.Label25 : lbl26 = Form1.Label26 : lbl27 = Form1.Label27 : lbl28 = Form1.Label28
@@ -2417,7 +2093,6 @@ Module Module2
                 Else
                     lbl24 = FormSmall.Label24 : lbl25 = FormSmall.Label25 : lbl26 = FormSmall.Label26 : lbl27 = FormSmall.Label27 : lbl28 = FormSmall.Label28
                 End If
-
                 lbl24.Text = "0"
                 lbl25.Text = Format(ScaleUnit * 1).ToString()
                 lbl26.Text = Format(ScaleUnit * 2).ToString()
@@ -2440,7 +2115,6 @@ Module Module2
                 HistoRects.Add(New Rectangle(0, CInt(yps), Cl_ms1, barH))
                 HistoCounts.Add(n_Cl_ms1)
                 For j = 0 To CInt(X_Shiguma / strStep * x00)
-
                     If j = 0 Then
                         g.DrawLine(B1Pen, 0, j + yps, Cl_ms1, j + yps)
                     ElseIf j = CInt(X_Shiguma / strStep * x00) Then
@@ -2758,28 +2432,20 @@ Module Module2
             g.Dispose()
         Catch ex As Exception
         End Try
-
     End Sub
 
     Public Function getTreeData() As String(,)
-
         getTreeData = Nothing
         Dim _TreeRist(,) As String
-
-
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
         Dim strSQL As String = ""
         Dim P_Table As New DataTable
         Dim AMP_Table As New DataTable
-
         Try
-
             Cn.ConnectionString = StrServerConnection
             P_Table.Clear()
-
             strSQL = "SELECT DISTINCT "
-
             For i As Integer = 0 To 10 - 1
                 strSQL &= "cTreeName" & i + 1
                 If Not i = 10 - 1 Then
@@ -2787,31 +2453,22 @@ Module Module2
                 End If
             Next
             strSQL &= " AS Tree"
-
             strSQL &= " FROM SPC_Property"
-
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
             Adapter.SelectCommand.CommandType = CommandType.Text
             Adapter.Fill(P_Table)
             P_Table.Dispose()
-
             If P_Table.Rows.Count = 0 Then
                 Return Nothing
             End If
-
             ReDim _TreeRist(P_Table.Rows.Count - 1, 2 - 1)
-
             For i As Integer = 0 To UBound(_TreeRist, 1)
                 _TreeRist(i, 0) = P_Table.Rows(i)("Tree")
                 _TreeRist(i, 1) = "0"
             Next
-
-
             AMP_Table.Clear()
-
             strSQL = "SELECT DISTINCT "
-
             For i As Integer = 0 To 10 - 1
                 strSQL &= "SPC_Alarm.cTreeName" & i + 1
                 If Not i = 10 - 1 Then
@@ -2848,13 +2505,11 @@ Module Module2
                     Exit For
                 Next
             Next
-
             Adapter.Dispose()
             Cn.Dispose()
             P_Table.Dispose()
             AMP_Table.Dispose()
             Return _TreeRist
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
@@ -2884,28 +2539,22 @@ Module Module2
         Else
             Exit Sub
         End If
-
         If _mode = "R" Then
             If MRFlag = True Then
                 _mode = "MR"
             End If
         End If
-
         dc = 0
-
-        For i = 0 To 31
+        For i = 0 To 29 * Graphsmallcount
+            If i >= xpnbuf_X.Length Then Exit For
             If _mode = "X" Then
-
                 If Not (xpnbuf_X(i) - 10 < mx1 And xpnbuf_X(i) + 10 > mx1) Then Continue For
-
                 If 0 < ypnbuf_X(i) Then
                     If Not (ypnbuf_X(i) - 10 < my1 And ypnbuf_X(i) + 10 > my1) Then Continue For
                 End If
                 dc = 1
                 Exit For
             ElseIf _mode = "R" Or _mode = "MR" Then
-
-
                 If Not (xpnbuf_R(i) - 10 < mx1 And xpnbuf_R(i) + 10 > mx1) Then Continue For
 
                 If 0 < ypnbuf_R(i) Then
@@ -2913,26 +2562,20 @@ Module Module2
                 End If
                 dc = 1
                 Exit For
-
             End If
-
         Next
-
         If dc = 0 Then
             i_old = 1000
             FormPopupNew.Close()
             Exit Sub
         End If
-
         If i_old = i Then Exit Sub
-
         Dim form_top As Integer
         Dim form_left As Integer
         Dim pic1_top As Integer
         Dim pic1_left As Integer
         Dim pic4_top As Integer
         Dim pic4_left As Integer
-
         If Form1.Visible = True Then
             form_top = Form1.Top
             form_left = Form1.Left
@@ -2955,7 +2598,6 @@ Module Module2
             pic4_top = FormSmall.PictureBox4.Top
             pic4_left = FormSmall.PictureBox4.Left
         End If
-
         Dim pic_top As Integer
         Dim pic_left As Integer
         If _mode = "X" Then
@@ -2965,23 +2607,59 @@ Module Module2
             pic_top = pic1_top
             pic_left = pic1_left
         End If
-
         mouseY = form_top + pic_top + 30
-
         i_old = i
         Display_Popup(i, _mode)
-
-
     End Sub
-
+    Private ImageToPrint As Bitmap
+    Public Sub ExportToPDF(ByVal targetForm As System.Windows.Forms.Form)
+        Try
+            Dim menuHeight As Integer = 0
+            For Each ctrl As Control In targetForm.Controls
+                If TypeOf ctrl Is MenuStrip AndAlso ctrl.Visible Then
+                    menuHeight = ctrl.Height
+                    Exit For
+                End If
+            Next
+            Dim clientW As Integer = targetForm.ClientSize.Width
+            Dim clientH As Integer = targetForm.ClientSize.Height
+            ImageToPrint = New Bitmap(clientW, clientH)
+            Using g As Graphics = Graphics.FromImage(ImageToPrint)
+                g.CopyFromScreen(targetForm.PointToScreen(New Point(0, menuHeight)), New Point(0, 0), New Size(clientW, clientH))
+            End Using
+            Dim sfd As New SaveFileDialog()
+            sfd.Filter = "PDF Files (*.pdf)|*.pdf"
+            sfd.FileName = "SPC_Chart_" & DateTime.Now.ToString("yyyyMMdd_HHmmss") & ".pdf"
+            If sfd.ShowDialog() = DialogResult.OK Then
+                Dim pd As New PrintDocument()
+                pd.PrinterSettings.PrinterName = "Microsoft Print to PDF"
+                pd.PrinterSettings.PrintToFile = True
+                pd.PrinterSettings.PrintFileName = sfd.FileName
+                pd.PrintController = New StandardPrintController()
+                pd.DefaultPageSettings.Landscape = True
+                AddHandler pd.PrintPage, AddressOf PrintPageHandler
+                pd.Print()
+                MsgBox("Export to PDF Successful!", MsgBoxStyle.Information)
+            End If
+        Catch ex As Exception
+            StrErrMes = "PDF Export Error: " & ex.Message
+            Call SaveLog(Now(), StrErrMes)
+        End Try
+    End Sub
+    Private Sub PrintPageHandler(ByVal sender As Object, ByVal e As PrintPageEventArgs)
+        If ImageToPrint IsNot Nothing Then
+            Dim margin As Integer = 10
+            Dim destRect As New Rectangle(margin, margin, e.MarginBounds.Width, e.MarginBounds.Height)
+            e.Graphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+            e.Graphics.DrawImage(ImageToPrint, destRect)
+        End If
+    End Sub
 
     Public Sub Display_Popup(ByVal d As Integer, ByVal Mode As String)
         Dim po As Integer
         Dim temp() As String
         Dim strAlarmName As String = ""
-
         Dim x1, x2, x3, x4, y0, y1, y2, y3, y4, y5, y6, y7, Lot0_x, Lot0_y, Lot_x, Lot_y, Va0_x, Va0_y, Va_x, Va_y As Integer
-
         x1 = 10
         x2 = 3
         x3 = 10
@@ -3000,22 +2678,28 @@ Module Module2
         Va_x = Va0_x
         Va_y = Va0_y
         x4 = x1
-
         Lot_x = Va_x + x3 + Va0_x + x2 + Va_x
         Lot_y = Lot0_y
-
         po = DispStartPosition + d
-
         If M_Data Is Nothing Then Exit Sub
-
         If po < 0 OrElse po > UBound(M_Data) Then Exit Sub
-
         If M_Data(po) Is Nothing Then Exit Sub
-
-        If po >= MesureValueBuf.Length Then Exit Sub
-
+        Dim p_idx As Integer = 0
+        If Mode = "X" Then
+            p_idx = 0
+        ElseIf Mode = "R" Then
+            p_idx = 1
+        Else
+            p_idx = 2
+        End If
+        Dim alarmStatus As String = readMaster(M_Alarm(po)(p_idx), 0)
+        Dim isAlarm As Boolean = (alarmStatus <> "0" And alarmStatus <> "")
+        If isAlarm Then
+            FormPopupNew.BackColor = Color.Red
+        Else
+            FormPopupNew.BackColor = Color.FromArgb(255, 255, 128)
+        End If
         If readMaster(M_Data(po), _X) <> "" Then
-
             Try
                 For i = 0 To FormPopupNew.Values0.Length - 1
                     FormPopupNew.Controls.Remove(FormPopupNew.Values0(i))
@@ -3024,15 +2708,12 @@ Module Module2
                     FormPopupNew.Controls.Remove(FormPopupNew.Values(i))
                 Next
             Catch ex As Exception
-
             End Try
-
             temp = Split(MesureValueBuf(po), ",")
             Dim leng As Integer = UBound(temp, 1) + 1
             If 20 < leng Then leng = 20
             FormPopupNew.Values0 = New System.Windows.Forms.Label(leng - 1) {}
             FormPopupNew.SuspendLayout()
-
             For i As Integer = 0 To UBound(FormPopupNew.Values0, 1)
                 FormPopupNew.Values0(i) = New System.Windows.Forms.Label
                 FormPopupNew.Values0(i).Name = "Values0" & (i).ToString()
@@ -3045,14 +2726,10 @@ Module Module2
                 FormPopupNew.Values0(i).Size = New System.Drawing.Size(Va0_x, Va0_y)
                 FormPopupNew.Values0(i).BackColor = Color.FromArgb(255, 255, 128)
             Next
-
             FormPopupNew.Controls.AddRange(FormPopupNew.Values0)
             FormPopupNew.ResumeLayout(False)
-
-
             FormPopupNew.Values = New System.Windows.Forms.Label(leng - 1) {}
             FormPopupNew.SuspendLayout()
-
             For i As Integer = 0 To UBound(FormPopupNew.Values, 1)
                 FormPopupNew.Values(i) = New System.Windows.Forms.Label
                 FormPopupNew.Values(i).Name = "Values" & (i).ToString()
@@ -3065,30 +2742,23 @@ Module Module2
                 FormPopupNew.Values(i).Size = New System.Drawing.Size(Va_x, Va_y)
                 FormPopupNew.Values(i).BackColor = Color.FromArgb(255, 255, 255)
             Next
-
             FormPopupNew.Controls.AddRange(FormPopupNew.Values)
             FormPopupNew.ResumeLayout(False)
-
-
-
             FormPopupNew.Labels = New System.Windows.Forms.Label(12 - 1) {}
             FormPopupNew.SuspendLayout()
-
             For i As Integer = 0 To UBound(FormPopupNew.Labels, 1)
                 FormPopupNew.Labels(i) = New System.Windows.Forms.Label
                 FormPopupNew.Labels(i).Name = "Labels" & (i).ToString()
-
                 FormPopupNew.Labels(i).Font = New Font("Meiryo UI", 10)
                 FormPopupNew.Labels(i).AutoSize = False
                 FormPopupNew.Labels(i).TextAlign = ContentAlignment.MiddleCenter
                 FormPopupNew.Labels(i).BorderStyle = BorderStyle.FixedSingle
-                FormPopupNew.Labels(i).BackColor = Color.FromArgb(215, 255, 255)
+                'FormPopupNew.Labels(i).BackColor = Color.FromArgb(215, 255, 255)
                 If i Mod 2 = 1 Then
                     FormPopupNew.Labels(i).BorderStyle = BorderStyle.Fixed3D
                     FormPopupNew.Labels(i).BackColor = Color.FromArgb(255, 255, 255)
                 End If
             Next
-
             'Data
             FormPopupNew.Labels(0).Text = "Date"
             FormPopupNew.Labels(0).Location = New Point(x1, y0)
@@ -3136,8 +2806,6 @@ Module Module2
             FormPopupNew.Labels(9).Location = New Point(FormPopupNew.Labels(8).Right + x2, FormPopupNew.Labels(8).Top)
             FormPopupNew.Labels(9).Size = New System.Drawing.Size(Lot0_x, Lot0_y)
 
-
-
             Dim SPCMes(8 - 1) As String
             If StrLanguage = "Japanese" Then
                 SPCMes(0) = "?1??3???????"
@@ -3177,11 +2845,6 @@ Module Module2
                     End If
                 Next
             End If
-
-
-
-
-
             'Alarm
             FormPopupNew.Labels(10).Text = "Alarm"
             FormPopupNew.Labels(10).Location = New Point(FormPopupNew.Labels(0).Left, FormPopupNew.Labels(6).Bottom + y6)
@@ -3190,36 +2853,31 @@ Module Module2
             FormPopupNew.Labels(11).Location = New Point(FormPopupNew.Labels(1).Left, FormPopupNew.Labels(10).Top)
             FormPopupNew.Labels(11).Size = New System.Drawing.Size(Lot_x, Lot0_y * 4 - 15)
             FormPopupNew.Labels(11).TextAlign = ContentAlignment.TopLeft
-
             FormPopupNew.Controls.AddRange(FormPopupNew.Labels)
             FormPopupNew.ResumeLayout(False)
-
-
             FormPopupNew.Width = x1 + ((UBound(FormPopupNew.Values, 1) \ 5) + 1) * (Va0_x + x2 + Va_x + x3) - x3 + x4 + 6 '+6????
             FormPopupNew.Height = FormPopupNew.Labels(11).Bottom + y7 + 29
-
-
             If FormPopupNew.Width < x1 + Va0_x + x2 + Va_x + x3 + Va0_x + x2 + Va_x + x4 + 6 Then
                 FormPopupNew.Width = x1 + Va0_x + x2 + Va_x + x3 + Va0_x + x2 + Va_x + x4 + 6
             End If
+            For i As Integer = 0 To UBound(FormPopupNew.Labels, 1)
+                FormPopupNew.Labels(i).BackColor = If(isAlarm, Color.Red, Color.FromArgb(215, 255, 255))
+                If i Mod 2 = 1 Then
+                    FormPopupNew.Labels(i).BackColor = If(isAlarm, Color.MistyRose, Color.White)
+                End If
+            Next
             'MsgBox(x1 & " " & (UBound(FormPopupNew.Values, 1) \ 5) & " " & (Va0_x + x2 + Va_x + x3) - x3 + x4)
             FormPopupNew.Show()
-
         End If
-
     End Sub
-
 
     Public Sub alarmInfo(ByVal mx1 As Integer, ByVal my1 As Integer, ByVal objName As String, ByVal btnName As String)
         If M_Data Is Nothing Then Exit Sub
         FormAlarmDisp.Close()
         FormAlarmInput.Close()
         FormPopupNew.Close()
-
         Dim dc, i As Integer
-
         Dim _mode As String
-
         If objName = "PictureBox1" Then
             _mode = "X"
         ElseIf objName = "PictureBox2" Then
@@ -3227,39 +2885,27 @@ Module Module2
         Else
             Exit Sub
         End If
-
         If _mode = "R" Then
             If MRFlag = True Then
                 _mode = "MR"
             End If
         End If
-
-
         dc = 0
         For i = 0 To 31
-
             If _mode = "X" Then
-
                 If Not (xpnbuf_X(i) - 10 < mx1 And xpnbuf_X(i) + 10 > mx1) Then Continue For
                 ypnbuf_X(i) = my1
                 dc = 1
                 Exit For
-
             ElseIf _mode = "R" Or _mode = "MR" Then
-
                 If Not (xpnbuf_R(i) - 10 < mx1 And xpnbuf_R(i) + 10 > mx1) Then Continue For
                 ypnbuf_R(i) = my1
                 dc = 1
                 Exit For
-
             End If
         Next
-
-
         If dc = 0 Then Exit Sub
-
         SerectPoint = DispStartPosition + i
-
         Dim p As Integer = 0
         If _mode = "X" Then
             p = 0
@@ -3270,69 +2916,49 @@ Module Module2
         Else
             Exit Sub
         End If
-
-        If InStr(M_Alarm(SerectPoint)(p), "1") = 0 Then Exit Sub '??????
-
-
-        If btnName = "Right" Then '?????
-            '???????????????????????
+        If InStr(M_Alarm(SerectPoint)(p), "1") = 0 Then Exit Sub
+        If btnName = "Right" Then
             Get_AlarmInfo("Write", _mode)
             FormAlarmInput.Show()
-        ElseIf btnName = "Left" Then    '???????????????????????
-            '??????????????
+        ElseIf btnName = "Left" Then
             Get_AlarmInfo("Read", _mode)
             FormAlarmDisp.Show()
         End If
-
-
     End Sub
 
-    '??????????????????
     Public Sub Get_AlarmInfo(ByVal _RorW As String, ByVal _mode As String) '???ID???? ModeRead or Write
         Dim strID As String = readMaster(M_Data(SerectPoint), _id)
-
         Dim Cn As New System.Data.SqlClient.SqlConnection
         Dim Adapter As New SqlDataAdapter
         Dim strSQL As String = ""
         Dim table As New DataTable
         Dim n As Integer
         Try
-
             Cn.ConnectionString = StrServerConnection
             table.Clear()
-
             strSQL = "SELECT *"
             strSQL &= " FROM SPC_Alarm"
             strSQL &= " WHERE iID = '" & strID & "'"
-
             For i As Integer = 0 To UBound(TreeName, 1)
                 strSQL &= " AND"
                 strSQL &= " cTreeName" & i + 1 & " = '" & TreeName(i) & "'"
             Next
-
             strSQL &= " AND cGraphFormat = '" & _mode & "'"
-
             Adapter = New SqlDataAdapter()
             Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
             Adapter.SelectCommand.CommandType = CommandType.Text
             Adapter.Fill(table)
             n = table.Rows.Count
-
             Adapter.Dispose()
             Cn.Dispose()
-
             If n = 0 Then
                 table.Dispose()
                 Exit Sub
             End If
-
-
             Display_AlarmInfo(table, _RorW, _mode)
-
         Catch ex As System.Exception
             Adapter.Dispose()
             Cn.Dispose()
-
             StrErrMes = "????????????" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now(), StrErrMes)
             Exit Sub
@@ -3475,16 +3101,11 @@ Module Module2
 
                 FormAlarmInput.TextMode.Text = _mode
             End If
-
         Catch ex As Exception
             ' บันทึก Error แต่ไม่เด้งปิดโปรแกรม
             StrErrMes = "Alarm Info Display Error: " & ex.Message
             Call SaveLog(Now(), StrErrMes)
         End Try
     End Sub
-
 #End Region
-
-
-
 End Module

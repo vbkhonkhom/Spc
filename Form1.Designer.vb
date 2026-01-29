@@ -27,7 +27,6 @@ Partial Class Form1
         Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.TreeView1 = New System.Windows.Forms.TreeView()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.PictureBox7 = New System.Windows.Forms.PictureBox()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
@@ -59,7 +58,6 @@ Partial Class Form1
         Me.labUCL = New System.Windows.Forms.Label()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
-        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.PictureBox5 = New System.Windows.Forms.PictureBox()
@@ -99,7 +97,6 @@ Partial Class Form1
         Me.LabelBase = New System.Windows.Forms.Label()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
-        Me.Label21 = New System.Windows.Forms.Label()
         Me.LabLoCpk = New System.Windows.Forms.Label()
         Me.LabUpCpk = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
@@ -137,13 +134,15 @@ Partial Class Form1
         Me.txtStan_No = New System.Windows.Forms.Label()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.PictureBox10 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox11 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
         CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -151,6 +150,10 @@ Partial Class Form1
         CType(Me.PictureBox6, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
+        CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ListBox1
@@ -180,21 +183,11 @@ Partial Class Form1
         Me.ImageList1.Images.SetKeyName(0, "Screenshot (27).png")
         Me.ImageList1.Images.SetKeyName(1, "Screenshot (26) - Copy.png")
         '
-        'PictureBox1
-        '
-        Me.PictureBox1.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.PictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.PictureBox1.Location = New System.Drawing.Point(357, 104)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(904, 464)
-        Me.PictureBox1.TabIndex = 48
-        Me.PictureBox1.TabStop = False
-        '
         'PictureBox2
         '
         Me.PictureBox2.BackColor = System.Drawing.Color.WhiteSmoke
         Me.PictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.PictureBox2.Location = New System.Drawing.Point(357, 685)
+        Me.PictureBox2.Location = New System.Drawing.Point(357, 705)
         Me.PictureBox2.Name = "PictureBox2"
         Me.PictureBox2.Size = New System.Drawing.Size(903, 275)
         Me.PictureBox2.TabIndex = 50
@@ -220,7 +213,7 @@ Partial Class Form1
         Me.GroupBox2.Controls.Add(Me.Label41)
         Me.GroupBox2.Controls.Add(Me.Label42)
         Me.GroupBox2.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.GroupBox2.Location = New System.Drawing.Point(1329, 835)
+        Me.GroupBox2.Location = New System.Drawing.Point(1329, 855)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(212, 124)
         Me.GroupBox2.TabIndex = 141
@@ -290,7 +283,7 @@ Partial Class Form1
         'Label28
         '
         Me.Label28.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label28.Location = New System.Drawing.Point(1512, 573)
+        Me.Label28.Location = New System.Drawing.Point(1514, 585)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(35, 19)
         Me.Label28.TabIndex = 139
@@ -300,7 +293,7 @@ Partial Class Form1
         'Label27
         '
         Me.Label27.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label27.Location = New System.Drawing.Point(1461, 573)
+        Me.Label27.Location = New System.Drawing.Point(1463, 585)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(35, 19)
         Me.Label27.TabIndex = 138
@@ -310,7 +303,7 @@ Partial Class Form1
         'Label26
         '
         Me.Label26.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label26.Location = New System.Drawing.Point(1409, 573)
+        Me.Label26.Location = New System.Drawing.Point(1411, 585)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(35, 19)
         Me.Label26.TabIndex = 137
@@ -320,7 +313,7 @@ Partial Class Form1
         'Label25
         '
         Me.Label25.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label25.Location = New System.Drawing.Point(1358, 573)
+        Me.Label25.Location = New System.Drawing.Point(1360, 585)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(35, 19)
         Me.Label25.TabIndex = 136
@@ -330,7 +323,7 @@ Partial Class Form1
         'Label24
         '
         Me.Label24.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label24.Location = New System.Drawing.Point(1307, 573)
+        Me.Label24.Location = New System.Drawing.Point(1309, 585)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(35, 19)
         Me.Label24.TabIndex = 135
@@ -342,7 +335,7 @@ Partial Class Form1
         Me.labRCL.BackColor = System.Drawing.Color.White
         Me.labRCL.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.labRCL.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.labRCL.Location = New System.Drawing.Point(1267, 795)
+        Me.labRCL.Location = New System.Drawing.Point(1267, 815)
         Me.labRCL.Name = "labRCL"
         Me.labRCL.Size = New System.Drawing.Size(57, 20)
         Me.labRCL.TabIndex = 133
@@ -354,7 +347,7 @@ Partial Class Form1
         Me.labRUCL.BackColor = System.Drawing.Color.White
         Me.labRUCL.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.labRUCL.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.labRUCL.Location = New System.Drawing.Point(1267, 762)
+        Me.labRUCL.Location = New System.Drawing.Point(1267, 782)
         Me.labRUCL.Name = "labRUCL"
         Me.labRUCL.Size = New System.Drawing.Size(57, 20)
         Me.labRUCL.TabIndex = 132
@@ -365,7 +358,7 @@ Partial Class Form1
         '
         Me.PictureBox9.BackColor = System.Drawing.Color.WhiteSmoke
         Me.PictureBox9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.PictureBox9.Location = New System.Drawing.Point(1330, 104)
+        Me.PictureBox9.Location = New System.Drawing.Point(1332, 116)
         Me.PictureBox9.Name = "PictureBox9"
         Me.PictureBox9.Size = New System.Drawing.Size(203, 464)
         Me.PictureBox9.TabIndex = 134
@@ -382,7 +375,7 @@ Partial Class Form1
         Me.GroupBox1.Controls.Add(Me.Label32)
         Me.GroupBox1.Controls.Add(Me.Label31)
         Me.GroupBox1.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.GroupBox1.Location = New System.Drawing.Point(1329, 690)
+        Me.GroupBox1.Location = New System.Drawing.Point(1329, 710)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(212, 148)
         Me.GroupBox1.TabIndex = 140
@@ -475,7 +468,7 @@ Partial Class Form1
         Me.labLCL.BackColor = System.Drawing.Color.White
         Me.labLCL.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.labLCL.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.labLCL.Location = New System.Drawing.Point(1267, 382)
+        Me.labLCL.Location = New System.Drawing.Point(1268, 389)
         Me.labLCL.Name = "labLCL"
         Me.labLCL.Size = New System.Drawing.Size(57, 20)
         Me.labLCL.TabIndex = 144
@@ -487,7 +480,7 @@ Partial Class Form1
         Me.labCL.BackColor = System.Drawing.Color.White
         Me.labCL.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.labCL.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.labCL.Location = New System.Drawing.Point(1266, 316)
+        Me.labCL.Location = New System.Drawing.Point(1267, 323)
         Me.labCL.Name = "labCL"
         Me.labCL.Size = New System.Drawing.Size(58, 20)
         Me.labCL.TabIndex = 143
@@ -499,7 +492,7 @@ Partial Class Form1
         Me.labUCL.BackColor = System.Drawing.Color.White
         Me.labUCL.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.labUCL.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.labUCL.Location = New System.Drawing.Point(1267, 245)
+        Me.labUCL.Location = New System.Drawing.Point(1268, 252)
         Me.labUCL.Name = "labUCL"
         Me.labUCL.Size = New System.Drawing.Size(57, 20)
         Me.labUCL.TabIndex = 142
@@ -510,32 +503,23 @@ Partial Class Form1
         '
         Me.Button3.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button3.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button3.Location = New System.Drawing.Point(1194, 55)
+        Me.Button3.Location = New System.Drawing.Point(1192, 71)
         Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(68, 47)
+        Me.Button3.Size = New System.Drawing.Size(71, 38)
         Me.Button3.TabIndex = 151
-        Me.Button3.Text = "->" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Next"
+        Me.Button3.Text = "Next->"
         Me.Button3.UseVisualStyleBackColor = True
         '
         'Button2
         '
         Me.Button2.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button2.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button2.Location = New System.Drawing.Point(1120, 55)
+        Me.Button2.Location = New System.Drawing.Point(1121, 71)
         Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(68, 47)
+        Me.Button2.Size = New System.Drawing.Size(71, 38)
         Me.Button2.TabIndex = 150
-        Me.Button2.Text = "<-" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Back"
+        Me.Button2.Text = "<-Back"
         Me.Button2.UseVisualStyleBackColor = True
-        '
-        'PictureBox4
-        '
-        Me.PictureBox4.BackColor = System.Drawing.Color.White
-        Me.PictureBox4.Location = New System.Drawing.Point(299, 568)
-        Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.Size = New System.Drawing.Size(963, 79)
-        Me.PictureBox4.TabIndex = 153
-        Me.PictureBox4.TabStop = False
         '
         'Label22
         '
@@ -543,7 +527,7 @@ Partial Class Form1
         Me.Label22.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
         Me.Label22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label22.Font = New System.Drawing.Font("Meiryo UI", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label22.Location = New System.Drawing.Point(302, 59)
+        Me.Label22.Location = New System.Drawing.Point(303, 66)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(87, 39)
         Me.Label22.TabIndex = 154
@@ -556,7 +540,7 @@ Partial Class Form1
         Me.Label1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
         Me.Label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label1.Font = New System.Drawing.Font("Meiryo UI", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label1.Location = New System.Drawing.Point(358, 647)
+        Me.Label1.Location = New System.Drawing.Point(358, 667)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(39, 39)
         Me.Label1.TabIndex = 155
@@ -576,11 +560,11 @@ Partial Class Form1
         '
         Me.labTitle.BackColor = System.Drawing.Color.SteelBlue
         Me.labTitle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.labTitle.Font = New System.Drawing.Font("Impact", 21.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.labTitle.Font = New System.Drawing.Font("Leelawadee", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.labTitle.ForeColor = System.Drawing.SystemColors.ControlLightLight
-        Me.labTitle.Location = New System.Drawing.Point(344, 15)
+        Me.labTitle.Location = New System.Drawing.Point(360, 31)
         Me.labTitle.Name = "labTitle"
-        Me.labTitle.Size = New System.Drawing.Size(954, 38)
+        Me.labTitle.Size = New System.Drawing.Size(902, 34)
         Me.labTitle.TabIndex = 158
         Me.labTitle.Text = "　　　Control chart"
         Me.labTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -598,7 +582,7 @@ Partial Class Form1
         'LabUnit
         '
         Me.LabUnit.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.LabUnit.Location = New System.Drawing.Point(289, 99)
+        Me.LabUnit.Location = New System.Drawing.Point(290, 106)
         Me.LabUnit.Name = "LabUnit"
         Me.LabUnit.Size = New System.Drawing.Size(60, 15)
         Me.LabUnit.TabIndex = 171
@@ -608,7 +592,7 @@ Partial Class Form1
         'Label11
         '
         Me.Label11.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label11.Location = New System.Drawing.Point(292, 526)
+        Me.Label11.Location = New System.Drawing.Point(293, 533)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(57, 15)
         Me.Label11.TabIndex = 170
@@ -618,7 +602,7 @@ Partial Class Form1
         'Label10
         '
         Me.Label10.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label10.Location = New System.Drawing.Point(292, 486)
+        Me.Label10.Location = New System.Drawing.Point(293, 493)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(57, 15)
         Me.Label10.TabIndex = 169
@@ -628,7 +612,7 @@ Partial Class Form1
         'Label9
         '
         Me.Label9.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label9.Location = New System.Drawing.Point(292, 446)
+        Me.Label9.Location = New System.Drawing.Point(293, 453)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(57, 15)
         Me.Label9.TabIndex = 168
@@ -638,7 +622,7 @@ Partial Class Form1
         'Label8
         '
         Me.Label8.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label8.Location = New System.Drawing.Point(292, 406)
+        Me.Label8.Location = New System.Drawing.Point(293, 413)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(57, 15)
         Me.Label8.TabIndex = 167
@@ -648,7 +632,7 @@ Partial Class Form1
         'Label7
         '
         Me.Label7.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label7.Location = New System.Drawing.Point(292, 366)
+        Me.Label7.Location = New System.Drawing.Point(293, 373)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(57, 15)
         Me.Label7.TabIndex = 166
@@ -658,7 +642,7 @@ Partial Class Form1
         'Label6
         '
         Me.Label6.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label6.Location = New System.Drawing.Point(292, 326)
+        Me.Label6.Location = New System.Drawing.Point(293, 333)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(57, 15)
         Me.Label6.TabIndex = 165
@@ -668,7 +652,7 @@ Partial Class Form1
         'Label5
         '
         Me.Label5.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label5.Location = New System.Drawing.Point(292, 286)
+        Me.Label5.Location = New System.Drawing.Point(293, 293)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(57, 15)
         Me.Label5.TabIndex = 164
@@ -678,7 +662,7 @@ Partial Class Form1
         'Label4
         '
         Me.Label4.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label4.Location = New System.Drawing.Point(292, 246)
+        Me.Label4.Location = New System.Drawing.Point(293, 253)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(57, 15)
         Me.Label4.TabIndex = 163
@@ -688,7 +672,7 @@ Partial Class Form1
         'Label3
         '
         Me.Label3.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label3.Location = New System.Drawing.Point(292, 206)
+        Me.Label3.Location = New System.Drawing.Point(293, 213)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(57, 15)
         Me.Label3.TabIndex = 162
@@ -698,7 +682,7 @@ Partial Class Form1
         'Label12
         '
         Me.Label12.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label12.Location = New System.Drawing.Point(292, 166)
+        Me.Label12.Location = New System.Drawing.Point(293, 173)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(57, 15)
         Me.Label12.TabIndex = 161
@@ -708,7 +692,7 @@ Partial Class Form1
         'Label13
         '
         Me.Label13.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label13.Location = New System.Drawing.Point(292, 126)
+        Me.Label13.Location = New System.Drawing.Point(293, 133)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(57, 15)
         Me.Label13.TabIndex = 160
@@ -718,7 +702,7 @@ Partial Class Form1
         'Label30
         '
         Me.Label30.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label30.Location = New System.Drawing.Point(301, 708)
+        Me.Label30.Location = New System.Drawing.Point(301, 728)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(50, 15)
         Me.Label30.TabIndex = 180
@@ -728,7 +712,7 @@ Partial Class Form1
         'Label29
         '
         Me.Label29.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label29.Location = New System.Drawing.Point(301, 738)
+        Me.Label29.Location = New System.Drawing.Point(301, 758)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(50, 15)
         Me.Label29.TabIndex = 179
@@ -738,7 +722,7 @@ Partial Class Form1
         'Label18
         '
         Me.Label18.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label18.Location = New System.Drawing.Point(301, 951)
+        Me.Label18.Location = New System.Drawing.Point(301, 971)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(50, 15)
         Me.Label18.TabIndex = 178
@@ -748,7 +732,7 @@ Partial Class Form1
         'Label17
         '
         Me.Label17.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label17.Location = New System.Drawing.Point(301, 918)
+        Me.Label17.Location = New System.Drawing.Point(301, 938)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(50, 15)
         Me.Label17.TabIndex = 177
@@ -758,7 +742,7 @@ Partial Class Form1
         'Label16
         '
         Me.Label16.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label16.Location = New System.Drawing.Point(301, 888)
+        Me.Label16.Location = New System.Drawing.Point(301, 908)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(50, 15)
         Me.Label16.TabIndex = 176
@@ -768,7 +752,7 @@ Partial Class Form1
         'Label15
         '
         Me.Label15.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label15.Location = New System.Drawing.Point(301, 858)
+        Me.Label15.Location = New System.Drawing.Point(301, 878)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(50, 15)
         Me.Label15.TabIndex = 175
@@ -778,7 +762,7 @@ Partial Class Form1
         'Label14
         '
         Me.Label14.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label14.Location = New System.Drawing.Point(301, 828)
+        Me.Label14.Location = New System.Drawing.Point(301, 848)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(50, 15)
         Me.Label14.TabIndex = 174
@@ -788,7 +772,7 @@ Partial Class Form1
         'Label19
         '
         Me.Label19.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label19.Location = New System.Drawing.Point(301, 798)
+        Me.Label19.Location = New System.Drawing.Point(301, 818)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(50, 15)
         Me.Label19.TabIndex = 173
@@ -798,7 +782,7 @@ Partial Class Form1
         'Label20
         '
         Me.Label20.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label20.Location = New System.Drawing.Point(301, 768)
+        Me.Label20.Location = New System.Drawing.Point(301, 788)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(50, 15)
         Me.Label20.TabIndex = 172
@@ -816,7 +800,7 @@ Partial Class Form1
         'Label36
         '
         Me.Label36.Font = New System.Drawing.Font("MS UI Gothic", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label36.Location = New System.Drawing.Point(301, 678)
+        Me.Label36.Location = New System.Drawing.Point(301, 698)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(50, 15)
         Me.Label36.TabIndex = 187
@@ -853,7 +837,7 @@ Partial Class Form1
         '
         Me.Button7.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button7.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button7.Location = New System.Drawing.Point(423, 650)
+        Me.Button7.Location = New System.Drawing.Point(423, 670)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(43, 32)
         Me.Button7.TabIndex = 195
@@ -864,7 +848,7 @@ Partial Class Form1
         '
         Me.Button9.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button9.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button9.Location = New System.Drawing.Point(481, 650)
+        Me.Button9.Location = New System.Drawing.Point(481, 670)
         Me.Button9.Name = "Button9"
         Me.Button9.Size = New System.Drawing.Size(43, 32)
         Me.Button9.TabIndex = 196
@@ -875,12 +859,13 @@ Partial Class Form1
         '
         Me.GroupBox3.Controls.Add(Me.LabelBase)
         Me.GroupBox3.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.GroupBox3.Location = New System.Drawing.Point(1329, 599)
+        Me.GroupBox3.Location = New System.Drawing.Point(1329, 619)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(212, 93)
         Me.GroupBox3.TabIndex = 141
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Standard"
+        Me.GroupBox3.Visible = False
         '
         'LabelBase
         '
@@ -904,28 +889,17 @@ Partial Class Form1
         '
         'GroupBox4
         '
-        Me.GroupBox4.Controls.Add(Me.Label21)
         Me.GroupBox4.Controls.Add(Me.LabLoCpk)
         Me.GroupBox4.Controls.Add(Me.LabUpCpk)
         Me.GroupBox4.Controls.Add(Me.Label40)
         Me.GroupBox4.Controls.Add(Me.Label38)
         Me.GroupBox4.Font = New System.Drawing.Font("Meiryo UI", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.GroupBox4.Location = New System.Drawing.Point(1329, 0)
+        Me.GroupBox4.Location = New System.Drawing.Point(1330, 31)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(199, 104)
+        Me.GroupBox4.Size = New System.Drawing.Size(205, 80)
         Me.GroupBox4.TabIndex = 142
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Cpk"
-        '
-        'Label21
-        '
-        Me.Label21.Font = New System.Drawing.Font("Meiryo UI", 11.25!)
-        Me.Label21.Location = New System.Drawing.Point(19, 64)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(163, 39)
-        Me.Label21.TabIndex = 214
-        Me.Label21.Text = "(Calculated with the displayed 30 points)"
-        Me.Label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'LabLoCpk
         '
@@ -1150,7 +1124,7 @@ Partial Class Form1
         Me.LabelQC.AutoSize = True
         Me.LabelQC.Font = New System.Drawing.Font("MS UI Gothic", 36.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.LabelQC.ForeColor = System.Drawing.Color.Red
-        Me.LabelQC.Location = New System.Drawing.Point(692, 166)
+        Me.LabelQC.Location = New System.Drawing.Point(693, 173)
         Me.LabelQC.Name = "LabelQC"
         Me.LabelQC.Size = New System.Drawing.Size(235, 48)
         Me.LabelQC.TabIndex = 203
@@ -1167,7 +1141,7 @@ Partial Class Form1
         'TextItem
         '
         Me.TextItem.Font = New System.Drawing.Font("Meiryo UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.TextItem.Location = New System.Drawing.Point(393, 64)
+        Me.TextItem.Location = New System.Drawing.Point(394, 71)
         Me.TextItem.Name = "TextItem"
         Me.TextItem.Size = New System.Drawing.Size(653, 28)
         Me.TextItem.TabIndex = 213
@@ -1185,18 +1159,57 @@ Partial Class Form1
         'Button1
         '
         Me.Button1.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(192, Byte), Integer))
-        Me.Button1.Location = New System.Drawing.Point(1052, 64)
+        Me.Button1.Location = New System.Drawing.Point(1053, 71)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(60, 27)
         Me.Button1.TabIndex = 215
         Me.Button1.Text = "Load"
         Me.Button1.UseVisualStyleBackColor = False
         '
+        'PictureBox10
+        '
+        Me.PictureBox10.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.PictureBox10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PictureBox10.Location = New System.Drawing.Point(357, 116)
+        Me.PictureBox10.Name = "PictureBox10"
+        Me.PictureBox10.Size = New System.Drawing.Size(902, 464)
+        Me.PictureBox10.TabIndex = 48
+        Me.PictureBox10.TabStop = False
+        '
+        'PictureBox11
+        '
+        Me.PictureBox11.BackColor = System.Drawing.Color.White
+        Me.PictureBox11.Location = New System.Drawing.Point(298, 581)
+        Me.PictureBox11.Name = "PictureBox11"
+        Me.PictureBox11.Size = New System.Drawing.Size(961, 79)
+        Me.PictureBox11.TabIndex = 153
+        Me.PictureBox11.TabStop = False
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.PictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PictureBox1.Location = New System.Drawing.Point(356, 116)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(902, 464)
+        Me.PictureBox1.TabIndex = 216
+        Me.PictureBox1.TabStop = False
+        '
+        'PictureBox4
+        '
+        Me.PictureBox4.BackColor = System.Drawing.Color.White
+        Me.PictureBox4.Location = New System.Drawing.Point(298, 581)
+        Me.PictureBox4.Name = "PictureBox4"
+        Me.PictureBox4.Size = New System.Drawing.Size(961, 79)
+        Me.PictureBox4.TabIndex = 217
+        Me.PictureBox4.TabStop = False
+        '
         'Form1
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.LightSteelBlue
-        Me.ClientSize = New System.Drawing.Size(1547, 978)
+        Me.ClientSize = New System.Drawing.Size(1547, 992)
+        Me.Controls.Add(Me.PictureBox4)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.txtStan_No)
         Me.Controls.Add(Me.TextItem)
@@ -1237,7 +1250,7 @@ Partial Class Form1
         Me.Controls.Add(Me.PictureBox3)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Label22)
-        Me.Controls.Add(Me.PictureBox4)
+        Me.Controls.Add(Me.PictureBox11)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.labLCL)
@@ -1255,16 +1268,16 @@ Partial Class Form1
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.PictureBox7)
         Me.Controls.Add(Me.PictureBox2)
-        Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.TreeView1)
         Me.Controls.Add(Me.ListBox1)
         Me.Controls.Add(Me.MenuStrip1)
+        Me.Controls.Add(Me.PictureBox1)
+        Me.Controls.Add(Me.PictureBox10)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.MainMenuStrip = Me.MenuStrip1
         Me.MaximizeBox = False
         Me.Name = "Form1"
         Me.Text = "SPC"
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox7, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
@@ -1272,7 +1285,6 @@ Partial Class Form1
         CType(Me.PictureBox9, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox5, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
@@ -1283,13 +1295,16 @@ Partial Class Form1
         CType(Me.PictureBox8, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
+        CType(Me.PictureBox10, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox11, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
     Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
     Friend WithEvents TreeView1 As System.Windows.Forms.TreeView
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents PictureBox2 As System.Windows.Forms.PictureBox
     Friend WithEvents PictureBox7 As System.Windows.Forms.PictureBox
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
@@ -1321,7 +1336,6 @@ Partial Class Form1
     Friend WithEvents labUCL As System.Windows.Forms.Label
     Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents PictureBox4 As System.Windows.Forms.PictureBox
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents PictureBox5 As System.Windows.Forms.PictureBox
@@ -1392,7 +1406,6 @@ Partial Class Form1
     Friend WithEvents ServerToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents DeleteAlarmTableToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TextItem As System.Windows.Forms.TextBox
-    Friend WithEvents Label21 As System.Windows.Forms.Label
     Friend WithEvents AboutToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SoftwareVersion206ToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents StandardNoToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -1400,4 +1413,8 @@ Partial Class Form1
     Friend WithEvents Button1 As Button
     Private WithEvents ImageList1 As ImageList
     Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents PictureBox10 As PictureBox
+    Friend WithEvents PictureBox11 As PictureBox
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents PictureBox4 As PictureBox
 End Class

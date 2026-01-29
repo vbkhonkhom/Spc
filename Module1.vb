@@ -44,6 +44,8 @@ Module Module1
     Public ServerName As String
     Public StrLanguage As String '翻訳言語
     Public StrResolution As String '解像度
+    Public IsAlarmActive As Boolean = False
+
 
     'グラフ作成用変数
     Public X_USL, X_LSL, X_SCL, X_kousa As Double 'XBar側規格値

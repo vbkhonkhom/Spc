@@ -4,9 +4,9 @@
     Public Labels() As System.Windows.Forms.Label
 
     Private Sub FormPopupNew_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        If IsAlarmActive Then Me.BackColor = Color.Red : Me.Refresh()
         Dim s As System.Windows.Forms.Screen = System.Windows.Forms.Screen.FromControl(Me)
         Me.Top = mouseY
         'Me.Left = mouseX
     End Sub
-
 End Class

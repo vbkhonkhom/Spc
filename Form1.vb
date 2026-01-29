@@ -5,6 +5,8 @@ Imports System.Text
 Imports System.Runtime.InteropServices
 Imports System.Net
 Imports System.Data.SqlClient
+Imports System.Drawing.Printing
+Imports SPC_Yukuhashi_Server
 
 Public Class Form1
     Dim myHostName As String
@@ -265,8 +267,6 @@ Public Class Form1
         TreeDisp_Server_New(TreeRist, FormSmall.TreeView1)
     End Sub
 
-
-
     Private Sub TreeDisp_Server_New(ByVal _TreeRist(,) As String, ByVal _TreeView As TreeView)
 
 
@@ -349,7 +349,7 @@ Public Class Form1
                 For k As Integer = 0 To UBound(_TreeRist, 1) 'アラームありか確認
                     If InStr(_TreeRist(k, 0), Tree(i)(j)) Then
                         If _TreeRist(k, 1) = "1" Then
-                            Kfile = 1
+                            Kfile = 1 : IsAlarmActive = True
                         End If
                     End If
                 Next
@@ -883,8 +883,8 @@ Public Class Form1
 
     End Sub
 
-    Private Sub ExToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ExToolStripMenuItem.Click
-
+    Private Sub ExToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExToolStripMenuItem.Click
+        Call Module2.ExportToPDF(Me)
     End Sub
 
     Private Sub DToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DToolStripMenuItem.Click
@@ -969,7 +969,6 @@ Public Class Form1
         'proc.Start()                              ' （3）
     End Sub
 
-
     Private Sub Button10_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Dim proc As New Process()                 ' （1）
         proc.StartInfo.FileName = "C:\ProductMonitor_Converter\ProductMonitor_Converter\bin\X86\Release\ProductMonitor_Converter.exe"    ' （2）
@@ -990,7 +989,6 @@ Public Class Form1
         Dim strSQL As String
         Dim SQLCm As SqlCommand = Cn.CreateCommand
         Dim trans As SqlTransaction
-
         Try
             Cn.ConnectionString = StrServerConnection
             Cn.Open()
@@ -1130,6 +1128,7 @@ Public Class Form1
             Input_CSV = "Input_CSV " & eCode & Environment.NewLine & ex.Message & Environment.NewLine & ex.StackTrace
         End Try
     End Function
+
     Public Function To_Server0(ByVal Array(,) As String, ByVal Array_Header(,) As String, ByVal TName As String, ByVal Del As Integer) As String
         To_Server0 = ""
         Dim eCode As String = ""
@@ -1333,9 +1332,7 @@ Public Class Form1
                 End If
                 StrResolution = "MAX"
                 UpdateButtonState()
-
                 GraphDisp()
-
                 Me.Text = "SPC System - " & System.IO.Path.GetFileName(selectedPath)
             End If
         End If
@@ -1613,11 +1610,7 @@ Public Class Form1
         End Try
     End Sub
     Private Sub PictureBox1_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox1.MouseMove
-        Try
-            Module2.popUp(e.X, e.Y, "PictureBox1")
-        Catch ex As Exception
-
-        End Try
+        Call Module2.popUp(e.X, e.Y, "PictureBox1")
     End Sub
     Private Sub PictureBox2_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox2.MouseMove
         Try
@@ -1626,7 +1619,7 @@ Public Class Form1
 
         End Try
     End Sub
-    Private Sub PictureBox1_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox1.MouseDown
+    Private Sub PictureBox1_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox10.MouseDown
         Try
             If e.Button = MouseButtons.Left Then
                 Module2.alarmInfo(e.X, e.Y, "PictureBox1", "Left")
@@ -1713,6 +1706,141 @@ Public Class Form1
                 End If
             End If
         End If
+    End Sub
+
+    Private Sub Label38_Click(sender As Object, e As EventArgs) Handles Label38.Click
+
+    End Sub
+
+    Private Sub Label8_Click(sender As Object, e As EventArgs) Handles Label8.Click
+
+    End Sub
+
+    Private Sub Label9_Click(sender As Object, e As EventArgs) Handles Label9.Click
+
+    End Sub
+
+    Private Sub Label10_Click(sender As Object, e As EventArgs) Handles Label10.Click
+
+    End Sub
+
+    Private Sub Label11_Click(sender As Object, e As EventArgs) Handles Label11.Click
+
+    End Sub
+
+    Private Sub Label7_Click(sender As Object, e As EventArgs) Handles Label7.Click
+
+    End Sub
+
+    Private Sub Label6_Click(sender As Object, e As EventArgs) Handles Label6.Click
+
+    End Sub
+
+    Private Sub Label5_Click(sender As Object, e As EventArgs) Handles Label5.Click
+
+    End Sub
+
+    Private Sub Label4_Click(sender As Object, e As EventArgs) Handles Label4.Click
+
+    End Sub
+
+    Private Sub Label3_Click(sender As Object, e As EventArgs) Handles Label3.Click
+
+    End Sub
+
+    Private Sub Label12_Click(sender As Object, e As EventArgs) Handles Label12.Click
+
+    End Sub
+
+    Private Sub Label13_Click(sender As Object, e As EventArgs) Handles Label13.Click
+
+    End Sub
+
+    Private Sub LabUnit_Click(sender As Object, e As EventArgs) Handles LabUnit.Click
+
+    End Sub
+
+    Private Sub Label22_Click(sender As Object, e As EventArgs) Handles Label22.Click
+
+    End Sub
+
+    Private Sub TextItem_TextChanged(sender As Object, e As EventArgs) Handles TextItem.TextChanged
+
+    End Sub
+
+    Private Sub PictureBox10_Click(sender As Object, e As EventArgs) Handles PictureBox10.Click
+
+    End Sub
+
+    Private Sub labTitle_Click(sender As Object, e As EventArgs) Handles labTitle.Click
+
+    End Sub
+
+    Private Sub Label40_Click(sender As Object, e As EventArgs) Handles Label40.Click
+
+    End Sub
+
+    Private Sub GroupBox4_Enter(sender As Object, e As EventArgs) Handles GroupBox4.Enter
+
+    End Sub
+
+    Private Sub PictureBox11_Click(sender As Object, e As EventArgs) Handles PictureBox11.Click
+
+    End Sub
+
+    Private Sub LabLoCpk_Click(sender As Object, e As EventArgs) Handles LabLoCpk.Click
+
+    End Sub
+
+    Private Sub LabUpCpk_Click(sender As Object, e As EventArgs) Handles LabUpCpk.Click
+
+    End Sub
+
+    Private Sub PictureBox9_Click(sender As Object, e As EventArgs) Handles PictureBox9.Click
+
+    End Sub
+
+    Private Sub labUCL_Click(sender As Object, e As EventArgs) Handles labUCL.Click
+
+    End Sub
+
+    Private Sub labCL_Click(sender As Object, e As EventArgs) Handles labCL.Click
+
+    End Sub
+
+    Private Sub LabelQC_Click(sender As Object, e As EventArgs) Handles LabelQC.Click
+
+    End Sub
+
+    Private Sub labLCL_Click(sender As Object, e As EventArgs) Handles labLCL.Click
+
+    End Sub
+
+    Private Sub Label24_Click(sender As Object, e As EventArgs) Handles Label24.Click
+
+    End Sub
+
+    Private Sub Label25_Click(sender As Object, e As EventArgs) Handles Label25.Click
+
+    End Sub
+
+    Private Sub Label26_Click(sender As Object, e As EventArgs) Handles Label26.Click
+
+    End Sub
+
+    Private Sub Label27_Click(sender As Object, e As EventArgs) Handles Label27.Click
+
+    End Sub
+
+    Private Sub Label28_Click(sender As Object, e As EventArgs) Handles Label28.Click
+
+    End Sub
+
+    Private Sub PictureBox4_Click(sender As Object, e As EventArgs) Handles PictureBox4.Click
+
+    End Sub
+
+    Private Sub PictureBox4_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox4.MouseMove
 
     End Sub
 End Class
