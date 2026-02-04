@@ -1,4 +1,5 @@
 ﻿Public Class FormProperty
+
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
         strStartDate = DateTimePicker1.Value
         strAlarmStartDate = DateTimePicker2.Value
@@ -17,11 +18,15 @@
             DateTimePicker4.Value = PropertyTable.Rows(PropertyTable.Rows.Count - 1)("dStartDate")
             DateTimePicker3.Value = PropertyTable.Rows(PropertyTable.Rows.Count - 1)("aStartDate")
         End If
+
+
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         'Form1.SPCData_Export()
     End Sub
+
+
     Private Sub SaveFileDialog1_FileOk(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles SaveFileDialog1.FileOk
 
     End Sub
@@ -31,6 +36,6 @@
     End Sub
 
     Private Sub Button2_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
-        Form1.UPDATE_d_a_StartDate(DateTimePicker4.Value, DateTimePicker3.Value, 0)
+        Form1.UPDATE_d_a_StartDate(DateTimePicker4.Value, DateTimePicker3.Value, 0)     
     End Sub
 End Class

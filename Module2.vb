@@ -2614,29 +2614,28 @@ Module Module2
     Private ImageToPrint As Bitmap
     Public Sub ExportToPDF(ByVal targetForm As System.Windows.Forms.Form)
         Try
-            Dim menuHeight As Integer = 0
-            For Each ctrl As Control In targetForm.Controls
-                If TypeOf ctrl Is MenuStrip AndAlso ctrl.Visible Then
-                    menuHeight = ctrl.Height
-                    Exit For
-                End If
-            Next
-            Dim clientW As Integer = targetForm.ClientSize.Width
-            Dim clientH As Integer = targetForm.ClientSize.Height
-            ImageToPrint = New Bitmap(clientW, clientH)
-            Using g As Graphics = Graphics.FromImage(ImageToPrint)
-                g.CopyFromScreen(targetForm.PointToScreen(New Point(0, menuHeight)), New Point(0, 0), New Size(clientW, clientH))
-            End Using
             Dim sfd As New SaveFileDialog()
             sfd.Filter = "PDF Files (*.pdf)|*.pdf"
             sfd.FileName = "SPC_Chart_" & DateTime.Now.ToString("yyyyMMdd_HHmmss") & ".pdf"
+
             If sfd.ShowDialog() = DialogResult.OK Then
                 Dim pd As New PrintDocument()
                 pd.PrinterSettings.PrinterName = "Microsoft Print to PDF"
+
+                pd.PrintController = New StandardPrintController()
+
                 pd.PrinterSettings.PrintToFile = True
                 pd.PrinterSettings.PrintFileName = sfd.FileName
-                pd.PrintController = New StandardPrintController()
+
                 pd.DefaultPageSettings.Landscape = True
+                For Each paper As PaperSize In pd.PrinterSettings.PaperSizes
+                    If paper.Kind = PaperKind.A4 Then
+                        pd.DefaultPageSettings.PaperSize = paper
+                        Exit For
+                    End If
+                Next
+
+                pd.DefaultPageSettings.Margins = New Margins(40, 40, 40, 40)
                 AddHandler pd.PrintPage, AddressOf PrintPageHandler
                 pd.Print()
                 MsgBox("Export to PDF Successful!", MsgBoxStyle.Information)
@@ -2644,15 +2643,151 @@ Module Module2
         Catch ex As Exception
             StrErrMes = "PDF Export Error: " & ex.Message
             Call SaveLog(Now(), StrErrMes)
+            MsgBox("Error" & ex.Message)
         End Try
     End Sub
     Private Sub PrintPageHandler(ByVal sender As Object, ByVal e As PrintPageEventArgs)
-        If ImageToPrint IsNot Nothing Then
-            Dim margin As Integer = 10
-            Dim destRect As New Rectangle(margin, margin, e.MarginBounds.Width, e.MarginBounds.Height)
-            e.Graphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
-            e.Graphics.DrawImage(ImageToPrint, destRect)
+        Dim g As Graphics = e.Graphics
+        Dim m As Rectangle = e.MarginBounds
+        Dim curY As Integer = m.Top
+
+        'Dim graphScale As Double = 0.9
+        'Dim destWidth As Integer = CInt(m.Width * graphScale)
+
+        'Dim posX As Integer = m.Left + (m.Width - destWidth) / 2
+
+        Dim titleFont As New Font("Arial", 18, FontStyle.Bold)
+        Dim headerFont As New Font("Arial", 10, FontStyle.Bold)
+        Dim normalFont As New Font("Arial", 10, FontStyle.Regular)
+        Dim labelFont As New Font("Arial", 7, FontStyle.Regular)
+        Dim countFont As New Font("Arial", 6, FontStyle.Regular)
+
+        g.DrawString("STATISTICAL PROCESS CONTROL REPORT", titleFont, Brushes.Black, m.Left, curY)
+        curY += 40
+        g.DrawLine(New Pen(Color.Black, 2), m.Left, curY, m.Right, curY)
+        curY += 10
+
+        If PropertyTable IsNot Nothing AndAlso PropertyTable.Rows.Count > 0 Then
+            g.DrawString("Machine: " & PropertyTable.Rows(PropertyNo)("cMachineNo"), headerFont, Brushes.Black, m.Left, curY)
+            g.DrawString("Item: " & PropertyTable.Rows(PropertyNo)("cControlItem"), headerFont, Brushes.Black, m.Left + 300, curY)
         End If
+
+        Dim dateStr As String = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+        g.DrawString("Date: " & dateStr, normalFont, Brushes.Black, m.Right - 167, curY)
+        curY += 25
+
+        Dim tableRect As New Rectangle(m.Left, curY, m.Width, 35)
+        g.FillRectangle(New SolidBrush(Color.FromArgb(240, 248, 255)), tableRect)
+        g.DrawRectangle(Pens.Black, tableRect)
+
+        Dim statsText As String = String.Format("UCL: {0} | CL: {1} | LCL: {2} | Cpk (Upper): {3} | Cpk (Lower): {4}",
+                                                Form1.TextUCL.Text, Form1.TextCL.Text, Form1.TextLCL.Text, Form1.LabUpCpk.Text, Form1.LabLoCpk.Text)
+        g.DrawString(statsText, headerFont, Brushes.DarkBlue, m.Left + 10, curY + 12)
+        curY += 55
+
+        Dim commonGraphHeight As Integer = 250
+        Dim scaleSpace As Integer = 50
+        Dim srcWidth30Slots As Integer = 901
+
+        If Form1.PictureBox1.Image IsNot Nothing Then
+            Dim xBarWidth As Integer = CInt(m.Width * 0.8)
+            Dim dRectX As New Rectangle(m.Left + scaleSpace, curY, xBarWidth, commonGraphHeight)
+            Dim histoWidth As Integer = CInt((m.Width * 0.15) - 9.5)
+
+
+            For i As Integer = 0 To 10
+                If i < Form1.LabXBar.Length Then
+                    Dim labelY As Integer = dRectX.Top + CInt(i * (commonGraphHeight / 10))
+                    g.DrawString(Form1.LabXBar(i).Text, labelFont, Brushes.Black, m.Left + 5, labelY - 5)
+                End If
+            Next
+
+            Dim srcY As Integer = 100
+            Dim srcH As Integer = 250
+
+            Dim sRectX As New Rectangle(0, srcY, srcWidth30Slots, srcH)
+
+            g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+            g.DrawImage(Form1.PictureBox1.Image, dRectX, sRectX, GraphicsUnit.Pixel)
+            g.DrawRectangle(Pens.Black, dRectX)
+
+            Dim dRectH As New Rectangle(dRectX.Right + 10, curY, histoWidth, commonGraphHeight)
+            g.DrawRectangle(Pens.Black, dRectH)
+
+            Dim localCount(9) As Integer
+            Dim localMaxCount As Integer = 0
+
+            Dim valTop As Double = Val(Form1.LabXBar(0).Text)
+            Dim valBottom As Double = Val(Form1.LabXBar(10).Text)
+            Dim totalRange As Double = valTop - valBottom
+
+            Dim kPos As Integer = DispStartPosition
+            For j As Integer = 0 To 29
+                If kPos < SPCDataNum Then
+                    Dim valX As Double = Val(readMaster(M_Data(kPos), _X))
+                    If totalRange > 0 Then
+                        Dim ratio As Double = (valTop - valX) / totalRange
+                        Dim binIndex As Integer = CInt(Math.Floor(ratio * 10))
+
+                        If binIndex >= 0 And binIndex <= 9 Then
+                            localCount(binIndex) += 1
+                            If localCount(binIndex) > localMaxCount Then localMaxCount = localCount(binIndex)
+                        End If
+                    End If
+                End If
+                kPos += 1
+            Next
+
+            If localMaxCount > 0 Then
+                Dim slotHeight As Single = CSng(commonGraphHeight / 10.0F)
+                Dim barThickness As Single = slotHeight * 0.6F
+
+                For i As Integer = 0 To 9
+                    Dim barWidth As Single = (localCount(i) / localMaxCount) * (dRectH.Width - 2)
+                    Dim bx As Single = dRectH.Left + 1
+                    Dim by As Single = dRectH.Top + (i * slotHeight) + (slotHeight - barThickness) / 2
+                    g.FillRectangle(New SolidBrush(Color.FromArgb(180, 102, 204)), bx, by, barWidth, barThickness)
+                    g.DrawRectangle(Pens.Black, bx, by, barWidth, barThickness)
+                Next
+            End If
+            curY += commonGraphHeight + 15
+
+            Using redDashPen As New Pen(Color.Red, 1)
+                redDashPen.DashStyle = Drawing2D.DashStyle.Dash
+                Dim uclY As Single = dRectH.Top + CSng(((valTop - Val(Form1.TextUCL.Text)) / totalRange) * commonGraphHeight)
+                Dim lclY As Single = dRectH.Top + CSng(((valTop - Val(Form1.TextLCL.Text)) / totalRange) * commonGraphHeight)
+
+                If uclY >= dRectH.Top And uclY <= dRectH.Bottom Then
+                    g.DrawLine(redDashPen, dRectH.Left, uclY, dRectH.Right, uclY)
+                End If
+                If lclY >= dRectH.Top And lclY <= dRectH.Bottom Then
+                    g.DrawLine(redDashPen, dRectH.Left, lclY, dRectH.Right, lclY)
+                End If
+            End Using
+        End If
+        If Form1.PictureBox4.Image IsNot Nothing Then
+            Dim gridRect As New Rectangle(m.Left - 9, curY, m.Width - 159, 80)
+            Dim sRectG As New Rectangle(0, 0, 960, 79)
+            g.DrawImage(Form1.PictureBox4.Image, gridRect, sRectG, GraphicsUnit.Pixel)
+            g.DrawRectangle(Pens.Black, gridRect)
+            curY += gridRect.Height + 20
+        End If
+        If Form1.PictureBox2.Image IsNot Nothing Then
+            Dim rChartWidth As Integer = CInt(m.Width * 0.8)
+
+            For i As Integer = 0 To 9
+                If i < Form1.LabR.Length Then
+                    Dim labelY As Integer = curY + CInt(i * (commonGraphHeight / 9))
+                    g.DrawString(Form1.LabR(i).Text, labelFont, Brushes.Black, m.Left + 5, labelY - 5)
+                End If
+            Next
+            Dim dRectR As New Rectangle(m.Left + scaleSpace, curY, rChartWidth, commonGraphHeight)
+            Dim sRectR As New Rectangle(0, 0, srcWidth30Slots, Form1.PictureBox2.Image.Height)
+            g.DrawImage(Form1.PictureBox2.Image, dRectR, sRectR, GraphicsUnit.Pixel)
+            g.DrawRectangle(Pens.Black, dRectR)
+        End If
+
+        'g.DrawString("Authorized Signature", normalFont, Brushes.Black, m.Right - 350, m.Bottom - 10)
     End Sub
 
     Public Sub Display_Popup(ByVal d As Integer, ByVal Mode As String)
@@ -2684,17 +2819,19 @@ Module Module2
         If M_Data Is Nothing Then Exit Sub
         If po < 0 OrElse po > UBound(M_Data) Then Exit Sub
         If M_Data(po) Is Nothing Then Exit Sub
-        Dim p_idx As Integer = 0
+        Dim isOverLimit As Boolean = False
         If Mode = "X" Then
-            p_idx = 0
-        ElseIf Mode = "R" Then
-            p_idx = 1
-        Else
-            p_idx = 2
+            Dim currentValX As Double = Val(readMaster(M_Data(po), _X))
+            If currentValX > X_UCL Or currentValX < X_LCL Then
+                isOverLimit = True
+            End If
+        ElseIf Mode = "R" Or Mode = "MR" Then
+            Dim currentValR As Double = Val(readMaster(M_Data(po), _R))
+            If currentValR > R_UCL Then
+                isOverLimit = True
+            End If
         End If
-        Dim alarmStatus As String = readMaster(M_Alarm(po)(p_idx), 0)
-        Dim isAlarm As Boolean = (alarmStatus <> "0" And alarmStatus <> "")
-        If isAlarm Then
+        If isOverLimit Then
             FormPopupNew.BackColor = Color.Red
         Else
             FormPopupNew.BackColor = Color.FromArgb(255, 255, 128)
@@ -2724,7 +2861,7 @@ Module Module2
                 FormPopupNew.Values0(i).BorderStyle = BorderStyle.None
                 FormPopupNew.Values0(i).Location = New Point(x1 + (i \ 5) * (Va0_x + x2 + Va_x + x3), y0 + Lot0_y + y1 + Lot0_y + y2 + (i Mod 5) * (Va0_y + y3))
                 FormPopupNew.Values0(i).Size = New System.Drawing.Size(Va0_x, Va0_y)
-                FormPopupNew.Values0(i).BackColor = Color.FromArgb(255, 255, 128)
+                FormPopupNew.Values0(i).BackColor = If(isOverLimit, Color.Red, Color.FromArgb(255, 255, 128))
             Next
             FormPopupNew.Controls.AddRange(FormPopupNew.Values0)
             FormPopupNew.ResumeLayout(False)
@@ -2753,10 +2890,13 @@ Module Module2
                 FormPopupNew.Labels(i).AutoSize = False
                 FormPopupNew.Labels(i).TextAlign = ContentAlignment.MiddleCenter
                 FormPopupNew.Labels(i).BorderStyle = BorderStyle.FixedSingle
-                'FormPopupNew.Labels(i).BackColor = Color.FromArgb(215, 255, 255)
+                If isOverLimit Then
+                    FormPopupNew.Labels(i).BackColor = If(i Mod 2 = 1, Color.White, Color.FromArgb(215, 255, 255))
+                Else
+                    FormPopupNew.Labels(i).BackColor = If(i Mod 2 = 1, Color.White, Color.FromArgb(215, 255, 255))
+                End If
                 If i Mod 2 = 1 Then
                     FormPopupNew.Labels(i).BorderStyle = BorderStyle.Fixed3D
-                    FormPopupNew.Labels(i).BackColor = Color.FromArgb(255, 255, 255)
                 End If
             Next
             'Data
@@ -2826,22 +2966,20 @@ Module Module2
                 SPCMes(6) = "?Seven consective points fall continuous rise or descent"
                 SPCMes(7) = "?Fourteen consective points fall alternate up and down"
             End If
-            Dim p As Integer = 0
+            Dim p_idx As Integer = 0
             If Mode = "X" Then
-                p = 0
+                p_idx = 0
             ElseIf Mode = "R" Then
-                p = 1
+                p_idx = 1
             ElseIf Mode = "MR" Then
-                p = 2
+                p_idx = 2
             End If
 
-            Dim naiyou As String = "00000000"
-
-            naiyou = readMaster(M_Alarm(po)(p), 1)
-            If Not naiyou = "" Then
+            Dim naiyou As String = readMaster(M_Alarm(po)(p_idx), 1)
+            If Not String.IsNullOrEmpty(naiyou) Then
                 For i As Integer = 0 To naiyou.Length - 1
-                    If CBool(naiyou.Substring(i, 1)) Then
-                        strAlarmName &= SPCMes(i)
+                    If i < SPCMes.Length AndAlso naiyou.Substring(i, 1) = "1" Then
+                        strAlarmName &= SPCMes(i) & Environment.NewLine
                     End If
                 Next
             End If
@@ -2855,18 +2993,9 @@ Module Module2
             FormPopupNew.Labels(11).TextAlign = ContentAlignment.TopLeft
             FormPopupNew.Controls.AddRange(FormPopupNew.Labels)
             FormPopupNew.ResumeLayout(False)
-            FormPopupNew.Width = x1 + ((UBound(FormPopupNew.Values, 1) \ 5) + 1) * (Va0_x + x2 + Va_x + x3) - x3 + x4 + 6 '+6????
+            FormPopupNew.Width = x1 + ((UBound(FormPopupNew.Values, 1) \ 5) + 1) * (Va0_x + x2 + Va_x + x3) - x3 + x4 + 6
             FormPopupNew.Height = FormPopupNew.Labels(11).Bottom + y7 + 29
-            If FormPopupNew.Width < x1 + Va0_x + x2 + Va_x + x3 + Va0_x + x2 + Va_x + x4 + 6 Then
-                FormPopupNew.Width = x1 + Va0_x + x2 + Va_x + x3 + Va0_x + x2 + Va_x + x4 + 6
-            End If
-            For i As Integer = 0 To UBound(FormPopupNew.Labels, 1)
-                FormPopupNew.Labels(i).BackColor = If(isAlarm, Color.Red, Color.FromArgb(215, 255, 255))
-                If i Mod 2 = 1 Then
-                    FormPopupNew.Labels(i).BackColor = If(isAlarm, Color.MistyRose, Color.White)
-                End If
-            Next
-            'MsgBox(x1 & " " & (UBound(FormPopupNew.Values, 1) \ 5) & " " & (Va0_x + x2 + Va_x + x3) - x3 + x4)
+            If FormPopupNew.Width < 300 Then FormPopupNew.Width = 300
             FormPopupNew.Show()
         End If
     End Sub
