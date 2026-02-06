@@ -837,23 +837,25 @@ Partial Class Form1
         '
         Me.Button7.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button7.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button7.Location = New System.Drawing.Point(423, 670)
+        Me.Button7.Location = New System.Drawing.Point(474, 670)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(43, 32)
         Me.Button7.TabIndex = 195
         Me.Button7.Text = "MR"
         Me.Button7.UseVisualStyleBackColor = True
+        Me.Button7.Visible = False
         '
         'Button9
         '
         Me.Button9.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Button9.Font = New System.Drawing.Font("Meiryo UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Button9.Location = New System.Drawing.Point(481, 670)
+        Me.Button9.Location = New System.Drawing.Point(418, 670)
         Me.Button9.Name = "Button9"
         Me.Button9.Size = New System.Drawing.Size(43, 32)
         Me.Button9.TabIndex = 196
         Me.Button9.Text = "R"
         Me.Button9.UseVisualStyleBackColor = True
+        Me.Button9.Visible = False
         '
         'GroupBox3
         '

@@ -1512,8 +1512,9 @@ Public Class Form1
                     rawRow &= "0,"
                     rawRow &= strOp & ","
                     rawRow &= strLot & ","
-                    rawRow &= "Pass"
 
+                    rawRow &= cols(8).Trim() & ","
+                    rawRow &= cols(32).Trim() & ","
                     M_Data(SPCDataNum) = rawRow
                     MesureValueBuf(SPCDataNum) = valX.ToString("F3")
                     SPCDataNum += 1
