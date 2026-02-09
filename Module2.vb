@@ -2650,17 +2650,15 @@ Module Module2
         Dim g As Graphics = e.Graphics
         Dim m As Rectangle = e.MarginBounds
         Dim curY As Integer = m.Top
-        'Dim graphScale As Double = 0.9
-        'Dim destWidth As Integer = CInt(m.Width * graphScale)
-
-        'Dim posX As Integer = m.Left + (m.Width - destWidth) / 2
 
         Dim titleFont As New Font("Arial", 18, FontStyle.Bold)
         Dim headerFont As New Font("Arial", 10, FontStyle.Bold)
         Dim normalFont As New Font("Arial", 10, FontStyle.Regular)
         Dim labelFont As New Font("Arial", 7, FontStyle.Regular)
-        Dim countFont As New Font("Arial", 6, FontStyle.Regular)
-        Dim hFont As New Font("Arial", 6, FontStyle.Bold)
+        Dim smallFont As New Font("Arial", 6, FontStyle.Regular)
+        Dim redDashPen As New Pen(Color.Red, 2) With {.DashStyle = Drawing2D.DashStyle.Dash}
+        Dim blackGridPen As New Pen(Color.LightGray, 0.5)
+        Dim blueGridPen As New Pen(Color.Blue, 1.5)
 
         g.DrawString("STATISTICAL PROCESS CONTROL REPORT", titleFont, Brushes.Black, m.Left, curY)
         curY += 40
@@ -2692,46 +2690,116 @@ Module Module2
         g.DrawRectangle(Pens.Black, tableRect2)
         g.DrawString("XBar", headerFont, Brushes.Black, m.Left + 50, curY)
         curY += 20
+
         Dim commonGraphHeight As Integer = 230
         Dim scaleSpace As Integer = 50
+        Dim xBarWidth As Integer = CInt(m.Width * 0.8)
+        Dim histoWidth As Integer = CInt(m.Width * 0.145)
+
         Dim srcWidth30Slots As Integer = 901
+
         Dim valTop As Double = Val(Form1.LabXBar(0).Text)
         Dim valBot As Double = Val(Form1.LabXBar(10).Text)
         Dim vRange As Double = valTop - valBot
+        Dim uclVal As Double = Val(Form1.TextUCL.Text)
+        Dim lclVal As Double = Val(Form1.TextLCL.Text)
+        Dim clVal As Double = Val(Form1.TextCL.Text)
+        Dim sigmaVal As Double = Val(Form1.TextSiguma.Text)
+        If sigmaVal <= 0 Then sigmaVal = 1
 
-        If Form1.PictureBox1.Image IsNot Nothing Then
-            Dim xBarWidth As Integer = CInt(m.Width * 0.8)
-            Dim histoWidth As Integer = CInt(m.Width * 0.14)
-            Dim dRectX As New Rectangle(m.Left + scaleSpace, curY, xBarWidth, commonGraphHeight)
+        Dim dRectX As New Rectangle(m.Left + scaleSpace, curY, xBarWidth, commonGraphHeight)
+        Dim dRechH As New Rectangle(m.Left + xBarWidth + 60, curY, histoWidth, commonGraphHeight)
 
+        Dim uclY_math As Integer = dRectX.Bottom - CInt(((uclVal - valBot) / vRange) * commonGraphHeight)
+        Dim lclY_math As Integer = dRectX.Bottom - CInt(((lclVal - valBot) / vRange) * commonGraphHeight)
+
+        Dim getYFinal = Function(v As Double) As Integer
+                            If vRange <= 0 Then Return dRectX.Bottom
+                            Dim yRaw = dRectX.Bottom - CInt(((v - valBot) / vRange) * commonGraphHeight)
+                            Dim ratio = (yRaw - uclY_math) / (lclY_math - uclY_math)
+                            Dim offset = -5 + (ratio * (12 - (-5)))
+                            Return yRaw + CInt(offset)
+                        End Function
+        For Each rect In {dRectX, dRechH}
+            g.DrawRectangle(Pens.Black, rect)
             For i As Integer = 0 To 10
-                If i < Form1.LabXBar.Length Then
-                    Dim labelY As Integer = dRectX.Top + CInt(i * (commonGraphHeight / 10))
-                    g.DrawString(Form1.LabXBar(i).Text, labelFont, Brushes.Black, m.Left + 5, labelY - 5)
+                Dim ly = rect.Top + CInt(i * (commonGraphHeight / 10))
+                g.DrawLine(blackGridPen, rect.Left, ly, rect.Right, ly)
+                If rect.Equals(dRectX) Then g.DrawString(Form1.LabXBar(i).Text, labelFont, Brushes.Black, m.Left + 5, ly - 5)
+            Next
+            If rect.Equals(dRectX) Then
+                Dim slotW As Double = xBarWidth / 30.0
+                For j As Integer = 0 To 30
+                    Dim lx = CInt(rect.Left + (j * slotW))
+                    g.DrawLine(blackGridPen, lx, rect.Top, lx, rect.Bottom)
+                Next
+            End If
+            g.DrawLine(redDashPen, rect.Left, uclY_math - 5, rect.Right, uclY_math - 5)
+            g.DrawLine(redDashPen, rect.Left, lclY_math + 12, rect.Right, lclY_math + 12)
+        Next
+
+        Using waterMark As New Font("Arial", 80, FontStyle.Bold)
+            Using waterMarkBrush As New SolidBrush(Color.FromArgb(40, Color.Gray))
+                Dim waterMarkText As String = "XBar"
+                Dim textSize As SizeF = g.MeasureString(waterMarkText, waterMark)
+
+                Dim posX As Single = dRectX.Left + (dRectX.Width - textSize.Width) / 2
+                Dim posY As Single = dRectX.Top + (dRectX.Height - textSize.Height) / 2
+
+                g.DrawString(waterMarkText, waterMark, waterMarkBrush, posX, posY)
+            End Using
+        End Using
+
+        Dim slotWidth As Double = xBarWidth / 30.0
+        Dim lastPoint As Point = Point.Empty
+        For j As Integer = 0 To 29
+            Dim k = DispStartPosition + j
+            If k < SPCDataNum Then
+                Dim valX = Val(readMaster(M_Data(k), _X))
+                Dim px = CInt(dRectX.Left + (j * slotWidth) + (slotWidth / 2))
+                Dim py = getYFinal(valX)
+
+                If Not lastPoint.IsEmpty Then g.DrawLine(blueGridPen, lastPoint, New Point(px, py))
+
+                Dim dotColor = If(valX > uclVal Or valX < lclVal, Color.Red, Color.Blue)
+                g.FillEllipse(New SolidBrush(dotColor), px - 3, py - 3, 6, 6)
+                g.DrawEllipse(Pens.Black, px - 3, py - 3, 6, 6)
+                lastPoint = New Point(px, py)
+            End If
+        Next
+
+        If HistoCounts.Count > 0 Then
+            Dim maxCount = 1
+            For Each c In HistoCounts
+                If c > maxCount Then
+                    maxCount = c
                 End If
             Next
+            Dim barBrush = New SolidBrush(Color.FromArgb(140, 147, 112, 219))
 
-            g.DrawImage(Form1.PictureBox1.Image, dRectX, New Rectangle(0, 100, 901, 250), GraphicsUnit.Pixel)
-            g.DrawRectangle(Pens.Black, dRectX)
+            For i As Integer = 0 To HistoCounts.Count - 1
+                Dim vStart, vEnd As Double
+                If i < 10 Then
+                    vStart = lclVal - (sigmaVal * (i + 1.5)) : vEnd = lclVal - (sigmaVal * (i + 0.5))
+                ElseIf i < 10 Then
+                    vStart = clVal - (sigmaVal * 0.5) : vEnd = clVal + (sigmaVal * 0.5)
+                Else
+                    Dim pIdx = i - 11 : vStart = clVal + (sigmaVal * (pIdx + 0.5)) : vEnd = clVal + (sigmaVal * (pIdx + 1.5))
+                End If
 
-            Using waterMark As New Font("Arial", 80, FontStyle.Bold)
-                Using waterMarkBrush As New SolidBrush(Color.FromArgb(40, Color.Gray))
-                    Dim waterMarkText As String = "XBar"
-                    Dim textSize As SizeF = g.MeasureString(waterMarkText, waterMark)
+                Dim y1 = getYFinal(vStart), y2 = getYFinal(vEnd)
+                Dim barH = Math.Abs(y1 - y2), barY = Math.Min(y1, y2)
+                Dim barW = CInt((HistoCounts(i) / maxCount) * (histoWidth - 25))
 
-                    Dim posX As Single = dRectX.Left + (dRectX.Width - textSize.Width) / 2
-                    Dim posY As Single = dRectX.Top + (dRectX.Height - textSize.Height) / 2
-
-                    g.DrawString(waterMarkText, waterMark, waterMarkBrush, posX, posY)
-                End Using
-            End Using
-            If Form1.PictureBox9.Image IsNot Nothing Then
-                Dim dRechH As New Rectangle(m.Left + xBarWidth + 60, curY, histoWidth, commonGraphHeight)
-                g.DrawImage(Form1.PictureBox9.Image, dRechH)
-                g.DrawRectangle(Pens.Black, dRechH)
-            End If
-            curY += commonGraphHeight + 10
+                If HistoCounts(i) > 0 Then
+                    g.FillRectangle(barBrush, dRechH.Left, barY, barW, barH)
+                    g.DrawRectangle(Pens.Purple, dRechH.Left, barY, barW, barH)
+                    g.DrawString(HistoCounts(i).ToString(), smallFont, Brushes.Black, dRechH.Left + barW + 2, barY + (barH / 2) - 4)
+                End If
+            Next
         End If
+        curY += dRechH.Height + 15
+
         Dim tableRect3 As New Rectangle(m.Left + 50, curY, m.Width - 1075, 15)
         g.FillRectangle(New SolidBrush(Color.FromArgb(255, 224, 192)), tableRect3)
         g.DrawRectangle(Pens.Black, tableRect3)
@@ -2743,16 +2811,16 @@ Module Module2
         g.DrawString("XBar", headerFont, Brushes.Black, m.Left + 940, curY + 10)
         g.DrawLine(New Pen(Color.Black, 1), m.Left + 940, curY + 35, m.Right - 10, curY + 35)
 
-        Dim statsText As String = String.Format("UCL: {0}", Form1.TextUCL.Text)
+        Dim statsText As String = String.Format("UCL : {0}", Form1.TextUCL.Text)
         g.DrawString(statsText, normalFont, Brushes.Black, m.Left + 940, curY + 50)
 
-        Dim statsText1 As String = String.Format("CL: {0}", Form1.TextCL.Text)
+        Dim statsText1 As String = String.Format("CL : {0}", Form1.TextCL.Text)
         g.DrawString(statsText1, normalFont, Brushes.Black, m.Left + 940, curY + 80)
 
-        Dim statsText2 As String = String.Format("LCL: {0}", Form1.TextLCL.Text)
+        Dim statsText2 As String = String.Format("LCL : {0}", Form1.TextLCL.Text)
         g.DrawString(statsText2, normalFont, Brushes.Black, m.Left + 940, curY + 110)
 
-        Dim statsText3 As String = String.Format("σ: {0}", Form1.TextSiguma.Text)
+        Dim statsText3 As String = String.Format("σ :  {0}", Form1.TextSiguma.Text)
         g.DrawString(statsText3, normalFont, Brushes.Black, m.Left + 940, curY + 140)
 
         Dim tableRect5 As New Rectangle(m.Left + 931, curY + 185, m.Width - 931, 140)
@@ -2761,40 +2829,73 @@ Module Module2
         g.DrawString("R", headerFont, Brushes.Black, m.Left + 940, curY + 195)
         g.DrawLine(New Pen(Color.Black, 1), m.Left + 940, curY + 220, m.Right - 10, curY + 220)
 
-        Dim statsText4 As String = String.Format("UCL: {0}", Form1.TextRUCL.Text)
+        Dim statsText4 As String = String.Format("UCL : {0}", Form1.TextRUCL.Text)
         g.DrawString(statsText4, normalFont, Brushes.Black, m.Left + 940, curY + 235)
 
-        Dim statsText5 As String = String.Format("CL: {0}", Form1.TextRCL.Text)
+        Dim statsText5 As String = String.Format("CL : {0}", Form1.TextRCL.Text)
         g.DrawString(statsText5, normalFont, Brushes.Black, m.Left + 940, curY + 265)
 
-        Dim statsText6 As String = String.Format("σ: {0}", Form1.TextRSiguma.Text)
+        Dim statsText6 As String = String.Format("σ :  {0}", Form1.TextRSiguma.Text)
         g.DrawString(statsText6, normalFont, Brushes.Black, m.Left + 940, curY + 295)
-        If Form1.PictureBox2.Image IsNot Nothing Then
-            Dim rChartWidth As Integer = CInt(m.Width * 0.8)
 
-            For i As Integer = 0 To 9
-                If i < Form1.LabR.Length Then
-                    Dim labelY As Integer = curY + CInt(i * (commonGraphHeight / 9))
-                    g.DrawString(Form1.LabR(i).Text, labelFont, Brushes.Black, m.Left + 5, labelY - 5)
+        Dim rChartWidth As Integer = CInt(m.Width * 0.8)
+        Dim dRectR As New Rectangle(m.Left + scaleSpace, curY, xBarWidth, commonGraphHeight)
+
+        Dim valRTop As Double = Val(Form1.LabR(0).Text)
+        Dim valRBot As Double = Val(Form1.LabR(9).Text)
+        Dim vRRange As Double = valRTop - valRBot
+
+        For i As Integer = 0 To 9
+            Dim ly = dRectR.Top + CInt(i * (commonGraphHeight / 9))
+            g.DrawLine(blackGridPen, dRectR.Left, ly, dRectR.Right, ly)
+            g.DrawString(Form1.LabR(i).Text, labelFont, Brushes.Black, m.Left + 5, ly - 5)
+        Next
+        Dim rSlotW As Double = xBarWidth / 30.0
+        For j As Integer = 0 To 30
+            Dim lx = CInt(dRectR.Left + (j * rSlotW))
+            g.DrawLine(blackGridPen, lx, dRectR.Top, lx, dRectR.Bottom)
+        Next
+        g.DrawRectangle(Pens.Black, dRectR)
+
+        If vRRange > 0 Then
+            Dim getRY = Function(v As Double) As Integer
+                            Return dRectR.Bottom - CInt(((v - valBot) / vRRange) * commonGraphHeight)
+                        End Function
+            Dim ruclVal As Double = Val(Form1.TextRUCL.Text)
+            Dim rclVal As Double = Val(Form1.TextRCL.Text)
+            g.DrawLine(redDashPen, dRectR.Left, getRY(ruclVal), dRectR.Right, getRY(ruclVal))
+            g.DrawLine(redDashPen, dRectR.Left, getRY(rclVal), dRectR.Right, getRY(rclVal))
+
+            Dim lastRPoint As Point = Point.Empty
+            For j As Integer = 0 To 29
+                Dim k = DispStartPosition + j
+                If k < SPCDataNum Then
+                    Dim valR As Double = Val(readMaster(M_Data(k), _R))
+                    Dim px = CInt(dRectR.Left + (j * rSlotW) + (rSlotW / 2))
+                    Dim py = getRY(valR)
+
+                    If Not lastRPoint.IsEmpty Then g.DrawLine(blueGridPen, lastRPoint, New Point(px, py))
+
+                    Dim dotBrush = If(valR > ruclVal, Brushes.Red, Brushes.Blue)
+                    g.FillEllipse(dotBrush, px - 3, py - 3, 6, 6)
+                    g.DrawEllipse(Pens.Black, px - 3, py - 3, 6, 6)
+                    lastRPoint = New Point(px, py)
                 End If
             Next
-            Dim dRectR As New Rectangle(m.Left + scaleSpace, curY, rChartWidth, commonGraphHeight)
-            Dim sRectR As New Rectangle(0, 0, srcWidth30Slots, Form1.PictureBox2.Image.Height)
-            g.DrawImage(Form1.PictureBox2.Image, dRectR, sRectR, GraphicsUnit.Pixel)
-            g.DrawRectangle(Pens.Black, dRectR)
-            Using waterMark As New Font("Arial", 80, FontStyle.Bold)
-                Using waterMarkBrush As New SolidBrush(Color.FromArgb(40, Color.Gray))
-                    Dim txtR As String = "R"
-                    Dim szR As SizeF = g.MeasureString(txtR, waterMark)
-
-                    Dim posX As Single = dRectR.Left + (dRectR.Width - szR.Width) / 2
-                    Dim posY As Single = dRectR.Top + (dRectR.Height - szR.Height) / 2
-
-                    g.DrawString(txtR, waterMark, waterMarkBrush, posX, posY)
-                End Using
-            End Using
-            curY += dRectR.Height + 15
         End If
+        Using waterMarkR As New Font("Arial", 80, FontStyle.Bold)
+            Using waterMarkBrushR As New SolidBrush(Color.FromArgb(40, Color.Gray))
+                Dim waterMarkTextR As String = "R"
+                Dim textSize As SizeF = g.MeasureString(waterMarkTextR, waterMarkR)
+
+                Dim posX As Single = dRectR.Left + (dRectR.Width - textSize.Width) / 2
+                Dim posY As Single = dRectR.Top + (dRectR.Height - textSize.Height) / 2
+
+                g.DrawString(waterMarkTextR, waterMarkR, waterMarkBrushR, posX, posY)
+            End Using
+        End Using
+        curY += dRectR.Height + 15
+
         If Form1.PictureBox4.Image IsNot Nothing Then
             Dim gridWidth As Integer = m.Width - 159
             Dim gridRect As New Rectangle(m.Left - 9, curY, gridWidth, 80)
@@ -2809,8 +2910,8 @@ Module Module2
         g.DrawRectangle(Pens.Black, newTableRect)
         g.DrawLine(Pens.Black, newTableRect.X, newTableRect.Y + newRowHeight, newTableRect.Right, newTableRect.Y + newRowHeight)
 
-        g.DrawString("Lot No", hFont, Brushes.Black, newTableRect.X + 5, newTableRect.Y + (newRowHeight / 4))
-        g.DrawString("OP", hFont, Brushes.Black, newTableRect.X + 5, newTableRect.Y + newRowHeight + (newRowHeight / 4))
+        g.DrawString("Lot No", smallFont, Brushes.Black, newTableRect.X + 5, newTableRect.Y + (newRowHeight / 4))
+        g.DrawString("OP", smallFont, Brushes.Black, newTableRect.X + 5, newTableRect.Y + newRowHeight + (newRowHeight / 4))
 
         Dim colWidth As Single = CSng(newTableRect.Width / 31.0F)
         Dim kPos1 As Integer = DispStartPosition
@@ -2819,8 +2920,8 @@ Module Module2
                 Dim lotText As String = readMaster(M_Data(kPos1), _lot)
                 Dim opText As String = readMaster(M_Data(kPos1), _opName)
                 Dim xPos As Single = newTableRect.X + ((j + 1) * colWidth) + 2
-                g.DrawString(lotText, countFont, Brushes.Black, xPos, newTableRect.Y + (newRowHeight / 4))
-                g.DrawString(opText, countFont, Brushes.Black, xPos, newTableRect.Y + newRowHeight + (newRowHeight / 4))
+                g.DrawString(lotText, labelFont, Brushes.Black, xPos, newTableRect.Y + (newRowHeight / 4))
+                g.DrawString(opText, labelFont, Brushes.Black, xPos, newTableRect.Y + newRowHeight + (newRowHeight / 4))
 
                 Dim lineX As Integer = CInt(newTableRect.X + ((j + 1) * colWidth))
                 g.DrawLine(Pens.Black, lineX, newTableRect.Y, lineX, newTableRect.Bottom)
