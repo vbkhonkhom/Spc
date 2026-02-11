@@ -12,6 +12,7 @@ Public Class FormControl
     's-jisのEncodingクラスの作成
     Dim encSjis As Encoding = Encoding.GetEncoding("shift-jis")
     Private Sub FormControl_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        On Error Resume Next
         '日本語・英語表記の切り替えを行う
         Translation_FormControl()
         'グラフフォーマット候補を表示する==========

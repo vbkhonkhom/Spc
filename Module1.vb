@@ -74,7 +74,8 @@ Module Module1
 
 
     Public strAlarmStartDate As Date
-    Public strStartDate As Date
+    Public strStartDate As String = ""
+    Public strEndDate As String = ""
 
     'SPCアラーム用
     Public QCNotCheckFlag As Boolean

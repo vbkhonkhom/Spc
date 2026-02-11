@@ -117,6 +117,7 @@ Public Class Form1
             End Try
         End If
         LoadFolderTree(targetPath)
+        ExToolStripMenuItem.Enabled = False
     End Sub
 
     Public Sub LoadLoad()
@@ -567,6 +568,11 @@ Public Class Form1
             End If
 
         End If
+        If SPCDataNum > 0 Then
+            ExToolStripMenuItem.Enabled = True
+        Else
+            ExToolStripMenuItem.Enabled = False
+        End If
         GraphDisp()
     End Sub
 
@@ -884,6 +890,10 @@ Public Class Form1
     End Sub
 
     Private Sub ExToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExToolStripMenuItem.Click
+        If SPCDataNum <= 0 Then
+            MsgBox("ไม่พบข้อมูลสำหรับการ Export ", MsgBoxStyle.Exclamation)
+            Exit Sub
+        End If
         Call Module2.ExportToPDF(Me)
     End Sub
 
@@ -1336,6 +1346,11 @@ Public Class Form1
                 Me.Text = "SPC System - " & System.IO.Path.GetFileName(selectedPath)
             End If
         End If
+        If SPCDataNum > 0 Then
+            ExToolStripMenuItem.Enabled = True
+        Else
+            ExToolStripMenuItem.Enabled = False
+        End If
     End Sub
     Public Sub LoadSPCFile(ByVal filePath As String)
         If Not System.IO.File.Exists(filePath) Then Exit Sub
@@ -1653,6 +1668,7 @@ Public Class Form1
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        On Error Resume Next
         Dim filePath As String = TextItem.Text.Trim()
         filePath = filePath.Replace("""", "")
         If System.IO.File.Exists(filePath) Then
@@ -1668,6 +1684,11 @@ Public Class Form1
             Me.Text = "SPC System - " & System.IO.Path.GetFileName(filePath)
         Else
             MsgBox("ไม่พบไฟล์ตาม Path ที่ระบุ" & vbCrLf & "กรุณาตรวจสอบว่า Path ถูกต้องหรือไม่ (ต้องเป็นไฟล์ .txt, .csv)", MsgBoxStyle.Exclamation)
+        End If
+        If SPCDataNum > 0 Then
+            ExToolStripMenuItem.Enabled = True
+        Else
+            ExToolStripMenuItem.Enabled = False
         End If
     End Sub
     Private Sub textitem_Keydown(sender As Object, e As KeyEventArgs) Handles TextItem.KeyDown
@@ -1842,6 +1863,10 @@ Public Class Form1
     End Sub
 
     Private Sub PictureBox4_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox4.MouseMove
+
+    End Sub
+
+    Private Sub Form1_Click(sender As Object, e As EventArgs) Handles Me.Click
 
     End Sub
 End Class

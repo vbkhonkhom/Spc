@@ -7,8 +7,32 @@ Public Class Form_User
     Dim Old_Password As String = Nothing
     Dim New_Password As String = Nothing
 
-    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+    Public Sub New()
 
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        Me.DoubleBuffered = True
+    End Sub
+    Private Sub Form_User_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Me.SuspendLayout()
+        Try
+            TextBox1.Text = ""
+            TextBox2.Text = ""
+            TextBox4.Text = Form1.txtStan_No.Text
+            If TextBox4.Text = "No Data" Then
+                TextBox4.Text = ""
+            End If
+
+            RadioButton2.Checked = True
+            Form1.GetUserList()
+        Catch ex As Exception
+        Finally
+            Me.ResumeLayout()
+        End Try
+    End Sub
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
         If TextBox1.Text = "" Then
             MsgBox("UseID not entered.")
             Exit Sub
@@ -32,7 +56,6 @@ Public Class Form_User
     'ユーザー情報をサーバーにインサートする
     '*******************************************************************
     Public Sub INSERT_UserInfo(ByVal _UserID As String, ByVal _Password As String)
-
         Dim Cn As New SqlConnection
         Dim strSQL As String
         Dim SQLCm As SqlCommand = Cn.CreateCommand
@@ -86,35 +109,27 @@ Public Class Form_User
             MsgBox(_UserID & " registered.")
 
         Catch ex As Exception
-            If IsNothing(trans) = False Then
+            If trans IsNot Nothing Then
                 trans.Rollback()
             End If
             StrErrMes = "ユーザー情報更新エラー" + ", " + ex.Message & ex.StackTrace
             Call SaveLog(Now().ToString, StrErrMes)
-            Exit Sub
+        Finally
+            If Cn.State = ConnectionState.Open Then
+                Cn.Close()
+            End If
+            Cn.Dispose()
         End Try
-
-    End Sub
-
-
-    Private Sub Form_User_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        TextBox1.Text = ""
-        TextBox2.Text = ""
-        TextBox4.Text = Form1.txtStan_No.Text
-        If TextBox4.Text = "No Data" Then
-            TextBox4.Text = ""
-        End If
-
-        RadioButton2.Checked = True
-        Form1.GetUserList()
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ComboBox1.SelectedIndexChanged
         'Form1.GetUserInfo(ComboBox1.Text)          'Dec.10.2020
         '>>> Dec.10.2020
-        Dim res As String = GetUserInfo2(ComboBox1.SelectedItem.ToString)
-        If Not String.IsNullOrEmpty(res) Then
-            Old_Password = res
+        If ComboBox1.SelectedItem IsNot Nothing Then
+            Dim res As String = GetUserInfo2(ComboBox1.SelectedItem.ToString)
+            If Not String.IsNullOrEmpty(res) Then
+                Old_Password = res
+            End If
         End If
         '<<< Dec.10.2020
     End Sub

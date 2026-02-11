@@ -9,17 +9,30 @@
     End Sub
 
     Private Sub FormProperty_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        DateTimePicker1.Value = strStartDate
-        DateTimePicker2.Value = strAlarmStartDate
-        If PropertyTable.Rows.Count = 0 Then
-            Button2.Enabled = False
-        Else
-            Button2.Enabled = True
-            DateTimePicker4.Value = PropertyTable.Rows(PropertyTable.Rows.Count - 1)("dStartDate")
-            DateTimePicker3.Value = PropertyTable.Rows(PropertyTable.Rows.Count - 1)("aStartDate")
-        End If
+        Dim tempStartDate As DateTime
+        Dim tempEndDate As DateTime
+        Try
+            If DateTime.TryParse(strStartDate, tempStartDate) Then
+                If tempStartDate >= DateTimePicker1.MinDate AndAlso tempStartDate <= DateTimePicker1.MaxDate Then
+                    DateTimePicker1.Value = tempStartDate
+                Else
+                    DateTimePicker1.Value = DateTime.Now
+                End If
+            Else
+                DateTimePicker1.Value = DateTime.Now
+            End If
+            If DateTime.TryParse(strEndDate, tempEndDate) Then
+                If tempEndDate >= DateTimePicker2.MinDate AndAlso tempEndDate <= DateTimePicker2.MaxDate Then
+                    DateTimePicker2.Value = tempEndDate
+                Else
+                    DateTimePicker2.Value = DateTime.Now
+                End If
+            Else
+                DateTimePicker2.Value = DateTime.Now
+            End If
+        Catch ex As Exception
 
-
+        End Try
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)

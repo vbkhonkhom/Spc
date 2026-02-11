@@ -2656,7 +2656,9 @@ Module Module2
         Dim normalFont As New Font("Arial", 10, FontStyle.Regular)
         Dim labelFont As New Font("Arial", 7, FontStyle.Regular)
         Dim smallFont As New Font("Arial", 6, FontStyle.Regular)
+
         Dim redDashPen As New Pen(Color.Red, 2) With {.DashStyle = Drawing2D.DashStyle.Dash}
+        Dim greenDashPen As New Pen(Color.Green, 2) With {.DashStyle = Drawing2D.DashStyle.Dash}
         Dim blackGridPen As New Pen(Color.LightGray, 0.5)
         Dim blueGridPen As New Pen(Color.Blue, 1.5)
 
@@ -2668,15 +2670,14 @@ Module Module2
         Dim tableRect As New Rectangle(m.Left, curY, m.Width, 35)
         g.FillRectangle(New SolidBrush(Color.FromArgb(240, 248, 255)), tableRect)
         g.DrawRectangle(Pens.Black, tableRect)
+
         Dim kPos As Integer = DispStartPosition
         If SPCDataNum > 0 AndAlso kPos < SPCDataNum Then
             Dim rawline As String = M_Data(kPos)
             Dim cols As String() = rawline.Split(","c)
-            'g.DrawString("DEBUG (RAW DATA): " & rawline, labelFont, Brushes.Black, m.Left, curY + 60)
             If cols.Length > 6 Then
                 Dim productName As String = cols(7).Trim()
                 Dim processName As String = cols(8).Trim()
-                'If PropertyTable IsNot Nothing AndAlso PropertyTable.Rows.Count > 0 Then
                 g.DrawString("Process: " & processName, normalFont, Brushes.Black, m.Left + 4, curY + 10)
                 g.DrawString("Type: " & productName, normalFont, Brushes.Black, m.Left + 250, curY + 10)
             End If
@@ -2698,34 +2699,34 @@ Module Module2
 
         Dim srcWidth30Slots As Integer = 901
 
-        Dim valTop As Double = Val(Form1.LabXBar(0).Text)
-        Dim valBot As Double = Val(Form1.LabXBar(10).Text)
-        Dim vRange As Double = valTop - valBot
         Dim uclVal As Double = Val(Form1.TextUCL.Text)
         Dim lclVal As Double = Val(Form1.TextLCL.Text)
         Dim clVal As Double = Val(Form1.TextCL.Text)
         Dim sigmaVal As Double = Val(Form1.TextSiguma.Text)
         If sigmaVal <= 0 Then sigmaVal = 1
 
+        Dim valTop As Double = clVal + (sigmaVal * 12)
+        Dim valBot As Double = clVal - (sigmaVal * 12)
+        Dim vRange As Double = valTop - valBot
+
+
+        Dim getYFinal = Function(v As Double) As Integer
+                            If vRange <= 0 Then Return curY + commonGraphHeight
+                            Return curY + commonGraphHeight - CInt(((v - valBot) / vRange) * commonGraphHeight)
+                        End Function
+
         Dim dRectX As New Rectangle(m.Left + scaleSpace, curY, xBarWidth, commonGraphHeight)
         Dim dRechH As New Rectangle(m.Left + xBarWidth + 60, curY, histoWidth, commonGraphHeight)
 
-        Dim uclY_math As Integer = dRectX.Bottom - CInt(((uclVal - valBot) / vRange) * commonGraphHeight)
-        Dim lclY_math As Integer = dRectX.Bottom - CInt(((lclVal - valBot) / vRange) * commonGraphHeight)
-
-        Dim getYFinal = Function(v As Double) As Integer
-                            If vRange <= 0 Then Return dRectX.Bottom
-                            Dim yRaw = dRectX.Bottom - CInt(((v - valBot) / vRange) * commonGraphHeight)
-                            Dim ratio = (yRaw - uclY_math) / (lclY_math - uclY_math)
-                            Dim offset = -5 + (ratio * (12 - (-5)))
-                            Return yRaw + CInt(offset)
-                        End Function
         For Each rect In {dRectX, dRechH}
             g.DrawRectangle(Pens.Black, rect)
             For i As Integer = 0 To 10
                 Dim ly = rect.Top + CInt(i * (commonGraphHeight / 10))
                 g.DrawLine(blackGridPen, rect.Left, ly, rect.Right, ly)
-                If rect.Equals(dRectX) Then g.DrawString(Form1.LabXBar(i).Text, labelFont, Brushes.Black, m.Left + 5, ly - 5)
+                If rect.Equals(dRectX) Then
+                    Dim currentGridValue As Double = valTop - (i * (vRange / 10))
+                    g.DrawString(currentGridValue.ToString("F2"), labelFont, Brushes.Black, m.Left + 5, ly - 5)
+                End If
             Next
             If rect.Equals(dRectX) Then
                 Dim slotW As Double = xBarWidth / 30.0
@@ -2734,8 +2735,9 @@ Module Module2
                     g.DrawLine(blackGridPen, lx, rect.Top, lx, rect.Bottom)
                 Next
             End If
-            g.DrawLine(redDashPen, rect.Left, uclY_math - 5, rect.Right, uclY_math - 5)
-            g.DrawLine(redDashPen, rect.Left, lclY_math + 12, rect.Right, lclY_math + 12)
+            g.DrawLine(redDashPen, rect.Left, getYFinal(uclVal), rect.Right, getYFinal(uclVal))
+            g.DrawLine(greenDashPen, rect.Left, getYFinal(clVal), rect.Right, getYFinal(clVal))
+            g.DrawLine(redDashPen, rect.Left, getYFinal(lclVal), rect.Right, getYFinal(lclVal))
         Next
 
         Using waterMark As New Font("Arial", 80, FontStyle.Bold)
@@ -2775,28 +2777,38 @@ Module Module2
                     maxCount = c
                 End If
             Next
-            Dim barBrush = New SolidBrush(Color.FromArgb(140, 147, 112, 219))
-
+            Dim barBrush As New SolidBrush(Color.FromArgb(255, 147, 112, 219))
+            Dim barPen As New Pen(Color.Purple, 1)
             For i As Integer = 0 To HistoCounts.Count - 1
-                Dim vStart, vEnd As Double
+                Dim vBinTop, vBinBottom As Double
                 If i < 10 Then
-                    vStart = lclVal - (sigmaVal * (i + 1.5)) : vEnd = lclVal - (sigmaVal * (i + 0.5))
-                ElseIf i < 10 Then
-                    vStart = clVal - (sigmaVal * 0.5) : vEnd = clVal + (sigmaVal * 0.5)
+                    vBinTop = clVal - ((i + 0.5) * sigmaVal)
+                    vBinBottom = clVal - ((i + 1.5) * sigmaVal)
+                ElseIf i = 10 Then
+                    vBinBottom = clVal - (0.5 * sigmaVal)
+                    vBinTop = clVal + (0.5 * sigmaVal)
                 Else
-                    Dim pIdx = i - 11 : vStart = clVal + (sigmaVal * (pIdx + 0.5)) : vEnd = clVal + (sigmaVal * (pIdx + 1.5))
+                    Dim pIdx = i - 10
+                    vBinBottom = clVal + ((pIdx - 0.5) * sigmaVal)
+                    vBinTop = clVal + ((pIdx + 0.5) * sigmaVal)
                 End If
-
-                Dim y1 = getYFinal(vStart), y2 = getYFinal(vEnd)
-                Dim barH = Math.Abs(y1 - y2), barY = Math.Min(y1, y2)
+                Dim yTop As Integer = getYFinal(vBinTop)
+                Dim yBottom As Integer = getYFinal(vBinBottom)
+                Dim barH = Math.Abs(yTop - yBottom)
+                Dim barY = Math.Min(yTop, yBottom)
                 Dim barW = CInt((HistoCounts(i) / maxCount) * (histoWidth - 25))
 
                 If HistoCounts(i) > 0 Then
-                    g.FillRectangle(barBrush, dRechH.Left, barY, barW, barH)
-                    g.DrawRectangle(Pens.Purple, dRechH.Left, barY, barW, barH)
-                    g.DrawString(HistoCounts(i).ToString(), smallFont, Brushes.Black, dRechH.Left + barW + 2, barY + (barH / 2) - 4)
+                    If barY >= dRechH.Top - 5 And (barY + barH) <= dRechH.Bottom + 5 Then
+                        g.FillRectangle(barBrush, CInt(dRechH.Left), CInt(barY), CInt(barW), CInt(barH))
+                        g.DrawRectangle(barPen, CInt(dRechH.Left), CInt(barY), CInt(barW), CInt(barH))
+                        g.DrawString(HistoCounts(i).ToString(), smallFont, Brushes.Black,
+                                     dRechH.Left + barW + 2, barY + (barH / 2) - 4)
+                    End If
                 End If
             Next
+            barBrush.Dispose()
+            barPen.Dispose()
         End If
         curY += dRechH.Height + 15
 
@@ -2859,12 +2871,12 @@ Module Module2
 
         If vRRange > 0 Then
             Dim getRY = Function(v As Double) As Integer
-                            Return dRectR.Bottom - CInt(((v - valBot) / vRRange) * commonGraphHeight)
+                            Return dRectR.Bottom - CInt(((v - valRBot) / vRRange) * commonGraphHeight)
                         End Function
             Dim ruclVal As Double = Val(Form1.TextRUCL.Text)
             Dim rclVal As Double = Val(Form1.TextRCL.Text)
             g.DrawLine(redDashPen, dRectR.Left, getRY(ruclVal), dRectR.Right, getRY(ruclVal))
-            g.DrawLine(redDashPen, dRectR.Left, getRY(rclVal), dRectR.Right, getRY(rclVal))
+            g.DrawLine(GreenDashPen, dRectR.Left, getRY(rclVal), dRectR.Right, getRY(rclVal))
 
             Dim lastRPoint As Point = Point.Empty
             For j As Integer = 0 To 29
@@ -2904,27 +2916,38 @@ Module Module2
             g.DrawRectangle(Pens.Black, gridRect)
             curY += gridRect.Height + 15
         End If
-        Dim newRowHeight As Integer = 25
-        Dim newTableheight As Integer = newRowHeight * 2
-        Dim newTableRect As New Rectangle(m.Left - 9, curY, m.Width + 10, newTableheight)
-        g.DrawRectangle(Pens.Black, newTableRect)
-        g.DrawLine(Pens.Black, newTableRect.X, newTableRect.Y + newRowHeight, newTableRect.Right, newTableRect.Y + newRowHeight)
+        Dim newRowHeightL As Integer = 30
+        Dim newRowHeightO As Integer = 20
+        Dim tableWidth As Integer = m.Width + 10
 
-        g.DrawString("Lot No", smallFont, Brushes.Black, newTableRect.X + 5, newTableRect.Y + (newRowHeight / 4))
-        g.DrawString("OP", smallFont, Brushes.Black, newTableRect.X + 5, newTableRect.Y + newRowHeight + (newRowHeight / 4))
+        Dim totalTacleH As Integer = newRowHeightL + newRowHeightO
+        Dim newTableRect As New Rectangle(m.Left - 9, curY, tableWidth, totalTacleH)
+        g.DrawRectangle(Pens.Black, newTableRect)
+
+        Dim splitLineY As Integer = newTableRect.Y + newRowHeightL
+        g.DrawLine(Pens.Black, newTableRect.X, splitLineY, newTableRect.Right, splitLineY)
+
+        Dim sf As New StringFormat()
+        sf.Alignment = StringAlignment.Center
+        sf.LineAlignment = StringAlignment.Center
+        sf.FormatFlags = StringFormatFlags.LineLimit
+
+        g.DrawString("Lot No", smallFont, Brushes.Black, New Rectangle(newTableRect.X, newTableRect.Y, 40, newRowHeightL), sf)
+        g.DrawString("OP", smallFont, Brushes.Black, New Rectangle(newTableRect.X, splitLineY, 40, newRowHeightO), sf)
 
         Dim colWidth As Single = CSng(newTableRect.Width / 31.0F)
-        Dim kPos1 As Integer = DispStartPosition
-        For j As Integer = 0 To 29
-            If kPos1 < SPCDataNum Then
-                Dim lotText As String = readMaster(M_Data(kPos1), _lot)
-                Dim opText As String = readMaster(M_Data(kPos1), _opName)
-                Dim xPos As Single = newTableRect.X + ((j + 1) * colWidth) + 2
-                g.DrawString(lotText, labelFont, Brushes.Black, xPos, newTableRect.Y + (newRowHeight / 4))
-                g.DrawString(opText, labelFont, Brushes.Black, xPos, newTableRect.Y + newRowHeight + (newRowHeight / 4))
 
-                Dim lineX As Integer = CInt(newTableRect.X + ((j + 1) * colWidth))
-                g.DrawLine(Pens.Black, lineX, newTableRect.Y, lineX, newTableRect.Bottom)
+        For j As Integer = 0 To 29
+            Dim kPos1 As Integer = DispStartPosition + j
+            If kPos1 < SPCDataNum Then
+                Dim xPos As Single = newTableRect.X + ((j + 1) * colWidth)
+                Dim lotText As New Rectangle(xPos, newTableRect.Y, colWidth, newRowHeightL)
+                Dim opText As New Rectangle(xPos, splitLineY, colWidth, newRowHeightO)
+
+                g.DrawString(readMaster(M_Data(kPos1), _lot), smallFont, Brushes.Black, lotText, sf)
+                g.DrawString(readMaster(M_Data(kPos1), _opName), smallFont, Brushes.Black, opText, sf)
+
+                g.DrawLine(Pens.Black, xPos, newTableRect.Y, xPos, newTableRect.Bottom)
             End If
             kPos1 += 1
         Next
