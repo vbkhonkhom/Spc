@@ -9,6 +9,9 @@ Imports System.Drawing.Printing
 Imports SPC_Yukuhashi_Server
 
 Public Class Form1
+    Private productFileOffsets As New Dictionary(Of String, Long)
+    Private StrBackupFolder As String = "C:\Machine\Backup"
+    Dim targetPath As String = "C:\MachineData"
     Dim myHostName As String
     Dim FROMHOST_SPC_Yukuhashi As String
 
@@ -109,7 +112,10 @@ Public Class Form1
         UpdateTimer.Enabled = False
         UpdateTimerHost.Enabled = False
         LoadLoad()
-        Dim targetPath As String = "C:\MachineData"
+        If Not BackgroundWorker1.IsBusy Then
+            BackgroundWorker1.RunWorkerAsync()
+        End If
+
         If Not System.IO.Directory.Exists(targetPath) Then
             Try
                 System.IO.Directory.CreateDirectory(targetPath)
@@ -123,6 +129,15 @@ Public Class Form1
     Public Sub LoadLoad()
         'GetStandardNo()
         'GetTreeList_Server()
+        TreeView1.Nodes.Clear()
+        If Directory.Exists(StrBackupFolder) Then
+            Dim files() As String = Directory.GetFiles(StrBackupFolder, "*.txt")
+            For Each f As String In files
+                Dim node As New TreeNode(Path.GetFileName(f))
+                node.Tag = f
+                TreeView1.Nodes.Add(node)
+            Next
+        End If
         FormAlarmInput.Translation_AlarmInput()
         FormAlarmDisp.Translation_AlarmDisp()
         FormControl.Translation_FormControl()
@@ -836,17 +851,23 @@ Public Class Form1
     End Sub
 
     Private Sub Button8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button8.Click
+        If productFileOffsets IsNot Nothing Then
+            productFileOffsets.Clear()
+        End If
+        TreeView1.Nodes.Clear()
         If StrServerConnection = "" Then
             Dim dr As DialogResult
             Dim frm As New Form3
             dr = frm.ShowDialog
             If dr = System.Windows.Forms.DialogResult.OK Then
                 LoadLoad()
+                LoadFolderTree(targetPath)
             ElseIf dr = System.Windows.Forms.DialogResult.Cancel Then
                 Me.Close()
             End If
         Else
             LoadLoad()
+            LoadFolderTree(targetPath)
         End If
         MsgBox("Tree Updated")
     End Sub
@@ -1728,6 +1749,67 @@ Public Class Form1
                 End If
             End If
         End If
+    End Sub
+    Private Sub BackgroundWorker1_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
+        Do
+            If BackgroundWorker1.CancellationPending Then Exit Do
+            Try
+                If Directory.Exists(StrBackupFolder) Then
+                    Dim files() As String = Directory.GetFiles(StrBackupFolder, "*.txt")
+                    For Each filePath As String In files
+                        Dim fi As New FileInfo(filePath)
+                        Dim lastPos As Long = 0
+
+                        If productFileOffsets.ContainsKey(filePath) Then
+                            lastPos = productFileOffsets(filePath)
+                        End If
+                        If fi.Length > lastPos Then
+                            ReadNewDataAndPlot(filePath, lastPos)
+                            productFileOffsets(filePath) = fi.Length
+                        End If
+                    Next
+
+                End If
+            Catch ex As Exception
+
+            End Try
+            System.Threading.Thread.Sleep(2000)
+        Loop
+    End Sub
+
+    Private Sub ReadNewDataAndPlot(ByVal filePath As String, ByVal startPos As Long)
+        Try
+            Using fs As New FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+                fs.Seek(startPos, SeekOrigin.Begin)
+                Using sr As New StreamReader(fs, Encoding.Default)
+                    Dim hasNewData As Boolean = False
+
+                    While Not sr.EndOfStream
+                        Dim currentLine As String = sr.ReadLine()
+                        If Not String.IsNullOrWhiteSpace(currentLine) Then
+                            'BackgroundWorker1.ReportProgress(0, "Update: " & Path.GetFileName(filePath) & "-> " & currentLine)
+                            'LoadSPCFile_ForModule2(filePath)
+                            hasNewData = True
+                        End If
+                    End While
+                    If hasNewData Then
+                        Me.Invoke(Sub()
+                                      LoadSPCFile_ForModule2(filePath)
+
+                                      If SPCDataNum > 30 Then
+                                          DispStartPosition = SPCDataNum - 30
+                                      Else
+                                          DispStartPosition = 0
+                                      End If
+                                      GraphDisp()
+                                      Me.Text = "SPC System (Auto) - " & Path.GetFileName(filePath)
+                                  End Sub)
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub Label38_Click(sender As Object, e As EventArgs) Handles Label38.Click
