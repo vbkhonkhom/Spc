@@ -10,8 +10,9 @@ Imports SPC_Yukuhashi_Server
 
 Public Class Form1
     Private productFileOffsets As New Dictionary(Of String, Long)
-    Private StrBackupFolder As String = "C:\Machine\Backup"
-    Dim targetPath As String = "C:\MachineData"
+    Private StrBackupFolder As String = "C:\Users\admin\Documents\Data"
+    Dim targetPath As String = "C:\Users\admin\Documents\Data"
+    Private CurrentMonitoringFile As String = ""
     Dim myHostName As String
     Dim FROMHOST_SPC_Yukuhashi As String
 
@@ -112,9 +113,6 @@ Public Class Form1
         UpdateTimer.Enabled = False
         UpdateTimerHost.Enabled = False
         LoadLoad()
-        If Not BackgroundWorker1.IsBusy Then
-            BackgroundWorker1.RunWorkerAsync()
-        End If
 
         If Not System.IO.Directory.Exists(targetPath) Then
             Try
@@ -124,6 +122,12 @@ Public Class Form1
         End If
         LoadFolderTree(targetPath)
         ExToolStripMenuItem.Enabled = False
+
+        StrBackupFolder = "C:\Users\admin\Documents\Data"
+
+        If Not BackgroundWorker1.IsBusy Then
+            BackgroundWorker1.RunWorkerAsync()
+        End If
     End Sub
 
     Public Sub LoadLoad()
@@ -1353,6 +1357,7 @@ Public Class Form1
         If e.Node.Tag Is Nothing Then Exit Sub
         Dim selectedPath As String = e.Node.Tag.ToString()
         If System.IO.File.Exists(selectedPath) Then
+            CurrentMonitoringFile = selectedPath
             Dim ext As String = System.IO.Path.GetExtension(selectedPath).ToLower()
             If ext = ".txt" Or ext = ".csv" Or ext = ".log" Or ext = ".dat" Then
                 LoadSPCFile_ForModule2(selectedPath)
@@ -1547,10 +1552,10 @@ Public Class Form1
                     rawRow &= valR.ToString("F3") & ","
                     rawRow &= "0,"
                     rawRow &= strOp & ","
-                    rawRow &= strLot & ","
-
+                    rawRow &= cols(0).Trim() & ","
                     rawRow &= cols(8).Trim() & ","
                     rawRow &= cols(32).Trim() & ","
+                    rawRow &= cols(16).Trim() & ","
                     M_Data(SPCDataNum) = rawRow
                     MesureValueBuf(SPCDataNum) = valX.ToString("F3")
                     SPCDataNum += 1
@@ -1693,6 +1698,7 @@ Public Class Form1
         Dim filePath As String = TextItem.Text.Trim()
         filePath = filePath.Replace("""", "")
         If System.IO.File.Exists(filePath) Then
+            CurrentMonitoringFile = filePath
             LoadSPCFile_ForModule2(filePath)
             If SPCDataNum > 30 Then
                 DispStartPosition = SPCDataNum - 30
@@ -1754,24 +1760,23 @@ Public Class Form1
         Do
             If BackgroundWorker1.CancellationPending Then Exit Do
             Try
-                If Directory.Exists(StrBackupFolder) Then
-                    Dim files() As String = Directory.GetFiles(StrBackupFolder, "*.txt")
-                    For Each filePath As String In files
-                        Dim fi As New FileInfo(filePath)
-                        Dim lastPos As Long = 0
+                If Not String.IsNullOrEmpty(CurrentMonitoringFile) AndAlso File.Exists(CurrentMonitoringFile) Then
+                    Dim fi As New FileInfo(CurrentMonitoringFile)
+                    Dim lastPos As Long = 0
 
-                        If productFileOffsets.ContainsKey(filePath) Then
-                            lastPos = productFileOffsets(filePath)
-                        End If
-                        If fi.Length > lastPos Then
-                            ReadNewDataAndPlot(filePath, lastPos)
-                            productFileOffsets(filePath) = fi.Length
-                        End If
-                    Next
-
+                    If productFileOffsets.ContainsKey(CurrentMonitoringFile) Then
+                        lastPos = productFileOffsets(CurrentMonitoringFile)
+                    End If
+                    If fi.Length > lastPos Then
+                        ReadNewDataAndPlot(CurrentMonitoringFile, lastPos)
+                        productFileOffsets(CurrentMonitoringFile) = fi.Length
+                    ElseIf fi.Length < lastPos Then
+                        ReadNewDataAndPlot(CurrentMonitoringFile, 0)
+                        productFileOffsets(CurrentMonitoringFile) = CurrentMonitoringFile
+                    End If
                 End If
             Catch ex As Exception
-
+                Call SaveLog(Now(), "BackgoundWorker Error: " & ex.Message)
             End Try
             System.Threading.Thread.Sleep(2000)
         Loop
@@ -1949,6 +1954,10 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Click(sender As Object, e As EventArgs) Handles Me.Click
+
+    End Sub
+
+    Private Sub TreeView1_Click(sender As Object, e As EventArgs) Handles TreeView1.Click
 
     End Sub
 End Class

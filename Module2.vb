@@ -2616,7 +2616,16 @@ Module Module2
         Try
             Dim sfd As New SaveFileDialog()
             sfd.Filter = "PDF Files (*.pdf)|*.pdf"
-            sfd.FileName = "SPC_Chart_" & DateTime.Now.ToString("yyyyMMdd_HHmmss") & ".pdf"
+            Dim kPos As Integer = DispStartPosition
+            If SPCDataNum > 0 AndAlso kPos < SPCDataNum Then
+                Dim rawline As String = M_Data(kPos)
+                Dim cols As String() = rawline.Split(","c)
+                If cols.Length > 6 Then
+                    Dim productName As String = cols(7).Trim()
+                    Dim machineNo As String = cols(9).Trim()
+                    sfd.FileName = "SPC_Chart_" & productName & "_" & machineNo & "_" & DateTime.Now.ToString("yyyyMMdd_HHmmss") & ".pdf"
+                End If
+            End If
 
             If sfd.ShowDialog() = DialogResult.OK Then
                 Dim pd As New PrintDocument()
@@ -2675,11 +2684,13 @@ Module Module2
         If SPCDataNum > 0 AndAlso kPos < SPCDataNum Then
             Dim rawline As String = M_Data(kPos)
             Dim cols As String() = rawline.Split(","c)
-            If cols.Length > 6 Then
-                Dim productName As String = cols(7).Trim()
+            If cols.Length > 8 Then
                 Dim processName As String = cols(8).Trim()
+                Dim typeName As String = cols(7).Trim()
+                Dim machineNo As String = cols(9).Trim()
                 g.DrawString("Process: " & processName, normalFont, Brushes.Black, m.Left + 4, curY + 10)
-                g.DrawString("Type: " & productName, normalFont, Brushes.Black, m.Left + 250, curY + 10)
+                g.DrawString("Type: " & typeName, normalFont, Brushes.Black, m.Left + 250, curY + 10)
+                g.DrawString("Equipment Name: " & machineNo, normalFont, Brushes.Black, m.Left + 450, curY + 10)
             End If
         End If
         Dim dateStr As String = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
