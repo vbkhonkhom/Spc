@@ -6,7 +6,7 @@
         'Dim uc As Integer
         'Dim AlarmCommentFlag As Boolean
         ''日本語・英語表記の切り替えを行う
-        'Translation_AlarmDisp()
+        Translation_AlarmDisp()
 
         'AlarmCommentFlag = False
         'strAlm = ""
@@ -108,6 +108,7 @@
     End Sub
 
     Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+
         Me.Close()
     End Sub
     '日本語・英語表記の切り替えを行う

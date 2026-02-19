@@ -1513,6 +1513,8 @@ Public Class Form1
             Dim cultureUS As New System.Globalization.CultureInfo("en-US")
             Dim dateFormats() As String = {"M/d/yyyy h:mm tt", "MM/dd/yyyy h:mm tt", "M/d/yyyy HH:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy", "MM/dd/yyyy"}
 
+            Dim hasNewAlarm As Boolean = False
+
             For i As Integer = 1 To lines.Length - 1
                 Dim line As String = lines(i)
                 If line.Trim() = "" Then Continue For
@@ -1524,6 +1526,13 @@ Public Class Form1
                     ReDim Preserve MesureValueBuf(SPCDataNum)
                     Dim valX As Double = Val(cols(colIndexX))
                     Dim valR As Double = Val(cols(colIndexR))
+                    Dim alarmStatus As String = "0"
+                    If valX > X_UCL Or valX < X_LCL Then
+                        alarmStatus = "1"
+                        hasNewAlarm = True
+                        'IsAlarmActive = True
+                    End If
+
                     Dim rawDateStr As String = cols(colIndexDate)
                     If colIndexTime >= 0 AndAlso colIndexTime < cols.Length Then
                         rawDateStr &= " " & cols(colIndexTime)
@@ -1545,11 +1554,13 @@ Public Class Form1
                     If strOp = "" Then strOp = "-"
                     xValues.Add(valX)
                     rValues.Add(valR)
+
                     Dim rawRow As String = ""
                     rawRow &= i & ","
                     rawRow &= finalDateStr & ","
                     rawRow &= valX.ToString("F3") & ","
                     rawRow &= valR.ToString("F3") & ","
+                    rawRow &= alarmStatus & ","
                     rawRow &= "0,"
                     rawRow &= strOp & ","
                     rawRow &= cols(0).Trim() & ","
@@ -1647,6 +1658,11 @@ Public Class Form1
             Next
             ReDim TreeName(0)
             TreeName(0) = System.IO.Path.GetFileNameWithoutExtension(filePath)
+            If hasNewAlarm Then
+                SerectPoint = SPCDataNum - 1
+                FormAlarmDisp.Show()
+            End If
+            GraphDisp()
         Catch ex As Exception
             MsgBox("Error loading file: " & ex.Message)
         End Try
