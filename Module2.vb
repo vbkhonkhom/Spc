@@ -2887,7 +2887,7 @@ Module Module2
             Dim ruclVal As Double = Val(Form1.TextRUCL.Text)
             Dim rclVal As Double = Val(Form1.TextRCL.Text)
             g.DrawLine(redDashPen, dRectR.Left, getRY(ruclVal), dRectR.Right, getRY(ruclVal))
-            g.DrawLine(GreenDashPen, dRectR.Left, getRY(rclVal), dRectR.Right, getRY(rclVal))
+            g.DrawLine(greenDashPen, dRectR.Left, getRY(rclVal), dRectR.Right, getRY(rclVal))
 
             Dim lastRPoint As Point = Point.Empty
             For j As Integer = 0 To 29
@@ -3178,96 +3178,111 @@ Module Module2
 
     Public Sub alarmInfo(ByVal mx1 As Integer, ByVal my1 As Integer, ByVal objName As String, ByVal btnName As String)
         If M_Data Is Nothing Then Exit Sub
+
         FormAlarmDisp.Close()
         FormAlarmInput.Close()
         FormPopupNew.Close()
-        Dim dc, i As Integer
-        Dim _mode As String
-        If objName = "PictureBox1" Then
-            _mode = "X"
-        ElseIf objName = "PictureBox2" Then
-            _mode = "R"
-        Else
-            Exit Sub
-        End If
-        If _mode = "R" Then
-            If MRFlag = True Then
-                _mode = "MR"
-            End If
-        End If
-        dc = 0
-        For i = 0 To 31
-            If _mode = "X" Then
-                If Not (xpnbuf_X(i) - 10 < mx1 And xpnbuf_X(i) + 10 > mx1) Then Continue For
-                ypnbuf_X(i) = my1
-                dc = 1
-                Exit For
-            ElseIf _mode = "R" Or _mode = "MR" Then
-                If Not (xpnbuf_R(i) - 10 < mx1 And xpnbuf_R(i) + 10 > mx1) Then Continue For
-                ypnbuf_R(i) = my1
-                dc = 1
-                Exit For
+        'Dim dc As Integer = 0
+        Dim i As Integer = 0
+        Dim foundIndex As Integer = -1
+        Dim _mode As String = If(objName = "PictureBox1", "X", If(MRFlag, "MR", "R"))
+
+        For i = 0 To 30
+            Dim tx As Integer = If(_mode = "X", xpnbuf_X(i), xpnbuf_R(i))
+            Dim ty As Integer = If(_mode = "X", ypnbuf_X(i), ypnbuf_R(i))
+
+            If tx > 0 AndAlso mx1 >= tx - 15 AndAlso mx1 <= tx + 15 Then
+                If my1 >= ty - 35 AndAlso my1 <= ty + 10 Then
+                    Dim jk As Integer = DispStartPosition + i
+                    Dim p_idx As Integer = If(_mode = "X", 0, If(_mode = "R", 1, 2))
+                    If jk <= UBound(M_Alarm) Then
+                        Dim fullStr As String = M_Alarm(jk)(p_idx)
+
+                        If Not String.IsNullOrEmpty(fullStr) AndAlso fullStr.Substring(0, 1) <> "0" Then
+                            foundIndex = i
+                            Exit For
+                        End If
+                    End If
+                End If
             End If
         Next
-        If dc = 0 Then Exit Sub
+        If foundIndex = -1 Then Exit Sub
         SerectPoint = DispStartPosition + i
-        Dim p As Integer = 0
-        If _mode = "X" Then
-            p = 0
-        ElseIf _mode = "R" Then
-            p = 1
-        ElseIf _mode = "MR" Then
-            p = 2
-        Else
-            Exit Sub
-        End If
-        If InStr(M_Alarm(SerectPoint)(p), "1") = 0 Then Exit Sub
-        If btnName = "Right" Then
+
+
+        If btnName = "Left" Then
             Get_AlarmInfo("Write", _mode)
             FormAlarmInput.Show()
-        ElseIf btnName = "Left" Then
+            FormAlarmInput.BringToFront()
+        ElseIf btnName = "Right" Then
             Get_AlarmInfo("Read", _mode)
             FormAlarmDisp.Show()
+            FormAlarmDisp.BringToFront()
         End If
     End Sub
 
     Public Sub Get_AlarmInfo(ByVal _RorW As String, ByVal _mode As String) '???ID???? ModeRead or Write
-        Dim strID As String = readMaster(M_Data(SerectPoint), _id)
-        Dim Cn As New System.Data.SqlClient.SqlConnection
-        Dim Adapter As New SqlDataAdapter
-        Dim strSQL As String = ""
+        Dim strID As String = ""
+        If M_Data IsNot Nothing AndAlso SerectPoint < M_Data.Length Then
+            strID = readMaster(M_Data(SerectPoint), _id)
+        End If
+
         Dim table As New DataTable
-        Dim n As Integer
+        table.Columns.Add("iID")
+        table.Columns.Add("cGraphFormat")
+        table.Columns.Add("cSpcrule1") : table.Columns.Add("cSpcrule2")
+        table.Columns.Add("cSpcrule3") : table.Columns.Add("cSpcrule4")
+        table.Columns.Add("cSpcrule5") : table.Columns.Add("cSpcrule6")
+        table.Columns.Add("cSpcrule7") : table.Columns.Add("cSpcrule8")
+        table.Columns.Add("cSurveyIncharge") : table.Columns.Add("cSurveyResult")
+        table.Columns.Add("cTreatIncharge") : table.Columns.Add("cTreatResult")
+        table.Columns.Add("cTreatEffect") : table.Columns.Add("cApprovalDate")
+        table.Columns.Add("cApproverName") : table.Columns.Add("cMaintenanceID")
+
+        Dim dr As DataRow = table.NewRow()
+        dr("iID") = strID
+        dr("cGraphFormat") = _mode
+
+        dr("cSpcrule1") = "False" : dr("cSpcrule2") = "False"
+        dr("cSpcrule3") = "False" : dr("cSpcrule4") = "False"
+        dr("cSpcrule5") = "False" : dr("cSpcrule6") = "False"
+        dr("cSpcrule7") = "False" : dr("cSpcrule8") = "False"
+
         Try
-            Cn.ConnectionString = StrServerConnection
-            table.Clear()
-            strSQL = "SELECT *"
-            strSQL &= " FROM SPC_Alarm"
-            strSQL &= " WHERE iID = '" & strID & "'"
-            For i As Integer = 0 To UBound(TreeName, 1)
-                strSQL &= " AND"
-                strSQL &= " cTreeName" & i + 1 & " = '" & TreeName(i) & "'"
-            Next
-            strSQL &= " AND cGraphFormat = '" & _mode & "'"
-            Adapter = New SqlDataAdapter()
-            Adapter.SelectCommand = New SqlCommand(strSQL, Cn)
-            Adapter.SelectCommand.CommandType = CommandType.Text
-            Adapter.Fill(table)
-            n = table.Rows.Count
-            Adapter.Dispose()
-            Cn.Dispose()
-            If n = 0 Then
-                table.Dispose()
-                Exit Sub
+            If M_Alarm IsNot Nothing AndAlso SerectPoint < M_Alarm.Length Then
+                Dim p_idx As Integer = 0
+                If _mode = "X" Then
+                    p_idx = 0
+                ElseIf _mode = "R" Then
+                    p_idx = 1
+                Else
+                    p_idx = 2
+                End If
+                Dim naiyou As String = readMaster(M_Alarm(SerectPoint)(p_idx), 1)
+                If Not String.IsNullOrEmpty(naiyou) AndAlso naiyou.Length >= 8 Then
+                    dr("cSpcrule1") = If(naiyou.Substring(0, 1) = "1", "True", "False")
+                    dr("cSpcrule2") = If(naiyou.Substring(1, 1) = "1", "True", "False")
+                    dr("cSpcrule3") = If(naiyou.Substring(2, 1) = "1", "True", "False")
+                    dr("cSpcrule4") = If(naiyou.Substring(3, 1) = "1", "True", "False")
+                    dr("cSpcrule5") = If(naiyou.Substring(4, 1) = "1", "True", "False")
+                    dr("cSpcrule6") = If(naiyou.Substring(5, 1) = "1", "True", "False")
+                    dr("cSpcrule7") = If(naiyou.Substring(6, 1) = "1", "True", "False")
+                    dr("cSpcrule8") = If(naiyou.Substring(7, 1) = "1", "True", "False")
+                End If
             End If
-            Display_AlarmInfo(table, _RorW, _mode)
-        Catch ex As System.Exception
-            Adapter.Dispose()
-            Cn.Dispose()
-            StrErrMes = "????????????" + ", " + ex.Message & ex.StackTrace
-            Call SaveLog(Now(), StrErrMes)
-            Exit Sub
+        Catch ex As Exception
+
         End Try
+        dr("cSurveyIncharge") = "" : dr("cSurveyResult") = ""
+        dr("cTreatIncharge") = "" : dr("cTreatResult") = ""
+        dr("cTreatEffect") = "" : dr("cApprovalDate") = DBNull.Value
+        dr("cApproverName") = "" : dr("cMaintenanceID") = ""
+
+        table.Rows.Add(dr)
+
+        Display_AlarmInfo(table, _RorW, _mode)
+        Exit Sub
+
     End Sub
 
     '?????????????
