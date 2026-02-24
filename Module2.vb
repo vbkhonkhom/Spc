@@ -1157,42 +1157,7 @@ Module Module2
                 '??????????0
                 colbuf(j) = 0
                 '???????1
-                Dim ala As Integer = readMaster(M_Alarm(jk)(0), 0)
 
-                If ala = 1 Then
-                    colbuf(j) = 1
-                End If
-
-                If ala = 2 Or ala = 3 Then
-                    colbuf(j) = 1
-                    ypf = ypn
-                    ypa = ypf - 50
-                    If ypa < 0 Then
-                        ypa = 50
-                        ypf = ypa + 50
-                    End If
-                    If ypa > 400 Then
-                        ypa = 400
-                        ypf = ypa + 50
-                    End If
-                    g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23)
-                    If Size = "MAX" Then
-                        x01 = 15
-                    ElseIf Size = "Middle" Then
-                        x01 = 15
-                    ElseIf Size = "MIN" Then
-                        x01 = 15
-                    End If
-                    k = 0
-                    For ii = 0 To 7
-                        If ala = 3 Then
-                            g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
-                        ElseIf ala = 2 Then
-                            g.DrawLine(A1Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + x01 - ii)
-                        End If
-                        k += 1
-                    Next
-                End If
 
                 xpnbuf_X(j) = xpn
                 ypnbuf_X(j) = ypn
@@ -1282,8 +1247,12 @@ Module Module2
             ypn = ypnbuf_X(j)
             If xpn <> "0" Then
                 Dim currentVal As Double = Val(readMaster(M_Data(jk), _X))
-                If currentVal > X_UCL Or currentVal < X_LCL Or colbuf(j) = 1 Then
-                    Using redBrush As New SolidBrush(Color.Red)
+                Dim ala As Integer = Val(readMaster(M_Alarm(jk)(0), 0))
+                If (currentVal > X_UCL Or currentVal < X_LCL) Or ala > 0 Then
+
+                    Dim flagColor As Color = If(ala = 3, Color.Green, Color.Red)
+
+                    Using flagBrush As New SolidBrush(flagColor)
                         Using blackPen As New Pen(Color.Black, 1)
                             g.DrawLine(blackPen, xpn, ypn, xpn, ypn - 20)
                             Dim flagPoints As Point() = {
@@ -1291,7 +1260,7 @@ Module Module2
                                 New Point(xpn + 12, ypn - 15),
                                 New Point(xpn, ypn - 10)
                             }
-                            g.FillPolygon(redBrush, flagPoints)
+                            g.FillPolygon(flagBrush, flagPoints)
                             g.DrawPolygon(blackPen, flagPoints)
                         End Using
                     End Using
@@ -1603,42 +1572,7 @@ Module Module2
                     Data1 = (CDbl(strData) - dblLow) * Bairitu
                     ypn = yp + yh - Data1                '
 
-                    Dim ala As Integer = readMaster(M_Alarm(i)(0), 0)
-                    If MR Then
-                        ala = readMaster(M_Alarm(i)(2), 0)
-                    Else
-                        ala = readMaster(M_Alarm(i)(1), 0)
-                    End If
 
-                    colbuf(j) = 0
-
-                    If ala = 1 Then
-                        colbuf(j) = 1
-                    End If
-
-                    If ala = 2 Or ala = 3 Then
-                        colbuf(j) = 1
-                        ypf = ypn
-                        ypa = ypf - 50
-                        If ypa < 0 Then
-                            ypa = 50
-                            ypf = ypa + 50
-                        End If
-                        If ypa > 400 Then
-                            ypa = 400
-                            ypf = ypa + 50
-                        End If
-                        g.DrawLine(B1Pen, xpn, ypf - 50, xpn, ypa + 23)
-                        k = 0
-                        For ii = 0 To 7
-                            If ala = 3 Then
-                                g.DrawLine(A2Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + 15 - ii)
-                            ElseIf ala = 2 Then
-                                g.DrawLine(A1Pen, xpn + k, ypf - 50 + ii, xpn + k, ypa + 15 - ii)
-                            End If
-                            k += 1
-                        Next
-                    End If
                     xpnbuf_R(j) = xpn
                     ypnbuf_R(j) = ypn
                     If j > 0 And null_bit = 0 Then
@@ -1679,10 +1613,11 @@ Module Module2
             xpn = xpnbuf_R(j)
             ypn = ypnbuf_R(j)
             If xpn <> "0" Then
-                Dim currentR As Double = 0
-                If MR Then currentR = Val(readMaster(M_Data(i), _MR)) Else currentR = Val(readMaster(M_Data(i), _R))
-                If currentR > dblSiguma Or colbuf(j) = 1 Then
-                    Using redBrush As New SolidBrush(Color.Red)
+                Dim currentR As Double = If(MR, Val(readMaster(M_Data(i), _MR)), Val(readMaster(M_Data(i), _R)))
+                Dim ala As Integer = If(MR, Val(readMaster(M_Alarm(i)(2), 0)), Val(readMaster(M_Alarm(i)(1), 0)))
+                If currentR > dblSiguma Or ala > 0 Then
+                    Dim flagColor As Color = If(ala = 3, Color.Green, Color.Red)
+                    Using flagBrush As New SolidBrush(flagColor)
                         Using blackPen As New Pen(Color.Black, 1)
                             g.DrawLine(blackPen, xpn, ypn, xpn, ypn - 20)
                             Dim flagPoints As Point() = {
@@ -1690,7 +1625,7 @@ Module Module2
                                 New Point(xpn + 12, ypn - 15),
                                 New Point(xpn, ypn - 10)
                             }
-                            g.FillPolygon(redBrush, flagPoints)
+                            g.FillPolygon(flagBrush, flagPoints)
                             g.DrawPolygon(blackPen, flagPoints)
                         End Using
                     End Using
@@ -2620,9 +2555,9 @@ Module Module2
             If SPCDataNum > 0 AndAlso kPos < SPCDataNum Then
                 Dim rawline As String = M_Data(kPos)
                 Dim cols As String() = rawline.Split(","c)
-                If cols.Length > 6 Then
-                    Dim productName As String = cols(7).Trim()
-                    Dim machineNo As String = cols(9).Trim()
+                If cols.Length > 8 Then
+                    Dim productName As String = cols(8).Trim()
+                    Dim machineNo As String = cols(10).Trim()
                     sfd.FileName = "SPC_Chart_" & productName & "_" & machineNo & "_" & DateTime.Now.ToString("yyyyMMdd_HHmmss") & ".pdf"
                 End If
             End If
@@ -3177,37 +3112,44 @@ Module Module2
     End Sub
 
     Public Sub alarmInfo(ByVal mx1 As Integer, ByVal my1 As Integer, ByVal objName As String, ByVal btnName As String)
+        If M_Data Is Nothing Then
+            MsgBox("M_Data Is Nothing")
+            Exit Sub
+        End If
         If M_Data Is Nothing Then Exit Sub
 
         FormAlarmDisp.Close()
         FormAlarmInput.Close()
         FormPopupNew.Close()
-        'Dim dc As Integer = 0
-        Dim i As Integer = 0
+
         Dim foundIndex As Integer = -1
         Dim _mode As String = If(objName = "PictureBox1", "X", If(MRFlag, "MR", "R"))
 
-        For i = 0 To 30
+        For i As Integer = 0 To 30
             Dim tx As Integer = If(_mode = "X", xpnbuf_X(i), xpnbuf_R(i))
             Dim ty As Integer = If(_mode = "X", ypnbuf_X(i), ypnbuf_R(i))
 
-            If tx > 0 AndAlso mx1 >= tx - 15 AndAlso mx1 <= tx + 15 Then
-                If my1 >= ty - 35 AndAlso my1 <= ty + 10 Then
-                    Dim jk As Integer = DispStartPosition + i
-                    Dim p_idx As Integer = If(_mode = "X", 0, If(_mode = "R", 1, 2))
-                    If jk <= UBound(M_Alarm) Then
-                        Dim fullStr As String = M_Alarm(jk)(p_idx)
+            If tx > 0 AndAlso mx1 >= tx - 15 AndAlso mx1 <= tx + 15 AndAlso
+                ty > 0 AndAlso my1 >= ty - 15 AndAlso my1 <= ty + 15 Then
+                Dim jk As Integer = DispStartPosition + i
+                If jk <= UBound(M_Alarm) Then
+                    Dim currentVal As Double = Val(readMaster(M_Data(jk), If(_mode = "X", _X, _R)))
+                    Dim uclLimit As Double = If(_mode = "X", X_UCL, R_UCL)
+                    Dim lclLimit As Double = If(_mode = "X", X_LCL, 0)
 
-                        If Not String.IsNullOrEmpty(fullStr) AndAlso fullStr.Substring(0, 1) <> "0" Then
-                            foundIndex = i
-                            Exit For
-                        End If
+                    Dim p_idx As Integer = If(_mode = "X", 0, If(_mode = "R", 1, 2))
+                    Dim alarmStatus As String = M_Alarm(jk)(p_idx).Substring(0, 1)
+
+                    If (currentVal > uclLimit Or currentVal < lclLimit) Or alarmStatus <> "0" Then
+                        foundIndex = i
+
                     End If
                 End If
             End If
         Next
         If foundIndex = -1 Then Exit Sub
-        SerectPoint = DispStartPosition + i
+
+        SerectPoint = DispStartPosition + foundIndex
 
 
         If btnName = "Left" Then

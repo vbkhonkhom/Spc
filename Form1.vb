@@ -220,6 +220,7 @@ Public Class Form1
                     MajorItem = temp(1)
                 ElseIf temp(0).Trim(Chr(34)) = "HostSub" Then
                     HostSub = temp(1)
+                    StrLanguage = "English"
                 ElseIf temp(0).Trim(Chr(34)) = "Language" Then
                     StrLanguage = temp(1)
                 ElseIf temp(0).Trim(Chr(34)) = "Resolution" Then
@@ -228,6 +229,7 @@ Public Class Form1
                     StrServerConnection = temp(1)
                 End If
             End If
+            If StrLanguage = "" Then StrLanguage = "English"
         Loop
         sr.Close()     '
     End Sub
@@ -1660,7 +1662,7 @@ Public Class Form1
             TreeName(0) = System.IO.Path.GetFileNameWithoutExtension(filePath)
             If hasNewAlarm Then
                 SerectPoint = SPCDataNum - 1
-                FormAlarmDisp.Show()
+                'FormAlarmDisp.Show()
             End If
             GraphDisp()
         Catch ex As Exception
@@ -1677,27 +1679,63 @@ Public Class Form1
 
         End Try
     End Sub
-    Private Sub PictureBox1_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox10.MouseDown
-        Try
-            If e.Button = MouseButtons.Left Then
-                Module2.alarmInfo(e.X, e.Y, "PictureBox1", "Left")
-            ElseIf e.Button = MouseButtons.Right Then
-                Module2.alarmInfo(e.X, e.Y, "PictureBox1", "Right")
+    Private Sub PictureBox1_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox1.MouseDown
+        SerectPoint = -1
+        For j As Integer = 0 To xpnbuf_X.Length - 1
+            If Math.Abs(e.X - xpnbuf_X(j)) <= 8 Then
+                SerectPoint = j + DispStartPosition
+                Exit For
             End If
-        Catch ex As Exception
+        Next
+        If SerectPoint >= 0 And SerectPoint < M_Data.Length Then
+            Dim alaStr As String = M_Alarm(SerectPoint)(0).ToString()
+            Dim alaStatus As Integer = Val(If(alaStr <> "", alaStr.Substring(0, 1), "0"))
 
-        End Try
+            Dim currentVal As Double = Val(readMaster(M_Data(SerectPoint), _X))
+
+            Dim ucl As Double = X_UCL
+            Dim lcl As Double = X_LCL
+
+
+            If alaStatus = 3 Then
+                FormAlarmDisp.TextMode.Text = "X"
+                FormAlarmDisp.ShowDialog()
+            ElseIf (currentVal > ucl Or currentVal < lcl Or alaStatus > 0) Then
+                FormAlarmInput.TextMode.Text = "X"
+                FormAlarmInput.ShowDialog()
+
+                GraphDisp()
+            End If
+        End If
     End Sub
     Private Sub PictureBox2_MouseDown(sender As Object, e As MouseEventArgs) Handles PictureBox2.MouseDown
-        Try
-            If e.Button = MouseButtons.Left Then
-                Module2.alarmInfo(e.X, e.Y, "PictureBox2", "Left")
-            ElseIf e.Button = MouseButtons.Right Then
-                Module2.alarmInfo(e.X, e.Y, "PictureBox2", "Right")
+        SerectPoint = -1
+        For j As Integer = 0 To xpnbuf_R.Length - 1
+            If Math.Abs(e.X - xpnbuf_R(j)) <= 8 Then
+                SerectPoint = j + DispStartPosition
+                Exit For
             End If
-        Catch ex As Exception
+        Next
+        If SerectPoint >= 0 And SerectPoint < M_Data.Length Then
+            Dim alaStr As String = M_Alarm(SerectPoint)(1).ToString()
+            Dim alaStatus As Integer = Val(If(alaStr <> "", alaStr.Substring(0, 1), "0"))
 
-        End Try
+            Dim currentVal As Double = Val(readMaster(M_Data(SerectPoint), _R))
+
+            Dim ucl As Double = R_UCL
+
+
+
+            If alaStatus = 3 Then
+                FormAlarmDisp.TextMode.Text = "R"
+                FormAlarmDisp.ShowDialog()
+            ElseIf (currentVal > ucl Or alaStatus > 0) Then
+                FormAlarmInput.TextMode.Text = "R"
+                FormAlarmInput.ShowDialog()
+
+                GraphDisp()
+            End If
+        End If
     End Sub
     Private Sub UpdateButtonState()
         If SPCDataNum <= 30 Then
@@ -1974,6 +2012,10 @@ Public Class Form1
     End Sub
 
     Private Sub TreeView1_Click(sender As Object, e As EventArgs) Handles TreeView1.Click
+
+    End Sub
+
+    Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
 
     End Sub
 End Class

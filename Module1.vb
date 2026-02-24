@@ -42,7 +42,7 @@ Module Module1
     Public MajorItem As String
     Public MyHostName As String
     Public ServerName As String
-    Public StrLanguage As String '翻訳言語
+    Public StrLanguage As String = "English" '翻訳言語
     Public StrResolution As String '解像度
     Public IsAlarmActive As Boolean = False
 
