@@ -3,17 +3,7 @@ Imports System.IO
 Public Class FormAlarmInput
     Public strID As String = ""
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
-        Dim JP_Msg As String = ".........."
-        Dim EN_Msg As String = "Please enter Password"
-        Dim userName As String = Input_Pass_to_Get_UserName(JP_Msg, EN_Msg, 0, 0)
-        If userName <> "" Then
-            UPDATE_AlarmComment()
-            SaveGreenFlagToFile()
-            GraphDisp()
-            Me.Close()
-        Else
-            MsgBox("0000")
-        End If
+
     End Sub
 
     Private Sub SaveGreenFlagToFile()
@@ -25,9 +15,9 @@ Public Class FormAlarmInput
                 If String.IsNullOrEmpty(fileNameToSave) Then
                     fileNameToSave = Form1.TextItem.Text
                 End If
-                sw.WriteLine(CurrentMonitoringFile & "|" & idToSave & "|3")
+                sw.WriteLine(fileNameToSave & "|" & idToSave & "|3")
             End Using
-            MsgBox("Success")
+            MsgBox("Success" & vbCrLf & alarmLogPath)
             Me.Close()
         Catch ex As Exception
             MsgBox("Error: " & ex.Message)
@@ -157,6 +147,7 @@ Public Class FormAlarmInput
             TextQC.Text = UserName
             MsgBox("TextQC: " & TextQC.Text)
             UPDATE_AlarmComment_QC(UserName)
+            SaveGreenFlagToFile()
             GraphDisp()
             Me.Close()
         End If

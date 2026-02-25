@@ -362,95 +362,119 @@ Module Module2
         getAlarmMaster = _Master
         Dim AlarmTable As New DataTable
         AlarmTable = getAlarm()
-        If AlarmTable Is Nothing Then
-            Return Nothing
-        End If
-        If AlarmTable.Rows.Count = 0 Then
-            Return _Master
-        End If
+        If AlarmTable Is Nothing AndAlso AlarmTable.Rows.Count > 0 Then
 
-        For i As Integer = 0 To AlarmTable.Rows.Count - 1
-            If IsDBNull(AlarmTable.Rows(i)("iID")) = True Then Continue For
-            Dim a_id As String = AlarmTable.Rows(i)("iID")
-            If IsDBNull(AlarmTable.Rows(i)("cGraphFormat")) = True Then Continue For
-            Dim p As Integer = 0
-            If AlarmTable.Rows(i)("cGraphFormat") = "X" Then
-                p = 0
-            ElseIf AlarmTable.Rows(i)("cGraphFormat") = "R" Then
-                p = 1
-            ElseIf AlarmTable.Rows(i)("cGraphFormat") = "MR" Then
-                p = 2
-            Else
-                Continue For
-            End If
-            Dim come As Integer = 1
+            For i As Integer = 0 To AlarmTable.Rows.Count - 1
+                If IsDBNull(AlarmTable.Rows(i)("iID")) = True Then Continue For
+                Dim a_id As String = AlarmTable.Rows(i)("iID")
+                If IsDBNull(AlarmTable.Rows(i)("cGraphFormat")) = True Then Continue For
+                Dim p As Integer = 0
+                If AlarmTable.Rows(i)("cGraphFormat") = "X" Then
+                    p = 0
+                ElseIf AlarmTable.Rows(i)("cGraphFormat") = "R" Then
+                    p = 1
+                ElseIf AlarmTable.Rows(i)("cGraphFormat") = "MR" Then
+                    p = 2
+                Else
+                    Continue For
+                End If
+                Dim come As Integer = 1
 
-            Dim CommentFlag As Boolean = False
-            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyIncharge"))) Then
-                If AlarmTable.Rows(i)("cSurveyIncharge") <> "" Then
-                    come = 2
-                End If
-            End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyResult"))) Then
-                If AlarmTable.Rows(i)("cSurveyResult") <> "" Then
-                    come = 2
-                End If
-            End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatIncharge"))) Then
-                If AlarmTable.Rows(i)("cTreatIncharge") <> "" Then
-                    come = 2
-                End If
-            End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatResult"))) Then
-                If AlarmTable.Rows(i)("cTreatResult") <> "" Then
-                    come = 2
-                End If
-            End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cTreatEffect"))) Then
-                If AlarmTable.Rows(i)("cTreatEffect") <> "" Then
-                    come = 2
-                End If
-            End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cMaintenanceID"))) Then
-                If AlarmTable.Rows(i)("cMaintenanceID") <> "" Then
-                    come = 2
-                End If
-            End If
-            If (Not IsDBNull(AlarmTable.Rows(i)("cApproverName"))) Then
-                If AlarmTable.Rows(i)("cApproverName") <> "" Then
-                    come = 3
-                End If
-            End If
-            If System.IO.File.Exists(StrCDir & "\AlarmLog.txt") Then
-                Dim savedStatuses() As String = System.IO.File.ReadAllLines(StrCDir & "\AlarmLog.txt")
-                For Each line As String In savedStatuses
-                    Dim parts() As String = line.Split("|")
-                    If parts.Length >= 3 Then
-                        If parts(0).Trim() = CurrentMonitoringFile.Trim() AndAlso parts(1).Trim() = a_id.Trim() Then
-                            come = 3
-                        End If
+                Dim CommentFlag As Boolean = False
+                If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyIncharge"))) Then
+                    If AlarmTable.Rows(i)("cSurveyIncharge") <> "" Then
+                        come = 2
                     End If
-                Next
-            End If
-            Dim naiyou As String = ""
-            For j As Integer = 0 To UBound(M_Data, 1)
-                Dim strId As String = readMaster(M_Data(j), _id)
-                If Not a_id = strId Then Continue For
-                For k As Integer = 1 To 8
-                    Dim _s As String = ""
-                    If (Not IsDBNull(AlarmTable.Rows(i)("cSpcrule" & k))) Then
-                        If CBool(AlarmTable.Rows(i)("cSpcrule" & k)) Then
-                            _s = "1"
-                        Else
-                            _s = "0"
-                        End If
+                End If
+                If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyResult"))) Then
+                    If AlarmTable.Rows(i)("cSurveyResult") <> "" Then
+                        come = 2
                     End If
-                    naiyou &= _s
+                End If
+                If (Not IsDBNull(AlarmTable.Rows(i)("cTreatIncharge"))) Then
+                    If AlarmTable.Rows(i)("cTreatIncharge") <> "" Then
+                        come = 2
+                    End If
+                End If
+                If (Not IsDBNull(AlarmTable.Rows(i)("cTreatResult"))) Then
+                    If AlarmTable.Rows(i)("cTreatResult") <> "" Then
+                        come = 2
+                    End If
+                End If
+                If (Not IsDBNull(AlarmTable.Rows(i)("cTreatEffect"))) Then
+                    If AlarmTable.Rows(i)("cTreatEffect") <> "" Then
+                        come = 2
+                    End If
+                End If
+                If (Not IsDBNull(AlarmTable.Rows(i)("cMaintenanceID"))) Then
+                    If AlarmTable.Rows(i)("cMaintenanceID") <> "" Then
+                        come = 2
+                    End If
+                End If
+                If (Not IsDBNull(AlarmTable.Rows(i)("cApproverName"))) Then
+                    If AlarmTable.Rows(i)("cApproverName") <> "" Then
+                        come = 3
+                    End If
+                End If
+
+                Dim naiyou As String = ""
+                For j As Integer = 0 To UBound(M_Data, 1)
+                    Dim strId As String = readMaster(M_Data(j), _id)
+                    If Not a_id = strId Then Continue For
+                    For k As Integer = 1 To 8
+                        Dim _s As String = ""
+                        If (Not IsDBNull(AlarmTable.Rows(i)("cSpcrule" & k))) Then
+                            If CBool(AlarmTable.Rows(i)("cSpcrule" & k)) Then
+                                _s = "1"
+                            Else
+                                _s = "0"
+                            End If
+                        End If
+                        naiyou &= _s
+                    Next
+                    _Master(j)(p) = come & "," & naiyou
+                    Exit For
                 Next
-                _Master(j)(p) = come & "," & naiyou
-                Exit For
             Next
-        Next
+        End If
+        If System.IO.File.Exists(StrCDir & "\AlarmLog.txt") Then
+            Dim savedStatuses() As String = System.IO.File.ReadAllLines(StrCDir & "\AlarmLog.txt")
+            Dim currentFileToCheck As String = CurrentMonitoringFile
+            If String.IsNullOrEmpty(currentFileToCheck) Then
+                currentFileToCheck = Form1.TextItem.Text
+            End If
+            If currentFileToCheck IsNot Nothing Then
+                currentFileToCheck = currentFileToCheck.Replace("""", "").Trim().ToLower()
+            End If
+
+            For Each line As String In savedStatuses
+                Dim parts() As String = line.Split("|")
+                If parts.Length >= 3 Then
+                    Dim savedFile As String = parts(0).Replace("""", "").Trim().ToLower()
+                    Dim savedId As String = parts(1).Trim()
+                    If savedFile = currentFileToCheck Then
+                        For j As Integer = 0 To UBound(M_Data, 1)
+                            If M_Data(j) Is Nothing Then Continue For
+                            Dim strId As String = readMaster(M_Data(j), _id)
+
+                            If strId = savedId Then
+                                Dim nX As String = "00000000"
+                                If _Master(j)(0).Contains(",") Then nX = _Master(j)(0).Split(",")(1)
+                                Dim nR As String = "00000000"
+                                If _Master(j)(1).Contains(",") Then nR = _Master(j)(1).Split(",")(1)
+                                Dim nMR As String = "00000000"
+                                If _Master(j)(2).Contains(",") Then nMR = _Master(j)(2).Split(",")(1)
+
+                                _Master(j)(0) = "3, " & nX
+                                _Master(j)(1) = "3, " & nR
+                                _Master(j)(2) = "3, " & nMR
+                            End If
+                        Next
+                        Exit For
+                    End If
+                End If
+            Next
+        End If
         Return _Master
     End Function
 
