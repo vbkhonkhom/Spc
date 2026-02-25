@@ -351,6 +351,7 @@ Module Module2
     End Function
 
     Public Function getAlarmMaster() As String()()
+
         Dim _Master(vv)() As String
         For i As Integer = 0 To UBound(_Master, 1)
             ReDim _Master(i)(3 - 1)
@@ -367,6 +368,7 @@ Module Module2
         If AlarmTable.Rows.Count = 0 Then
             Return _Master
         End If
+
         For i As Integer = 0 To AlarmTable.Rows.Count - 1
             If IsDBNull(AlarmTable.Rows(i)("iID")) = True Then Continue For
             Dim a_id As String = AlarmTable.Rows(i)("iID")
@@ -382,6 +384,7 @@ Module Module2
                 Continue For
             End If
             Dim come As Integer = 1
+
             Dim CommentFlag As Boolean = False
             If (Not IsDBNull(AlarmTable.Rows(i)("cSurveyIncharge"))) Then
                 If AlarmTable.Rows(i)("cSurveyIncharge") <> "" Then
@@ -417,6 +420,17 @@ Module Module2
                 If AlarmTable.Rows(i)("cApproverName") <> "" Then
                     come = 3
                 End If
+            End If
+            If System.IO.File.Exists(StrCDir & "\AlarmLog.txt") Then
+                Dim savedStatuses() As String = System.IO.File.ReadAllLines(StrCDir & "\AlarmLog.txt")
+                For Each line As String In savedStatuses
+                    Dim parts() As String = line.Split("|")
+                    If parts.Length >= 3 Then
+                        If parts(0).Trim() = CurrentMonitoringFile.Trim() AndAlso parts(1).Trim() = a_id.Trim() Then
+                            come = 3
+                        End If
+                    End If
+                Next
             End If
             Dim naiyou As String = ""
             For j As Integer = 0 To UBound(M_Data, 1)
@@ -2899,6 +2913,16 @@ Module Module2
         Next
 
         'g.DrawString("Authorized Signature", normalFont, Brushes.Black, m.Right - 350, m.Bottom - 10)
+    End Sub
+    Public Sub SaveAlarmStatusToFile(ByVal strID As String, ByVal status As String)
+        Try
+            Dim filePath As String = StrCDir & "\AlarmLog.txt"
+            Using sw As New System.IO.StreamWriter(filePath, True, System.Text.Encoding.Default)
+                sw.WriteLine(CurrentMonitoringFile & "|" & strID & "|" & status)
+            End Using
+        Catch ex As Exception
+            Call SaveLog(Now(), "Error Saving Alarm Status: " & ex.Message)
+        End Try
     End Sub
 
     Public Sub Display_Popup(ByVal d As Integer, ByVal Mode As String)

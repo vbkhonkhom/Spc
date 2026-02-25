@@ -12,7 +12,6 @@ Public Class Form1
     Private productFileOffsets As New Dictionary(Of String, Long)
     Private StrBackupFolder As String = "C:\Users\admin\Documents\Data"
     Dim targetPath As String = "C:\Users\admin\Documents\Data"
-    Private CurrentMonitoringFile As String = ""
     Dim myHostName As String
     Dim FROMHOST_SPC_Yukuhashi As String
 
@@ -1360,6 +1359,7 @@ Public Class Form1
         Dim selectedPath As String = e.Node.Tag.ToString()
         If System.IO.File.Exists(selectedPath) Then
             CurrentMonitoringFile = selectedPath
+            MsgBox("ee" & CurrentMonitoringFile)
             Dim ext As String = System.IO.Path.GetExtension(selectedPath).ToLower()
             If ext = ".txt" Or ext = ".csv" Or ext = ".log" Or ext = ".dat" Then
                 LoadSPCFile_ForModule2(selectedPath)

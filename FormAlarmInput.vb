@@ -1,11 +1,38 @@
 ﻿Imports System.Data.SqlClient
+Imports System.IO
 Public Class FormAlarmInput
     Public strID As String = ""
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
-        UPDATE_AlarmComment()
-        GraphDisp()
+        Dim JP_Msg As String = ".........."
+        Dim EN_Msg As String = "Please enter Password"
+        Dim userName As String = Input_Pass_to_Get_UserName(JP_Msg, EN_Msg, 0, 0)
+        If userName <> "" Then
+            UPDATE_AlarmComment()
+            SaveGreenFlagToFile()
+            GraphDisp()
+            Me.Close()
+        Else
+            MsgBox("0000")
+        End If
+    End Sub
 
-        Me.Close()
+    Private Sub SaveGreenFlagToFile()
+        Try
+            Dim alarmLogPath As String = StrCDir & "\AlarmLog.txt"
+            Dim idToSave As String = Module2.readMaster(M_Data(SerectPoint), _id)
+            Using sw As New System.IO.StreamWriter(alarmLogPath, True, System.Text.Encoding.Default)
+                Dim fileNameToSave As String = CurrentMonitoringFile
+                If String.IsNullOrEmpty(fileNameToSave) Then
+                    fileNameToSave = Form1.TextItem.Text
+                End If
+                sw.WriteLine(CurrentMonitoringFile & "|" & idToSave & "|3")
+            End Using
+            MsgBox("Success")
+            Me.Close()
+        Catch ex As Exception
+            MsgBox("Error: " & ex.Message)
+        End Try
+
     End Sub
     '*******************************************************************
     'アラームコメントをアップデートする
@@ -207,8 +234,11 @@ Public Class FormAlarmInput
         If String.IsNullOrEmpty(strPassword) Then Exit Function
 
         If strPassword.Trim() = "1234" Then
+
             MsgBox("sent pass")
+
             Input_Pass_to_Get_UserName = "Admin"
+
         Else
             MsgBox("Password not Correct")
             Return ""

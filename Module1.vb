@@ -45,7 +45,7 @@ Module Module1
     Public StrLanguage As String = "English" '翻訳言語
     Public StrResolution As String '解像度
     Public IsAlarmActive As Boolean = False
-
+    Public CurrentMonitoringFile As String = ""
 
     'グラフ作成用変数
     Public X_USL, X_LSL, X_SCL, X_kousa As Double 'XBar側規格値
